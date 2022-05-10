@@ -17,6 +17,6 @@ https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Vehicle type
 
 https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Vehicle type energy use in Base year and then 2050 CN and REF.html
 
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Hydrogen use by Sector for each scenario.html
 
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Energy use from elec vs hydrogen in each vehicle type for each scenario.html
