@@ -40,3 +40,7 @@ https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/USA energy u
 https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/South east asia vehicle activity bars compared to the rest of APEC in 2017.html
 
 https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/South east asia indexed activity growth compared to the rest of APEC (REF only).html
+
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Vehicle type energy proportions per region in 2050 (CN).html
+
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Vehicle type energy proportions per region in 2050 (REF).html
