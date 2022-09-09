@@ -7,7 +7,7 @@ import os
 import re
 
 #%%
-folder_names = ['transport-model-9th-edition', 'Kyoto transport lecture 2022']
+folder_names = ['transport-model-9th-edition', 'Kyoto-transport-lecture-2022']
 file_name_list = []
 for folder_name in folder_names:
     for file_name in os.listdir(folder_name):
