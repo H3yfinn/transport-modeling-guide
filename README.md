@@ -1,72 +1,54 @@
-# APERC-graphs
-Repo for hosting graphs so that i can share them with others easily. Especially useful for html Plotly graphs
+##Repo for hosting graphs so that i can share them with others easily. Especially useful for html Plotly graphs which cannot be shared easily. 
 
-Links to access the files: (if you cannot find the link for a graph in this repo then use the filename of that graph and add it onto https://h3yfinn.github.io/APERC-graphs/ like you will see below)
+https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition\Experiemental_3d_plot_of_ratios_for_BEV_to_ICE_and_PHEV_to_ICE.html
 
-##Transport model 2022 9/9
-https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition/Total energy use for each economy for each year, drive type.html
+https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition\Experiemental_3d_plot_of_sales_share_ratios_for_BEV_to_ICE_and_PHEV_to_ICE.html
 
-https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition/Experiemental 3d plot of ratios for BEV to ICE and PHEV to ICE.html
+https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition\Stocks_and_sales_of_each_drive_vehicle_type_combination_in_passenger_transport_lv_vehicles.html
 
-https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition/Experiemental 3d plot of sales share ratios for BEV to ICE and PHEV to ICE.html
+https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition\Total_energy_use_for_each_economy_for_each_year,_drive_type.html
 
-https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition/Stocks and sales of each drive vehicle type combination in passenger transport lv vehicles.html
+https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition\Vehicle_sales_share_by_year,_transport_type,_vehicle_type,_drive_and_economy.html
 
-https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition/Vehicle_sales_share by year, transport type, vehicle type, drive and economy.html
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\China_energy_use_by_vehicle_type,_vs_rest_of_APEC,_in_2030.html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\China_energy_use_by_vehicle_type,_vs_rest_of_APEC,_over_time.html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\China_stocks_by_vehicle_type_and_drive_type,_vs_rest_of_APEC,_over_time_in_each_scenario.html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\CN_scenario_for_BEV_vs_ICE_(Energy_vs_stocks).html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\Drive_type_energy_use_in_Base_year_and_then_2050_CN_and_REF.html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\Energy_by_fuel_type_for_each_scenario.html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\Energy_use_from_elec_vs_hydrogen_in_each_vehicle_type_for_each_scenario.html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\Freight_vs_passenger_energy_for_REF.html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\Hydrogen_use_by_Sector_for_each_scenario.html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\Macro_data_for_regions_in_Apec_during_the_forecasted_period_(GDP_then_Population).html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\NZ_Transport_Energy_and_Activity_indexed_over_time_for_selected_vehicle_types.html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\NZ_Transport_Energy_and_Activity_in_2050_vs_base_year_for_different_vehicle_types.html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\REF_scenario_for_BEV_vs_ICE_(Energy_vs_stocks).html
 
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\South_east_asia_indexed_activity_growth_compared_to_the_rest_of_APEC_(REF_only).html
 
-##KYOTO GRAPHS 2021:
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\South_east_asia_vehicle_activity_bars_compared_to_the_rest_of_APEC_in_2017.html
 
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/CN scenario for BEV vs ICE (Energy vs stocks).html
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\USA_energy_use_by_vehicle_type,_vs_rest_of_APEC,_in_2030.html
 
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Drive type energy use in Base year and then 2050 CN and REF.html
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\USA_energy_use_by_vehicle_type,_vs_rest_of_APEC,_over_time.html
 
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Energy by fuel type for each scenario.html
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\Vehicle_type_energy_proportions_per_region_in_2017.html
 
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Freight vs passenger energy for REF.html
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\Vehicle_type_energy_proportions_per_region_in_2050_(CN).html
 
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/REF scenario for BEV vs ICE (Energy vs stocks).html
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\Vehicle_type_energy_proportions_per_region_in_2050_(REF).html
 
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Vehicle type energy proportions per region in 2017.html
+https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022\Vehicle_type_energy_use_in_Base_year_and_then_2050_CN_and_REF.html
 
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Vehicle type energy use in Base year and then 2050 CN and REF.html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Hydrogen use by Sector for each scenario.html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Energy use from elec vs hydrogen in each vehicle type for each scenario.html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/NZ Transport Energy and Activity in 2050 vs base year for different vehicle types.html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/NZ Transport Energy and Activity indexed over time for selected vehicle types.html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Macro data for regions in Apec during the forecasted period (GDP then Population).html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/China energy use by vehicle type, vs rest of APEC, over time.html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/China energy use by vehicle type, vs rest of APEC, in 2030.html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/China stocks by vehicle type and drive type, vs rest of APEC, over time in each scenario.html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/USA energy use by vehicle type, vs rest of APEC, in 2030.html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/USA energy use by vehicle type, vs rest of APEC, over time.html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/South east asia vehicle activity bars compared to the rest of APEC in 2017.html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/South east asia indexed activity growth compared to the rest of APEC (REF only).html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Vehicle type energy proportions per region in 2050 (CN).html
-
-https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Vehicle type energy proportions per region in 2050 (REF).html
