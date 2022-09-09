@@ -18,7 +18,7 @@ for folder_name in folder_names:
 
         #add file nae to list so we can print it in the readme. note that if the file is already in the readme or has no space anywa, it will still be added to the readme as we will add the files to the readme all over again.
         #creat fulll file name form folder name as well
-        file_name_full = [os.path.join(folder_name, file_name)]
+        file_name_full = os.path.join(folder_name, file_name)
         file_name_list.append(file_name_full)
     
 #%%
@@ -27,8 +27,8 @@ with open('README.md', 'w') as f:
     f.write("##Repo for hosting graphs so that i can share them with others easily. Especially useful for html Plotly graphs which cannot be shared easily. \n\n")
     for file_name in file_name_list:
         #replace backslashes with forward slashes
-        file_name = file_name[0].replace('\\', '/')
-        line = "https://h3yfinn.github.io/APERC-graphs/" + file_name[0] + "\n\n"
+        file_name = file_name.replace('\\', '/')
+        line = "https://h3yfinn.github.io/APERC-graphs/" + file_name + "\n\n"
         f.write(line)
 
 #done
