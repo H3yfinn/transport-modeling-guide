@@ -26,6 +26,8 @@ for folder_name in folder_names:
 with open('README.md', 'w') as f:
     f.write("##Repo for hosting graphs so that i can share them with others easily. Especially useful for html Plotly graphs which cannot be shared easily. \n\n")
     for file_name in file_name_list:
+        #replace backslashes with forward slashes
+        file_name = file_name[0].replace('\\', '/')
         line = "https://h3yfinn.github.io/APERC-graphs/" + file_name[0] + "\n\n"
         f.write(line)
 
