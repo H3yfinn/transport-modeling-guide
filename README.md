@@ -3,6 +3,32 @@ Repo for hosting graphs so that i can share them with others easily. Especially 
 
 Links to access the files: (if you cannot find the link for a graph in this repo then use the filename of that graph and add it onto https://h3yfinn.github.io/APERC-graphs/ like you will see below)
 
+##Transport model 2022 9/9
+https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition/Total energy use for each economy for each year, drive type.html
+
+https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition/Experiemental 3d plot of ratios for BEV to ICE and PHEV to ICE.html
+
+https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition/Experiemental 3d plot of sales share ratios for BEV to ICE and PHEV to ICE.html
+
+https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition/Stocks and sales of each drive vehicle type combination in passenger transport lv vehicles.html
+
+https://h3yfinn.github.io/APERC-graphs/transport-model-9th-edition/Vehicle_sales_share by year, transport type, vehicle type, drive and economy.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##KYOTO GRAPHS 2021:
+
 https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/CN scenario for BEV vs ICE (Energy vs stocks).html
 
 https://h3yfinn.github.io/APERC-graphs/Kyoto transport lecture 2022/Drive type energy use in Base year and then 2050 CN and REF.html
