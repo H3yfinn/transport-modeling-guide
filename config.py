@@ -5,7 +5,7 @@ from git import Repo
 class Config:
     SECRET_KEY = 'supersecretkey'
     BASE_UPLOAD_FOLDER = 'uploads'
-    ORIGINAL_LIBRARY_PATH = '../transport_model_9th_edition_public'
+    ORIGINAL_LIBRARY_PATH = '../transport_model_9th_edition'
     USER_DATA_FILE = 'user_data.txt'
     SESSION_TIMEOUT = 3600  # Session timeout in seconds
 
@@ -32,3 +32,6 @@ def create_folders():
     
     if not os.path.exists(Config.ORIGINAL_LIBRARY_PATH):
         Repo.clone_from('https://github.com/asia-pacific-energy-research-centre/transport_model_9th_edition.git', Config.ORIGINAL_LIBRARY_PATH, branch='public_master')
+    
+    if not os.path.exists('../PyLMDI'):#this is needed by the transport model
+        Repo.clone_from('https://github.com/asia-pacific-energy-research-centre/PyLMDI.git', Config.ORIGINAL_LIBRARY_PATH, branch='main')
