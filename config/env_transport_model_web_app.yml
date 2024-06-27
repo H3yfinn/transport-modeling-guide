@@ -13,3 +13,4 @@ dependencies:
     - cryptography
     - APScheduler
     - GitPython
+    - markdown
