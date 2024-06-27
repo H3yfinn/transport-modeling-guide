@@ -23,7 +23,7 @@ mail = user_management.mail
 # scheduler.start()
 
 # Adjust the Python path to include the workflow directory inside LIBRARY_NAME
-LIBRARY_NAME = 'transport_model_9th_edition_public'
+LIBRARY_NAME = '../transport_model_9th_edition'
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), LIBRARY_NAME, 'workflow')))
 # # Import the main function from your model
 # from main import main
@@ -32,11 +32,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), LIBRARY_
 
 ############################################################################
 SAVED_FOLDER_STRUCTURE_PATH = 'folder_structure.txt' 
-ORIGINAL_LIBRARY_PATH = 'transport_model_9th_edition_public'
+ORIGINAL_LIBRARY_PATH = '../transport_model_9th_edition'
 BASE_UPLOAD_FOLDER = 'uploads'
 
 def get_required_input_files_and_their_locations(CHECK_FOLDER_STRUCTURE, INPUT_DATA_FOLDER_PATH, SAVED_FOLDER_STRUCTURE_PATH, OVERWRITE_SAVED_FOLDER_STRUCTURE_PATH):
-    """Will search through transport_model_9th_edition_public/input_data and record the names of all input files and their locations. Then when a file is passed to this app, if it is in the list of required files, it will be moved to the correct location. If it is not, an error message will be returned to the user. This will also take in a list of allowed files to be uploaded, as well as having the option to be passed the structure of the input_data folder, so it doesn't have to be run all the time, only when the structure of the input_data folder changes and the user sets CHECK_FOLDER_STRUCTURE to true.
+    """Will search through transport_model_9th_edition/input_data and record the names of all input files and their locations. Then when a file is passed to this app, if it is in the list of required files, it will be moved to the correct location. If it is not, an error message will be returned to the user. This will also take in a list of allowed files to be uploaded, as well as having the option to be passed the structure of the input_data folder, so it doesn't have to be run all the time, only when the structure of the input_data folder changes and the user sets CHECK_FOLDER_STRUCTURE to true.
     
     CHECK_FOLDER_STRUCTURE = True or False
     INPUT_DATA_FOLDER_PATH = the path to the input_data folder

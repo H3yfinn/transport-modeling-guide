@@ -97,7 +97,7 @@ class UserManagement:
                 shutil.copytree(self.app.config['ORIGINAL_LIBRARY_PATH'], session_library_path)
 
             # Adjust the Python path to include the workflow directory inside LIBRARY_NAME
-            LIBRARY_NAME = 'transport_model_9th_edition_public'
+            LIBRARY_NAME = 'transport_model_9th_edition'
             sys.path.append(os.path.abspath(os.path.join(session_library_path, 'workflow')))
             # Import the main function from your model
             from main import main
@@ -132,7 +132,7 @@ class UserManagement:
             session_library_path = os.path.join(session_folder, app.config['ORIGINAL_LIBRARY_PATH'])
             
             # Adjust the Python path to include the workflow directory inside LIBRARY_NAME
-            LIBRARY_NAME = 'transport_model_9th_edition_public'
+            LIBRARY_NAME = 'transport_model_9th_edition'
             sys.path.append(os.path.abspath(os.path.join(session_library_path, 'workflow')))
             # Import the main function from the session specific model
             from main import main
