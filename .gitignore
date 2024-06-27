@@ -1,3 +1,4 @@
 
 # Env folders don't need to be tracked:
 env_transport_model_web_app/*
+**/archive/**
