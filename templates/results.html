@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Results</title>
+</head>
+<body>
+    <h1>Results</h1>
+    {% for path in results_paths %}
+        <h2>{{ path }}</h2>
+        <iframe src="{{ path }}" width="100%" height="600px"></iframe>
+    {% endfor %}
+    
+    <h1>Download Key Results and Input Files</h1>
+    {% for path in key_csv_paths %}
+        <a href="{{ url_for('download_file', filename=path.split(session_id+'/')[1]) }}">Download {{ path.split('/')[-1] }}</a><br>
+    {% endfor %}
+    
+    <a href="/">Back to Home</a>
+</body>
+</html>
