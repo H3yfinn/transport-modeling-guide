@@ -8,6 +8,7 @@ import sys
 from datetime import timedelta
 from encryption import encrypt_password, decrypt_password
 import markdown
+import time
 # Initialize the app
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -23,16 +24,28 @@ mail = user_management.mail
 # scheduler.start()
 
 # Adjust the Python path to include the workflow directory inside LIBRARY_NAME
-LIBRARY_NAME = '../transport_model_9th_edition'
+LIBRARY_NAME = 'transport_model_9th_edition'
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), LIBRARY_NAME, 'workflow')))
 # # Import the main function from your model
 # from main import main
 # # also run and pull FILE_DATE_ID and transport_data_system_FILE_DATE_ID from the model inside {LIBRARY_NAME}/config/config.py
 # from config.config import FILE_DATE_ID, transport_data_system_FILE_DATE_ID
 
+def configure_app(application):
+    application.config.from_object(Config)
+    # Set Flask-Mail configuration from Config
+    application.config['MAIL_SERVER'] = Config.MAIL_SERVER
+    application.config['MAIL_PORT'] = Config.MAIL_PORT
+    application.config['MAIL_USE_TLS'] = Config.MAIL_USE_TLS
+    application.config['MAIL_USERNAME'] = Config.MAIL_USERNAME
+    application.config['MAIL_PASSWORD'] = Config.MAIL_PASSWORD
+    # Additional configuration can be set here
+
+configure_app(app)
+
 ############################################################################
 SAVED_FOLDER_STRUCTURE_PATH = 'folder_structure.txt' 
-ORIGINAL_LIBRARY_PATH = '../transport_model_9th_edition'
+ORIGINAL_LIBRARY_PATH = 'transport_model_9th_edition'
 BASE_UPLOAD_FOLDER = 'uploads'
 
 def get_required_input_files_and_their_locations(CHECK_FOLDER_STRUCTURE, INPUT_DATA_FOLDER_PATH, SAVED_FOLDER_STRUCTURE_PATH, OVERWRITE_SAVED_FOLDER_STRUCTURE_PATH):
@@ -79,7 +92,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(weeks=1)
 def update_session_timeout():
     session.permanent = True
     session.modified = True  # Ensures the session cookie is sent to the client
-    session['last_active'] = timedelta(weeks=1)
+    session['last_active'] = time.time()
     
 @app.route('/')
 def index():
@@ -240,7 +253,7 @@ def login():
         else:
             password = user_management.generate_password()
             encrypted_password = encrypt_password(password)
-            user_data[email] = encrypted_password.decode()#TO DO SHOULDNT THIS BE ENCODED?
+            user_data[email] = encrypted_password#.decode()#TO DO SHOULDNT THIS BE ENCODED?
             user_management.write_user_data(user_data)
             user_management.send_password_email(email, password)
             flash('Password sent to your email!')

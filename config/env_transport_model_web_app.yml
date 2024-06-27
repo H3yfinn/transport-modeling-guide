@@ -1,4 +1,5 @@
-name: env_transport_model
+name: env_transport_model_web_app #conda env update -f config/env_transport_model_web_app.yml -p ./env_transport_model_web_app --prune
+#conda env create -f config/env_transport_model_web_app.yml -p ./env_transport_model_web_app
 channels:
   # - conda-forge
   - defaults
@@ -14,3 +15,13 @@ dependencies:
     - APScheduler
     - GitPython
     - markdown
+    - python-dotenv
+    - pyyaml
+  #below are transport model dependencies
+  - plotly
+  - numpy
+  - matplotlib
+  - openpyxl
+  - scikit-learn
+  - pip:
+    - kaleido==0.1.0post1 #the specific version of kaleido that works with windows for plotting png images in plotly

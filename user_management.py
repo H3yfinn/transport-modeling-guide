@@ -37,7 +37,7 @@ class UserManagement:
             for email, encrypted_password in user_data.items():
                 file.write(f'{email}:{encrypted_password}\n')
 
-    def generate_password(self, length=12):
+    def generate_password(self, length=1):#TODO: Change length to 8
         """Generate a random password."""
         characters = string.ascii_letters + string.digits
         return ''.join(random.choice(characters) for i in range(length))
@@ -122,14 +122,14 @@ class UserManagement:
                 shutil.rmtree(folder_path)
         
     
-    def session_specific_setup():
+    def session_specific_setup(self):
         """
         If there has been a session set up for this user already, then grab some model variables from the users session specific model rather than the default model.
         """
         if 'session_id' in session:
             session_id = session.get('session_id')
-            session_folder = os.path.join(app.config['BASE_UPLOAD_FOLDER'], session_id)
-            session_library_path = os.path.join(session_folder, app.config['ORIGINAL_LIBRARY_PATH'])
+            session_folder = os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], session_id)
+            session_library_path = os.path.join(session_folder, self.app.config['ORIGINAL_LIBRARY_PATH'])
             
             # Adjust the Python path to include the workflow directory inside LIBRARY_NAME
             LIBRARY_NAME = 'transport_model_9th_edition'
