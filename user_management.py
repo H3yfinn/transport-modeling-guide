@@ -55,18 +55,28 @@ class UserManagement:
         self.save_session_data(email)
 
         session_id = session['session_id']
-        session_folder = os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], session_id)
+        session_folder = os.path.join(self.app.config['ROOT_DIR'], self.app.config['BASE_UPLOAD_FOLDER'], session_id)
         os.makedirs(session_folder, exist_ok=True)
 
-        session_library_path = os.path.join(session_folder, self.app.config['ORIGINAL_LIBRARY_PATH'])
+        session_library_path = os.path.join(session_folder, self.app.config['ORIGINAL_MODEL_LIBRARY_NAME'])
         if not os.path.exists(session_library_path):
-            shutil.copytree(self.app.config['ORIGINAL_LIBRARY_PATH'], session_library_path)
+            shutil.copytree(self.app.config['ORIGINAL_MODEL_LIBRARY_NAME'], session_library_path)
+            
+        # Store paths in session data
+        session['session_folder'] = session_folder
+        session['session_library_path'] = session_library_path
+        
+        self.save_session_data(email)
 
     def save_session_data(self, email):
         session_data = {
             'username': session['username'],
             'session_id': session['session_id'],
-            'last_active': session['last_active']
+            'last_active': session['last_active'],
+            'session_folder': session['session_folder'],
+            'session_library_path': session['session_library_path'],
+            #if economy_to_run is not None, add it to the session data
+            'economy_to_run': session.get('economy_to_run', None)
         }
         if not os.path.exists(self.session_data_file):
             data = {}
@@ -83,29 +93,28 @@ class UserManagement:
         with open(self.session_data_file, 'r') as file:
             data = json.load(file)
         return data.get(email, None)
-
+    
     def reset_session_folder(self):
+        
         if 'session_id' in session:
-            session_id = session.get('session_id')
-            session_folder = os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], session_id)
-            if os.path.exists(session_folder):
-                shutil.rmtree(session_folder)
-            os.makedirs(session_folder, exist_ok=True)
+            if os.path.exists(session['session_folder']):
+                shutil.rmtree(session['session_folder'])
+            os.makedirs(session['session_folder'], exist_ok=True)
 
-            session_library_path = os.path.join(session_folder, self.app.config['ORIGINAL_LIBRARY_PATH'])
-            if not os.path.exists(session_library_path):
-                shutil.copytree(self.app.config['ORIGINAL_LIBRARY_PATH'], session_library_path)
-
-            # Adjust the Python path to include the workflow directory inside LIBRARY_NAME
-            LIBRARY_NAME = 'transport_model_9th_edition'
-            sys.path.append(os.path.abspath(os.path.join(session_library_path, 'workflow')))
-            # Import the main function from your model
-            from main import main
-            # also run and pull FILE_DATE_ID and transport_data_system_FILE_DATE_ID from the model inside {LIBRARY_NAME}/config/config.py
-            from config.config import FILE_DATE_ID, transport_data_system_FILE_DATE_ID
-
+            if not os.path.exists(session['session_library_path']):
+                shutil.copytree(self.app.config['ORIGINAL_MODEL_LIBRARY_NAME'], session['session_library_path'])
+            
+            # Delete log file
+            log_filename = f'logs/model_output_{session_id}.log'
+            if os.path.exists(log_filename):
+                os.remove(log_filename)
+                
+            # # Import the main function from your model
+            # from main import main
+            # # also run and pull FILE_DATE_ID and transport_data_system_FILE_DATE_ID from the model inside {LIBRARY_NAME}/code/config.py
+            # from config.config import FILE_DATE_ID, transport_data_system_FILE_DATE_ID
+            
     def delete_inactive_sessions(self):
-        now = time.time()
         if not os.path.exists(self.session_data_file):
             return
 
@@ -120,22 +129,7 @@ class UserManagement:
             folder_path = os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], session_folder)
             if os.path.isdir(folder_path) and session_folder not in active_session_ids:
                 shutil.rmtree(folder_path)
-        
-    
-    def session_specific_setup(self):
-        """
-        If there has been a session set up for this user already, then grab some model variables from the users session specific model rather than the default model.
-        """
-        if 'session_id' in session:
-            session_id = session.get('session_id')
-            session_folder = os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], session_id)
-            session_library_path = os.path.join(session_folder, self.app.config['ORIGINAL_LIBRARY_PATH'])
-            
-            # Adjust the Python path to include the workflow directory inside LIBRARY_NAME
-            LIBRARY_NAME = 'transport_model_9th_edition'
-            sys.path.append(os.path.abspath(os.path.join(session_library_path, 'workflow')))
-            # Import the main function from the session specific model
-            from main import main
-            # also run and pull FILE_DATE_ID and transport_data_system_FILE_DATE_ID from the model inside {LIBRARY_NAME}/config/config.py
-            from config.config import FILE_DATE_ID, transport_data_system_FILE_DATE_ID
-            
+                log_filename = f'logs/model_output_{session_folder}.log'
+                if os.path.exists(log_filename):
+                    os.remove(log_filename)
+                    

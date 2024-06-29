@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file, flash, redirect, url_for, session
+from flask import Flask, request, render_template, send_file, flash, redirect, url_for, session, jsonify, stream_with_context, Response
 # from flask_apscheduler import APScheduler
 from config import Config, create_folders
 from user_management import UserManagement
@@ -9,6 +9,13 @@ from datetime import timedelta
 from encryption import encrypt_password, decrypt_password
 import markdown
 import time
+from dotenv import load_dotenv
+import importlib.util
+import backend
+import threading
+# Load environment variables from .env file
+load_dotenv()
+
 # Initialize the app
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -18,35 +25,7 @@ create_folders()
 user_management = UserManagement(app)
 mail = user_management.mail
 
-# # Initialize APScheduler
-# scheduler = APScheduler()
-# scheduler.init_app(app)
-# scheduler.start()
-
-# Adjust the Python path to include the workflow directory inside LIBRARY_NAME
-LIBRARY_NAME = 'transport_model_9th_edition'
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), LIBRARY_NAME, 'workflow')))
-# # Import the main function from your model
-# from main import main
-# # also run and pull FILE_DATE_ID and transport_data_system_FILE_DATE_ID from the model inside {LIBRARY_NAME}/config/config.py
-# from config.config import FILE_DATE_ID, transport_data_system_FILE_DATE_ID
-
-def configure_app(application):
-    application.config.from_object(Config)
-    # Set Flask-Mail configuration from Config
-    application.config['MAIL_SERVER'] = Config.MAIL_SERVER
-    application.config['MAIL_PORT'] = Config.MAIL_PORT
-    application.config['MAIL_USE_TLS'] = Config.MAIL_USE_TLS
-    application.config['MAIL_USERNAME'] = Config.MAIL_USERNAME
-    application.config['MAIL_PASSWORD'] = Config.MAIL_PASSWORD
-    # Additional configuration can be set here
-
-configure_app(app)
-
 ############################################################################
-SAVED_FOLDER_STRUCTURE_PATH = 'folder_structure.txt' 
-ORIGINAL_LIBRARY_PATH = 'transport_model_9th_edition'
-BASE_UPLOAD_FOLDER = 'uploads'
 
 def get_required_input_files_and_their_locations(CHECK_FOLDER_STRUCTURE, INPUT_DATA_FOLDER_PATH, SAVED_FOLDER_STRUCTURE_PATH, OVERWRITE_SAVED_FOLDER_STRUCTURE_PATH):
     """Will search through transport_model_9th_edition/input_data and record the names of all input files and their locations. Then when a file is passed to this app, if it is in the list of required files, it will be moved to the correct location. If it is not, an error message will be returned to the user. This will also take in a list of allowed files to be uploaded, as well as having the option to be passed the structure of the input_data folder, so it doesn't have to be run all the time, only when the structure of the input_data folder changes and the user sets CHECK_FOLDER_STRUCTURE to true.
@@ -78,8 +57,8 @@ def get_required_input_files_and_their_locations(CHECK_FOLDER_STRUCTURE, INPUT_D
 # Load or check the folder structure at startup
 file_dict = get_required_input_files_and_their_locations(
     CHECK_FOLDER_STRUCTURE=True, 
-    INPUT_DATA_FOLDER_PATH=os.path.join(ORIGINAL_LIBRARY_PATH, 'input_data'), 
-    SAVED_FOLDER_STRUCTURE_PATH=SAVED_FOLDER_STRUCTURE_PATH, 
+    INPUT_DATA_FOLDER_PATH=os.path.join(app.config['ORIGINAL_MODEL_LIBRARY_NAME'], 'input_data'), 
+    SAVED_FOLDER_STRUCTURE_PATH=app.config['SAVED_FOLDER_STRUCTURE_PATH'], 
     OVERWRITE_SAVED_FOLDER_STRUCTURE_PATH=True
 )
 
@@ -99,8 +78,6 @@ def index():
     if 'username' not in session:
         return redirect(url_for('login'))#get user to create or login, if they are not logged in
     
-    user_management.session_specific_setup()
-    
     keys = [
         '01_AUS', '02_BD', '03_CDA', '04_CHL', '05_PRC', '06_HKC',
         '07_INA', '08_JPN', '09_ROK', '10_MAS', '11_MEX', '12_NZ',
@@ -113,15 +90,7 @@ def index():
 def upload_file():
     if 'username' not in session:
         return redirect(url_for('login'))#get user to create or login, if they are not logged in
-
-    user_management.session_specific_setup()
-
-    session_id = session.get('session_id')
-    session_folder = os.path.join(app.config['BASE_UPLOAD_FOLDER'], session_id)
-    os.makedirs(session_folder, exist_ok=True)
     
-    session_library_path = os.path.join(session_folder, app.config['ORIGINAL_LIBRARY_PATH'])
-
     if 'file' not in request.files:
         flash('No file part')
         return redirect(request.url)
@@ -135,38 +104,11 @@ def upload_file():
             flash(f'{filename} is not a required input file. Maybe you need to name it correctly.')
             return redirect(request.url)
         
-        # filepath = os.path.join(session_folder, filename)
-        # file.save(filepath)
-        
-        filepath = file_dict[filename]#get the path to the file wihtin the input_data folder
-        filepath = os.path.join(session_library_path, filepath)
-        file.save(filepath)
-        
-        # model_input_path = os.path.join(session_library_path, 'input_data', filename)
-        # shutil.move(filepath, model_input_path)
+        original_filepath = file_dict[filename]#get the path to the file wihtin the input_data folder of the original model library
+        new_filepath = os.path.join(session['session_library_path'], original_filepath)
+        file.save(new_filepath)
         
         flash(f'File {filename} uploaded successfully')
-        return redirect(url_for('index'))
-
-@app.route('/run', methods=['POST'])
-def run_model_endpoint():
-    if 'username' not in session:#get user to create or login, if they are not logged in
-        return redirect(url_for('login'))
-
-    user_management.session_specific_setup()
-
-    economy_to_run = request.form.get('economy')
-    if not economy_to_run:
-        flash('No economy selected. Please select an economy to run.')
-        return redirect(url_for('index'))
-
-    session['economy_to_run'] = economy_to_run
-
-    try:
-        run_model(economy_to_run)
-        return redirect(url_for('results'))
-    except Exception as e:
-        flash(str(e))
         return redirect(url_for('index'))
 
 @app.route('/reset', methods=['POST'])
@@ -183,16 +125,10 @@ def results():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    user_management.session_specific_setup()
-
-    session_id = session.get('session_id')
     economy_to_run = session.get('economy_to_run')
     if not economy_to_run:
         flash('No economy selected. Please run the model first.')
         return redirect(url_for('index'))
-    
-    session_folder = os.path.join(app.config['BASE_UPLOAD_FOLDER'], session_id)
-    session_library_path = os.path.join(session_folder, app.config['ORIGINAL_LIBRARY_PATH'])
     
     results_files = [
         f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_results.html',
@@ -203,13 +139,13 @@ def results():
         f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions_extra.html'
     ]
     
-    results_paths = [os.path.join(session_library_path, 'plotting_output', file) for file in results_files]
+    results_paths = [os.path.join(session['session_library_path'], 'plotting_output', file) for file in results_files]
     
     key_csv_files = [
         f'plotting_output/key_results_{economy_to_run}.csv',
         f'input_data/key_input_{economy_to_run}.csv'
     ]
-    key_csv_paths = [os.path.join(session_library_path, file) for file in key_csv_files]
+    key_csv_paths = [os.path.join(session['session_library_path'], file) for file in key_csv_files]
     
     return render_template('results.html', results_paths=results_paths, key_csv_paths=key_csv_paths)
 
@@ -218,11 +154,7 @@ def download_file(filename):
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    user_management.session_specific_setup()
-
-    session_id = session.get('session_id')
-    session_folder = os.path.join(app.config['BASE_UPLOAD_FOLDER'], session_id)
-    file_path = os.path.join(session_folder, filename)
+    file_path = os.path.join(session['session_folder'], filename)
     if os.path.exists(file_path):
         return send_file(file_path, as_attachment=True)
     else:
@@ -267,14 +199,24 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('login'))
 
+@app.route('/running_model')
+def running_model():
+    estimated_time = backend.calculate_average_time()
+    if estimated_time is None:
+        estimated_time = "No previous execution times available to estimate."
+    return render_template('running_model.html', estimated_time=estimated_time)
+
+@app.route('/model_progress')
+def model_progress():
+    progress = session.get('model_progress', 0)
+    return jsonify(progress=progress)
+
 ####################################################
 #METHODOLOGY RELATED
 @app.route('/content/<page_name>')
 def content_page(page_name):
     if 'username' not in session:
         return redirect(url_for('login'))
-    
-    user_management.session_specific_setup()
 
     content_folder = os.path.join('content', page_name)
     graph_file = os.path.join(content_folder, 'graph.html')
@@ -290,8 +232,82 @@ def content_page(page_name):
     return render_template('content_page.html', title=page_name, graph=graph_file, explanation=explanation)
 
 ####################################################
+
+@app.route('/run', methods=['POST'])
+def run_model_endpoint():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    economy_to_run = request.form.get('economy')
+    if not economy_to_run:
+        flash('No economy selected. Please select an economy to run.')
+        return redirect(url_for('index'))
+
+    session['economy_to_run'] = economy_to_run
+
+    # Start the model run in a separate thread
+    thread = threading.Thread(target=run_model, args=(economy_to_run,))
+    thread.start()
+
+    return redirect(url_for('running_model'))
+
 def run_model(economy_to_run):
-    main(economy_to_run)
+    session_id = session.get('session_id')
+    log_filename = f'logs/model_output_{session_id}.log'
+
+    # Redirect stdout and stderr to the log file
+    logger = backend.StreamToLogger(log_filename)
+    sys.stdout = logger
+    sys.stderr = logger
+
+    model_code_path = os.path.abspath(os.path.join(session['session_library_path'], 'model_code'))
+    sys.path.insert(0, model_code_path)
+
+    try:
+        main_module_spec = importlib.util.spec_from_file_location("main", os.path.join(model_code_path, "main.py"))
+        main_module_spec = importlib.util.find_spec("main")
+        if main_module_spec is None:
+            raise ImportError("Could not find the main module in the session-specific path")
+        main_module = importlib.util.module_from_spec(main_module_spec)
+        main_module_spec.loader.exec_module(main_module)
+
+        start_time = time.time()
+        session['model_progress'] = 0
+
+        # Assuming main_module.main supports progress reporting via callback
+        def progress_callback(progress):
+            session['model_progress'] = progress
+            session.modified = True
+
+        main_module.main(economy_to_run, progress_callback)
+
+        execution_time = time.time() - start_time
+        backend.save_execution_time(execution_time)
+    finally:
+        if sys.path[0] == model_code_path:
+            sys.path.pop(0)
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+
+@app.route('/stream')
+def stream():
+    session_id = session.get('session_id')
+    log_filename = f'logs/model_output_{session_id}.log'
+
+    # Ensure the log file exists
+    if not os.path.isfile(log_filename):
+        open(log_filename, 'w').close()
+
+    def generate():
+        with open(log_filename, 'r') as log_file:
+            while True:
+                line = log_file.readline()
+                if not line:
+                    break
+                yield f"data: {line}\n\n"
+                time.sleep(1)
+
+    return Response(stream_with_context(generate()), content_type='text/event-stream')
 
 if __name__ == '__main__':
     app.run(debug=True)

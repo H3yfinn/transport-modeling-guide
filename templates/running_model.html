@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Running Model</title>
+</head>
+<body>
+    <h1>Model is running...</h1>
+    <p>Estimated time remaining: {{ estimated_time }}</p>
+    <pre id="output"></pre>
+    <script>
+        const outputElement = document.getElementById('output');
+        const eventSource = new EventSource("{{ url_for('stream') }}");
+        eventSource.onmessage = function(event) {
+            outputElement.textContent += event.data + "\n";
+        };
+    </script>
+</body>
+</html>

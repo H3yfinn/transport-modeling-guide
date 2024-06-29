@@ -22,7 +22,7 @@ This project aims to be useful in APERC activities such as workshops, training, 
 
 The application enables users to upload input files, select an economy, run a model, and view or download the results. Each user session is uniquely identified and isolated, ensuring users do not interfere with each other's data.
 
-## Application Workflow
+## Application code
 
 1. **Upload Input Data**: Users upload the required input files for running the model.
 2. **Select Economy and Run Model**: Users select an economy and execute the model.
