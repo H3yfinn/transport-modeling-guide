@@ -40,7 +40,6 @@ The application enables users to upload input files, select an economy, run a mo
 Using Amazon elastic beanstalk to deploy the website.
 ```bash
 
-pip install awsebcli --upgrade
 conda list --export > conda-requirements.txt  
 pip freeze > requirements.txt   
 mkdir .ebextensions
@@ -66,10 +65,20 @@ commands:
       source /opt/miniconda3/bin/activate env_transport_model_web_app
       pip install -r requirements.txt
 ```
-Then use the following commands to deploy the website:
+Now update your git with all these cahnges because you're going to clone it within the amazon Cloudshell (just a terminal in the cloud) and then deploy it from there.
+
+Get in there and clone the git and use the following commands to deploy the website:
 ```bash
+git clone https://github.com/H3yfinn/transport-modeling-guide.git
+pip install awsebcli --upgrade
 eb init -p python-3.9 transport-modeling-guide
-eb create env_transport_model_web_app_aws
+eb create env-transport-model-app
 eb deploy
 ```
 
+And when you want to update it you can just do regular git pull and so on. and then run the following commmand to update that all on the website:
+```bash
+eb deploy
+```
+
+If you need to install new packages you will need to update the requirements.txt and/or conda-requirements.txt file. Then when you use the eb deploy command it will install the new packages for you.
