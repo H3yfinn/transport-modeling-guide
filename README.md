@@ -45,6 +45,8 @@ mv requirements.txt .ebextensions
 ```
 I actually then went into Claude.ai and moved all the conda files to pip bnecause it seemed conda wasnt working well with the elastic beanstalk. So I had to change the conda-requirements.txt to requirements.txt.
 
+There were also some windows related libraries i had to remove manually. you'll notice them if you run the eb deploy command and it fails, then checking 'eb logs' will show you the error with the certain library.
+
 Now update your git with all these cahnges because you're going to clone it within the amazon Cloudshell (just a terminal in the cloud) and then deploy it from there.
 
 Get in there and clone the git! and use the following commands to deploy the website:
