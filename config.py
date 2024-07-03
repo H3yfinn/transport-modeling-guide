@@ -39,12 +39,3 @@ class Config:
         }
     ]
     SCHEDULER_API_ENABLED = True
-
-# def create_folders():
-#     os.makedirs(Config.BASE_UPLOAD_FOLDER, exist_ok=True)
-    
-#     if not os.path.exists(Config.ORIGINAL_MODEL_LIBRARY_NAME):
-#         Repo.clone_from('https://github.com/H3yfinn/transport_model_9th_edition', Config.ORIGINAL_MODEL_LIBRARY_NAME, branch='public_master')
-
-# if not os.path.exists(root_dir + '/' + './PyLMDI'):#this is needed by the transport model
-#     Repo.clone_from('https://github.com/asia-pacific-energy-research-centre/PyLMDI.git', Config.ORIGINAL_LIBRARY_PATH, branch='main')

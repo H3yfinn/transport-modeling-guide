@@ -19,7 +19,7 @@ from shared import progress_tracker, global_logger, model_threads,model_FILE_DAT
 load_dotenv()
 # load_keys_from_file()
 
-from config import Config, create_folders
+from config import Config
 from user_management import UserManagement
 from encryption import encrypt_password, decrypt_password
 import backend
@@ -28,7 +28,6 @@ from backend import global_logger
 # Initialize the app
 app = Flask(__name__)
 app.config.from_object(Config)
-# create_folders()
 
 # Initialize user management and mail
 user_manager = UserManagement(app)
