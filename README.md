@@ -39,7 +39,6 @@ The application enables users to upload input files, select an economy, run a mo
 # Guide for getting website up and running
 Using Amazon elastic beanstalk to deploy the website.
 ```bash
-
 conda list --export > conda-requirements.txt  
 pip freeze > requirements.txt   
 mkdir .ebextensions
