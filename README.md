@@ -46,37 +46,33 @@ mkdir .ebextensions
 mv conda-requirements.txt .ebextensions
 mv requirements.txt .ebextensions
 ```
-Create a file called 01_conda_setup.config in the .ebextensions folder:
+I actually then went into Claude.ai and moved all the conda files to pip bnecause it seemed conda wasnt working well with the elastic beanstalk. So I had to change the conda-requirements.txt to requirements.txt.
+Create a file called 01_setup.config in the .ebextensions folder:
 ```bash
-
 commands:
-  01_install_conda:
+  01_install_requirements:
     command: |
-      mkdir -p /opt/miniconda3
-      wget -nv https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
-      bash /tmp/miniconda.sh -b -f -p /opt/miniconda3
-      /opt/miniconda3/bin/conda init
-  02_create_conda_env:
-    command: |
-      /opt/miniconda3/bin/conda create -n env_transport_model_web_app --file conda-requirements.txt -y
-      echo 'source /opt/miniconda3/bin/activate env_transport_model_web_app' >> ~/.bashrc
-  03_install_requirements:
-    command: |
-      source /opt/miniconda3/bin/activate env_transport_model_web_app
       pip install -r requirements.txt
 ```
 Now update your git with all these cahnges because you're going to clone it within the amazon Cloudshell (just a terminal in the cloud) and then deploy it from there.
 
-Get in there and clone the git and use the following commands to deploy the website:
+Get in there and clone the git! and use the following commands to deploy the website:
 ```bash
 git clone https://github.com/H3yfinn/transport-modeling-guide.git
+git remote add origin https://github.com/H3yfinn/transport-modeling-guide.git
 pip install awsebcli --upgrade
 eb init -p python-3.9 transport-modeling-guide
 eb create env-transport-model-app
 eb deploy
 ```
-
-And when you want to update it you can just do regular git pull and so on. and then run the following commmand to update that all on the website:
+If that doesnt work, theres a slight chance you'll have to run this because the transport_model_9th_edition repo is in my git as a submodule (trying to delete it):
+```bash
+git submodule deinit -f transport_model_9th_edition
+rm -rf .git/modules/transport_model_9th_edition
+git rm -f transport_model_9th_edition
+git commit -m "Removed submodule transport_model_9th_edition"
+```
+And when you want to update the git you can just do regular git pull and so on. and then run the following commmand to update that all on the website:
 ```bash
 eb deploy
 ```
