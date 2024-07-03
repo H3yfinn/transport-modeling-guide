@@ -20,10 +20,10 @@ class Config:
     #now in .env file
     # Load environment variables from .env file
     load_dotenv()
-    MAIL_SERVER = os.getenv('MAIL_SERVER')
-    MAIL_PORT = int(os.getenv('MAIL_PORT'))
-    MAIL_USE_TLS = os.getenv('MAIL_USE_TLS') == 'True'
-    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    MAIL_SERVER = 'sandbox.smtp.mailtrap.io'#os.getenv('MAIL_SERVER')
+    MAIL_PORT = 587#int(os.getenv('MAIL_PORT'))
+    MAIL_USE_TLS = True#os.getenv('MAIL_USE_TLS') == 'True'
+    MAIL_USERNAME = '9bc3bb2015fc8d'#os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     SECRET_KEY = os.getenv('SECRET_KEY')
     ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
