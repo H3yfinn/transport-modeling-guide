@@ -89,3 +89,9 @@ pip install -r requirements.txt
 ```
 All done (hopefully...)
 
+# submodule integration
+since this sues the transport model 9th edition repo, im not sure if this needs you to run:
+```bash
+git submodule add https://github.com/H3yfinn/transport_model_9th_edition.git transport_model_9th_edition
+```
+Anyway, its important you have that set up correctly. (i originally had it downlaoded within the code but that seemed to cause issues with the elastic beanstalk deployment)
