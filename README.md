@@ -58,7 +58,6 @@ Now update your git with all these cahnges because you're going to clone it with
 Get in there and clone the git! and use the following commands to deploy the website:
 ```bash
 git clone https://github.com/H3yfinn/transport-modeling-guide.git
-git remote add origin https://github.com/H3yfinn/transport-modeling-guide.git
 pip install awsebcli --upgrade
 eb init -p python-3.9 transport-modeling-guide
 eb create env-transport-model-app
