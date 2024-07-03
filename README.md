@@ -39,20 +39,12 @@ The application enables users to upload input files, select an economy, run a mo
 # Guide for getting website up and running
 Using Amazon elastic beanstalk to deploy the website.
 ```bash
-conda list --export > conda-requirements.txt  
 pip freeze > requirements.txt   
 mkdir .ebextensions
-mv conda-requirements.txt .ebextensions
 mv requirements.txt .ebextensions
 ```
 I actually then went into Claude.ai and moved all the conda files to pip bnecause it seemed conda wasnt working well with the elastic beanstalk. So I had to change the conda-requirements.txt to requirements.txt.
-Create a file called 01_setup.config in the .ebextensions folder:
-```bash
-commands:
-  01_install_requirements:
-    command: |
-      pip install -r requirements.txt
-```
+
 Now update your git with all these cahnges because you're going to clone it within the amazon Cloudshell (just a terminal in the cloud) and then deploy it from there.
 
 Get in there and clone the git! and use the following commands to deploy the website:
@@ -76,3 +68,12 @@ eb deploy
 ```
 
 If you need to install new packages you will need to update the requirements.txt and/or conda-requirements.txt file. Then when you use the eb deploy command it will install the new packages for you.
+
+
+# local installation
+```bash
+python3.9 -m venv transport-modeling-guide-venv
+transport-modeling-guide-venv\Scripts\activate #activate the virtual environment
+pip install -r requirements.txt
+```
+All done (hopefully...)
