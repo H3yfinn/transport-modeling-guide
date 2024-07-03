@@ -52,6 +52,19 @@ Now update your git with all these cahnges because you're going to clone it with
 Get in there and clone the git! and use the following commands to deploy the website:
 ```bash
 git clone https://github.com/H3yfinn/transport-modeling-guide.git
+python generate_key.py
+```
+At this point you will need to write out a .env config file which isnt tracked in git *note you created the secret key above using python generate_key.py*. You will need to create a .env file like so *with values filled instead of my examples*:
+```bash
+MAIL_SERVER='sandbox.smtp.mailtrap.io'
+MAIL_PORT=587
+MAIL_USE_TLS=True
+MAIL_USE_SSL=False
+MAIL_USERNAME='a'
+MAIL_PASSWORD='b'
+MAIL_DEFAULT_SENDER='test@example.com'
+```
+```bash
 pip install awsebcli --upgrade
 eb init -p python-3.9 transport-modeling-guide
 eb create env-transport-model-app
@@ -79,3 +92,4 @@ transport-modeling-guide-venv\Scripts\activate #activate the virtual environment
 pip install -r requirements.txt
 ```
 All done (hopefully...)
+
