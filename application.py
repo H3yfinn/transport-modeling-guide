@@ -28,7 +28,7 @@ from backend import global_logger
 # Initialize the app
 app = Flask(__name__)
 app.config.from_object(Config)
-create_folders()
+# create_folders()
 
 # Initialize user management and mail
 user_manager = UserManagement(app)

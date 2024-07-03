@@ -6,7 +6,6 @@ env_transport_model_web_app/*
 secret.key
 user_data.json
 session_data.json
-**/transport_model_9th_edition/**
 **/uploads/**
 *.log
 *.pyc
