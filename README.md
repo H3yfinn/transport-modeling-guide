@@ -54,16 +54,7 @@ Get in there and clone the git! and use the following commands to deploy the web
 git clone https://github.com/H3yfinn/transport-modeling-guide.git
 python generate_key.py
 ```
-At this point you will need to write out a .env config file which isnt tracked in git *note you created the secret key above using python generate_key.py*. You will need to create a .env file like so *with values filled instead of my examples*:
-```bash
-MAIL_SERVER='sandbox.smtp.mailtrap.io'
-MAIL_PORT=587
-MAIL_USE_TLS=True
-MAIL_USE_SSL=False
-MAIL_USERNAME='a'
-MAIL_PASSWORD='b'
-MAIL_DEFAULT_SENDER='test@example.com'
-```
+At this point you will need to organise your config files. I couldnt find how to do this more easily so i created 01_create_env.config and put the MAIL_USERNAME and MAIL_PASSWORD in the aws systems-manager/parameters thing. Note that the code includes a call to python to created the secret key using *python generate_key.py*.
 ```bash
 pip install awsebcli --upgrade
 eb init -p python-3.9 transport-modeling-guide
