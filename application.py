@@ -17,7 +17,7 @@ from shared import progress_tracker, global_logger, model_threads,model_FILE_DAT
 
 # Load environment variables from .env file and keys from secret.key file
 load_dotenv()
-load_keys_from_file()
+# load_keys_from_file()
 
 from config import Config, create_folders
 from user_management import UserManagement

@@ -54,7 +54,7 @@ Get in there and clone the git! and use the following commands to deploy the web
 git clone https://github.com/H3yfinn/transport-modeling-guide.git
 python generate_key.py
 ```
-At this point you will need to organise your config files. I couldnt find how to do this more easily so i created 01_create_env.config and put the MAIL_USERNAME and MAIL_PASSWORD in the aws systems-manager/parameters thing. Note that the code includes a call to python to created the secret key using *python generate_key.py*.
+At this point you will need to organise your config files. I couldnt find how to do this more easily so i created 01_create_env.config and put the MAIL_USERNAME, MAIL_PASSWORD, ENCRYPTION_KEY and SECRET_KEY  in the aws systems-manager/parameters thing.
 ```bash
 pip install awsebcli --upgrade
 eb init -p python-3.9 transport-modeling-guide
@@ -74,6 +74,11 @@ eb deploy
 ```
 
 If you need to install new packages you will need to update the requirements.txt and/or conda-requirements.txt file. Then when you use the eb deploy command it will install the new packages for you.
+
+If you make a mistake you can remove the environment with the following command:
+```bash
+eb terminate env-transport-model-app
+```
 
 
 # local installation
