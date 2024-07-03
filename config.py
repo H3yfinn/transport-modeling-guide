@@ -4,14 +4,7 @@ from dotenv import load_dotenv
     
 class Config:
     
-    SECRET_KEY = os.getenv('SECRET_KEY', None)
     DEBUG = False#os.getenv('DEBUG', 'True').lower() in ['true', '1', 't']
-    ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY', None)
-
-    if not SECRET_KEY:
-        raise ValueError("SECRET_KEY must be set in the environment.")
-    if not ENCRYPTION_KEY or len(ENCRYPTION_KEY) != 44:
-        raise ValueError("ENCRYPTION_KEY must be a 32-byte, URL-safe base64-encoded string.")
         
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__))    #is thjer any need for this?
     BASE_UPLOAD_FOLDER = 'uploads'
@@ -32,6 +25,8 @@ class Config:
     MAIL_USE_TLS = os.getenv('MAIL_USE_TLS') == 'True'
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
     # app.config['MAIL_DEFAULT_SENDER'] = ('Your Name', os.getenv('MAIL_USERNAME'))
     
     # APScheduler configuration

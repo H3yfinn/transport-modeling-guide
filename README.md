@@ -79,7 +79,7 @@ If you make a mistake you can remove the environment with the following command:
 ```bash
 eb terminate env-transport-model-app
 ```
-
+You can also use *eb logs* to see the logs of the website and see what went wrong if it crashes.
 
 # local installation
 ```bash
