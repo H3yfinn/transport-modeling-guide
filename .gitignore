@@ -3,13 +3,14 @@
 env_transport_model_web_app/*
 **/archive/**
 .env
-secret.key
+*.key
 user_data.json
 session_data.json
 **/uploads/**
 *.log
 *.pyc
-
+*.pem
+*.ppk
 .vscode/**
 ######################################
 #Following are defaults based on a file i found on github

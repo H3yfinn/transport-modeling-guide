@@ -1,13 +1,7 @@
 from cryptography.fernet import Fernet
 import secrets
-import os 
+import os
 
-def load_keys_from_file(filepath="secret.key"):
-    with open(filepath, "r") as key_file:
-        for line in key_file:
-            key, value = line.strip().split('=', 1)
-            os.environ[key] = value
-            
 def load_encryption_key():
     key = os.getenv('ENCRYPTION_KEY')
     if key is None:
@@ -30,14 +24,37 @@ def decrypt_password(encrypted_password):
     cipher_suite = Fernet(key)
     return cipher_suite.decrypt(encrypted_password.encode()).decode()
 
-def generate_keys():
+def generate_keys(filepath=".env"):
     encryption_key = Fernet.generate_key().decode()
     secret_key = secrets.token_urlsafe(32)
     
-    with open("secret.key", "w") as key_file:
-        key_file.write(f'ENCRYPTION_KEY={encryption_key}\n')
+    with open(filepath, "a") as key_file:
+        key_file.write(f'\nENCRYPTION_KEY={encryption_key}\n')
         key_file.write(f'SECRET_KEY={secret_key}\n')
     
+    print("Keys generated and appended to .env file.")
+    
+def generate_keys(filepath="secret.key"):
+    encryption_key = Fernet.generate_key().decode()
+    secret_key = secrets.token_urlsafe(32)
+    
+    # Read the existing content and filter out old keys
+    if os.path.exists(filepath):
+        with open(filepath, "r") as key_file:
+            lines = key_file.readlines()
+        lines = [line for line in lines if not line.startswith('ENCRYPTION_KEY=') and not line.startswith('SECRET_KEY=')]
+    else:
+        lines = []
+    
+    # Append new keys
+    lines.append(f'ENCRYPTION_KEY={encryption_key}\n')
+    lines.append(f'SECRET_KEY={secret_key}\n')
+    
+    # Write everything back
+    with open(filepath, "w") as key_file:
+        key_file.writelines(lines)
+    
     print("Keys generated and saved to secret.key file.")
-
+# Example usage
 # generate_keys()
+# load_keys_from_file()
