@@ -9,7 +9,7 @@ model_threads = {}
 model_FILE_DATE_IDs = {}
 
 def setup_global_logger():
-    # Set up a global logger for the application
+    # Set up a global logger for the 
     global_logger = logging.getLogger('global_logger')
     global_logger.setLevel(logging.DEBUG)
 

@@ -10,14 +10,12 @@ from dotenv import load_dotenv
 import importlib.util
 import threading
 import schedule
-from encryption import load_keys_from_file
 import jwt
 import uuid
 from shared import progress_tracker, global_logger, model_threads,model_FILE_DATE_IDs
 
 # Load environment variables from .env file and keys from secret.key file
 load_dotenv()
-# load_keys_from_file()
 
 from config import Config
 from user_management import UserManagement
