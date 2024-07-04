@@ -13,6 +13,7 @@ import schedule
 import jwt
 import uuid
 from shared import progress_tracker, global_logger, model_threads,model_FILE_DATE_IDs
+from itsdangerous import URLSafeTimedSerializer
 
 # Load environment variables from .env file and keys from secret.key file
 load_dotenv()#also done in .wsgi file but to help with local testing do it here as well
@@ -31,6 +32,7 @@ app.config.from_object(Config)
 user_manager = UserManagement(app)
 mail = user_manager.mail
 
+s = URLSafeTimedSerializer(os.getenv('SECRET_KEY'))
 # Global dictionary to track model progress
 
 # Pass the global model_progress_tracker to backend
@@ -184,7 +186,21 @@ def reset_user_session():
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
-    
+        
+    #double check user is not still running the model. if so they must wait for it to finish
+    if user_manager.check_model_is_running():
+        flash('FLASH: Model is still running. Please wait for it to finish.')
+        
+    user_manager.reset_user_session()
+    return redirect(url_for('index'))
+
+@app.route('/hard_reset_user_session', methods=['GET', 'POST'])
+def hard_reset_user_session():
+    #this is a hard reset and will not check if the user is still running the model
+    if not user_manager.is_session_valid():
+        user_manager.clear_invalid_session()
+        return redirect(url_for('login'))
+        
     user_manager.reset_user_session()
     return redirect(url_for('index'))
 
@@ -202,7 +218,8 @@ def results():
         
     economy_to_run = session.get('economy_to_run')
     if not economy_to_run:
-        global_logger.info('No economy selected. Please run the model first.')
+        if Config.LOGGING:
+            global_logger.info('No economy selected. Please run the model first.')
         flash('No economy selected. Please run the model first.')
         return redirect(url_for('index'))
     
@@ -221,7 +238,7 @@ def results():
     #     f'plotting_output/key_results_{economy_to_run}.csv',
     #     input_data/key_input_{economy_to_run}.csv'
     # ]
-    if session['user_id'] in model_FILE_DATE_IDs:
+    if session['user_id'] in model_FILE_DATE_IDs.keys():
         model_FILE_DATE_ID = model_FILE_DATE_IDs[session['user_id']]
         
         key_csv_files += [f'output_data/for_other_modellers/{economy_to_run}/{model_FILE_DATE_ID}_{economy_to_run}_transport_stocks.csv',
@@ -233,8 +250,9 @@ def results():
     
     logs = backend.get_logs_from_file(session['session_log_filename'])
     
-    global_logger.info('Displaying the following results:')
-    global_logger.info(results_paths)
+    if Config.LOGGING:
+        global_logger.info('Displaying results.')
+    # global_logger.info(results_paths)
     return render_template('results.html', results_paths=results_paths, key_csv_paths=key_csv_paths, logs=logs)
 
 @app.route('/serve_file/<path:filename>')
@@ -263,7 +281,6 @@ def download_file(filename):
         flash('FLASH: File not found.')
         return redirect(url_for('results'))
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if user_manager.is_session_valid():
@@ -290,6 +307,8 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if user_manager.is_session_valid():
+        return redirect(url_for('index'))
     if request.method == 'POST':
         email = request.form['email']
         if user_manager.register_user(email):
@@ -302,6 +321,45 @@ def register():
             flash('FLASH: Email already registered.')
             return redirect(url_for('register'))
     return render_template('register.html')
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if user_manager.is_session_valid():
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        email = request.form['email']
+        user = user_manager.find_user_in_user_data_by_key_value('email', email)
+        
+        if user:
+            token = s.dumps(email, salt='password-reset-salt')
+            reset_link = url_for('reset_password', token=token, _external=True)
+            user_manager.send_reset_password_email(email, reset_link)
+            flash('FLASH: A password reset link has been sent to your email.', 'info')
+        else:
+            flash('FLASH: Email address not found.', 'danger')
+        return redirect(url_for('forgot_password'))
+    
+    return render_template('forgot_password.html')
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        email = s.loads(token, salt='password-reset-salt', max_age=3600)
+    except:
+        flash('FLASH: The reset link is invalid or has expired.', 'danger')
+        return redirect(url_for('forgot_password'))
+
+    if request.method == 'POST':
+        new_password = request.form['password']
+        if user_manager.update_user_password(email, new_password):
+            flash('FLASH: Your password has been updated!', 'success')
+            return redirect(url_for('login'))
+        else:
+            flash('FLASH: An error occurred while updating your password.', 'danger')
+            return redirect(url_for('reset_password', token=token))
+
+    return render_template('reset_password.html', token=token)
 
 @app.route('/logout')
 def logout():
@@ -350,29 +408,34 @@ def running_model():
     
     #check if a user session has already been set up. if so the user must restart it before running a new model
     if user_manager.check_if_results_available():
-        global_logger.info('User results are available. User must restart the session before running a new model.')
+        if Config.LOGGING:
+            global_logger.info('User results are available. User must restart the session before running a new model.')
         return redirect(url_for('results'))
     if user_manager.check_model_is_running():
-        global_logger.info('User model is running. User must restart the session before running a new model.')
+        if Config.LOGGING:
+            global_logger.info('User model is running. User must restart the session before running a new model.')
         return redirect(url_for('model_progress'))
     
     try:
         # Start the model run in a separate thread
         thread = threading.Thread(target=backend.run_model_thread, args=(session['session_log_filename'], session['session_library_path'], economy_to_run, session['user_id']))
         thread.start()
-        global_logger.info('Model run started successfully.')
-        app.logger.info('Model run started successfully.')
+        if Config.LOGGING:
+            global_logger.info('Model run started successfully.')
+            app.logger.info('Model run started successfully.')
         session['model_thread_running'] = True
         session['results_available'] = False
-        global_logger.info('Saving session data after starting model run.')
+        if Config.LOGGING:
+            global_logger.info('Saving session data after starting model run.')
         user_manager.save_session_data()
         model_threads[session['user_id']] = thread
         return redirect(url_for('model_progress'))
         
     except Exception as e:
-        app.logger.error(f'Error running model: {str(e)}')
+        if Config.LOGGING:
+            app.logger.error(f'Error running model: {str(e)}')
+            global_logger.error(f'Error running model: {str(e)}')
         flash(f'FLASH: Error running model: {str(e)}')
-        print(f'PRINT: Error running model: {str(e)}')
 
         return redirect(url_for('error_page', error_message=str(e)))
     
@@ -390,10 +453,12 @@ def model_progress():
         
         if not user_manager.check_model_is_running():
             if user_manager.check_if_results_available():
-                global_logger.info('model_progress() POST: Model is not running and results are available. Redirecting to results page.')
+                if Config.LOGGING:
+                    global_logger.info('model_progress() POST: Model is not running and results are available. Redirecting to results page.')
                 return jsonify({'redirect': url_for('results')})
             else:
-                global_logger.info('model_progress() POST: Model is not running and results not available. Redirecting to index page.')
+                if Config.LOGGING:
+                    global_logger.info('model_progress() POST: Model is not running and results not available. Redirecting to index page.')
                 return jsonify({'redirect': url_for('index')})
         
         estimated_time = backend.calculate_average_time()
@@ -405,25 +470,28 @@ def model_progress():
         return jsonify({'progress': progress_tracker.get(session['user_id'], 0), 'logs': logs, 'estimated_time': estimated_time})
         
     elif request.method == 'GET':
+        #following are in case of accidental visit to the model progress page
         if not user_manager.is_session_valid():
             user_manager.clear_invalid_session()
             return redirect(url_for('login'))
-
         if not user_manager.check_model_is_running():
             if user_manager.check_if_results_available():
-                global_logger.info('model_progress() GET: Model is not running and results are available. Redirecting to results page.')
+                if Config.LOGGING:
+                    global_logger.info('model_progress() GET: Model is not running and results are available. Redirecting to results page.')
                 return redirect(url_for('results'))
             else:
-                global_logger.info('model_progress() GET: Model is not running and results not available. Redirecting to index page.')
+                if Config.LOGGING:
+                    global_logger.info('model_progress() GET: Model is not running and results not available. Redirecting to index page.')
                 return redirect(url_for('index'))
         
-        # Check if the model is still running
+        # While on the page, check if the model is still running
         user_id = session['user_id']
         if user_id in model_threads:
             thread = model_threads[user_id]
             session['model_thread_running'] = thread.is_alive()
             if not session['model_thread_running']:
-                global_logger.info('model_progress() GET: Model completed running. Redirecting to results page.')
+                if Config.LOGGING:
+                    global_logger.info('model_progress() GET: Model completed running. Redirecting to results page.')
                 del model_threads[user_id]
                 session['results_available'] = True
                 user_manager.save_session_data()
@@ -437,9 +505,10 @@ def model_progress():
                 return render_template('model_progress.html', progress=progress_tracker[session['user_id']], logs=logs, estimated_time=estimated_time)
         
         else:
-            global_logger.error('Model thread not found yet model_running is True. This should not happen.')
-            app.logger.error('Model thread not found yet model_running is True. This should not happen.')
-            return redirect(url_for('reset_user_session'))
+            if Config.LOGGING:
+                global_logger.error('Model thread not found yet model_running is True. This should not happen.')
+                app.logger.error('Model thread not found yet model_running is True. This should not happen.')
+            return redirect(url_for('hard_reset_user_session'))
     
 ####################################################
 # METHODOLOGY RELATED

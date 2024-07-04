@@ -65,7 +65,9 @@
             fetchModelProgress();
         }
 
-        setInterval(update, 4000);  // Update every 4 seconds
+        setTimeout(() => {
+            setInterval(update, 4000);  // Start updating every 4 seconds after an initial 4-second delay
+        }, 4000);  // Update every 4 seconds
     </script>
 </body>
 </html>

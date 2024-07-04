@@ -3,8 +3,6 @@ import os
 from dotenv import load_dotenv
     
 class Config:
-    
-    DEBUG = False#os.getenv('DEBUG', 'True').lower() in ['true', '1', 't']
         
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__))    #is thjer any need for this?
     BASE_UPLOAD_FOLDER = 'uploads'
@@ -20,6 +18,8 @@ class Config:
     #now in .env file
     # Load environment variables from .env file
     load_dotenv()
+    LOGGING = os.getenv('LOGGING', 'True').lower() in ['true', '1', 't']
+    DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1', 't']
     MAIL_SERVER = os.getenv('MAIL_SERVER')
     MAIL_PORT = int(os.getenv('MAIL_PORT'))
     MAIL_USE_TLS = os.getenv('MAIL_USE_TLS') == 'True'

@@ -45,6 +45,8 @@ def generate_keys(filepath=".env"):
         key_file.writelines(lines)
     
     print("Keys generated and saved to secret.key file.")
+    
+    
 # Example usage
 # generate_keys()
 # load_keys_from_file()

@@ -67,6 +67,21 @@ git pull --recurse-submodules
 git submodule update --remote --merge
 ```
 
+# .env files:
+We manage the secret keys using generate_key,py and the .env file. The .env file is not uploaded to the git repo. It is used to store the secret keys and other sensitive information. The .env file should look like this:
+```bash
+MAIL_SERVER=
+MAIL_PORT=
+MAIL_USE_TLS=
+MAIL_USE_SSL=
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_DEFAULT_SENDER=
+ENCRYPTION_KEY=
+SECRET_KEY=
+```
+You will need to copy/paste the values for everything except the keys, as the keys are generated using the generate_key.py file.
+
 # New EC2 instance
 I'm going to try to set up a new EC2 instance instaed of using elastic beanstalk. Maybe it will be easier to manage.
 

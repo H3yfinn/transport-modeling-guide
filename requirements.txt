@@ -62,3 +62,4 @@ urllib3==1.26.19
 wcwidth==0.1.9
 Werkzeug==3.0.3
 zipp==3.17.0
+itsdangerous==2.2.0
