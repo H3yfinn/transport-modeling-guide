@@ -95,6 +95,7 @@ def run_model_thread(log_filename, session_library_path, economy_to_run, user_id
             test_dummy_run_model(economy_to_run, progress_callback, logger)
         else:
             try:
+                #set sys.path to include the session library path. Note that if we have multiple users running models at the same time, this will mean multiple paths for duplicates of the same module are added to the path. in that case sys.path will just use the first one it finds
                 FILE_DATE_ID = main_module.main(economy_to_run, progress_callback)
                 # print("PRINT: Model execution completed successfully.")
                 logging.getLogger('model_logger').info("Model execution completed successfully.")

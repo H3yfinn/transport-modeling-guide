@@ -299,18 +299,24 @@ class UserManagement:
             user_session_data = user['session_data']
             if user_session_data:
                 if os.path.exists(user_session_data['session_folder']):
-                    if Config.LOGGING:
-                        global_logger.info(f'Deleting session folder: {user_session_data["session_folder"]}')
+                    if Config.DEBUG:
+                        pass
                     else:
                         shutil.rmtree(user_session_data['session_folder'])
+                    if Config.LOGGING:
+                        global_logger.info(f'Deleting session folder: {user_session_data["session_folder"]}')
                 
                 if os.path.exists(user_session_data['session_library_path']):
-                    if Config.LOGGING:
-                        global_logger.info(f'Deleting session library path: {user_session_data["session_library_path"]}')
+                    if Config.DEBUG:
+                        pass
                     else:
                         shutil.rmtree(user_session_data['session_library_path'])
+                    if Config.LOGGING:
+                        global_logger.info(f'Deleting session library path: {user_session_data["session_library_path"]}')
                 
                 if os.path.exists(user_session_data['session_log_filename']):
+                    if Config.DEBUG:
+                        pass
                     if Config.LOGGING:
                         global_logger.info(f'Archiving log file: {user_session_data["session_log_filename"]}')
                     backend.archive_log(user_session_data['session_log_filename'])

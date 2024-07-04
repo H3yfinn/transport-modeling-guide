@@ -226,13 +226,15 @@ def results():
     results_files = [
         f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_results.html',
         f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_assumptions.html',
-        f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_assumptions_extra.html',
+        #f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_assumptions_extra.html',
         f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_results.html',
-        f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions.html',
-        f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions_extra.html'
+        f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions.html'#,
+        #f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions_extra.html'
     ]
     
     results_paths = [os.path.join(session['session_library_path'], 'plotting_output', file) for file in results_files]
+    #check that they exist, otherwise remove them from the list
+    results_paths = [file for file in results_paths if os.path.exists(file)]
     
     key_csv_files = results_files
     #     f'plotting_output/key_results_{economy_to_run}.csv',
@@ -247,6 +249,8 @@ def results():
         f'output_data/for_other_modellers/{economy_to_run}/{economy_to_run}_{model_FILE_DATE_ID}_transport_energy_use.csv']
 
     key_csv_paths = [os.path.join(session['session_library_path'], file) for file in key_csv_files]
+    #check that they exist, otherwise remove them from the list
+    key_csv_paths = [file for file in key_csv_paths if os.path.exists(file)]
     
     logs = backend.get_logs_from_file(session['session_log_filename'])
     
@@ -417,18 +421,22 @@ def running_model():
         return redirect(url_for('model_progress'))
     
     try:
-        # Start the model run in a separate thread
+        # Start the model run in a separate thread. also initiate alll variables now, since we are about to start a new thread and things could get messy if we dont
+        session['model_thread_running'] = True
+        session['results_available'] = False
+        progress_tracker[session['user_id']] = 0
+        
         thread = threading.Thread(target=backend.run_model_thread, args=(session['session_log_filename'], session['session_library_path'], economy_to_run, session['user_id']))
+        
+        model_threads[session['user_id']] = thread
+        
         thread.start()
         if Config.LOGGING:
             global_logger.info('Model run started successfully.')
             app.logger.info('Model run started successfully.')
-        session['model_thread_running'] = True
-        session['results_available'] = False
         if Config.LOGGING:
             global_logger.info('Saving session data after starting model run.')
         user_manager.save_session_data()
-        model_threads[session['user_id']] = thread
         return redirect(url_for('model_progress'))
         
     except Exception as e:
