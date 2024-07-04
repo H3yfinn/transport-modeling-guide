@@ -61,7 +61,17 @@ def archive_log(log_filename):
             global_logger.error(f"Error moving log file: {e}")
 
 def run_model_thread(log_filename, session_library_path, economy_to_run, user_id):
-    
+    """Ok one big issue with this and threading and the way ive moidularised the model is that it uses relative imports and these dont work unless we add the models root folder to the path, but if we are threading multiple models from different paths we will end up importing from the firstt model on the path. However, because of the mdoels redevelopments we can sort of overcome this by assuming that all model are the same code an dinstead changing the paths we pass in to the model, especailly the root_dir path, which defines the relative poiint from which ALL files are read and saved from within the scope of that model. So we will add each model to the sys.path and remove it later, but this shouldnt be an issue.
+
+    Args:
+        log_filename (_type_): _description_
+        session_library_path (_type_): _description_
+        economy_to_run (_type_): _description_
+        user_id (_type_): _description_
+
+    Raises:
+        ImportError: _description_
+    """
     if Config.LOGGING:
         global_logger.info(f'Running model thread for economy: {economy_to_run}')
         
@@ -72,6 +82,11 @@ def run_model_thread(log_filename, session_library_path, economy_to_run, user_id
         if Config.DEBUG:
             pass
         else:
+            sys.path.append(os.getcwd() +'\\' +  session_library_path)
+            root_dir_param =  "\\\\?\\"+ os.getcwd()+ '\\' + session_library_path
+            if Config.LOGGING:
+                global_logger.info(f"sys.path: {sys.path}")
+            #this is a hack to allow long paths in windows
             main_module_spec = importlib.util.spec_from_file_location("main", os.path.join(session_library_path, "main.py"))
             if main_module_spec is None:
                 if Config.LOGGING:
@@ -96,7 +111,7 @@ def run_model_thread(log_filename, session_library_path, economy_to_run, user_id
         else:
             try:
                 #set sys.path to include the session library path. Note that if we have multiple users running models at the same time, this will mean multiple paths for duplicates of the same module are added to the path. in that case sys.path will just use the first one it finds
-                FILE_DATE_ID = main_module.main(economy_to_run, progress_callback)
+                FILE_DATE_ID = main_module.main(economy_to_run=economy_to_run, progress_callback=progress_callback, root_dir_param=root_dir_param, script_dir_param=root_dir_param)
                 # print("PRINT: Model execution completed successfully.")
                 logging.getLogger('model_logger').info("Model execution completed successfully.")
                 if Config.LOGGING:
@@ -113,6 +128,9 @@ def run_model_thread(log_filename, session_library_path, economy_to_run, user_id
         if not Config.DEBUG:
             save_execution_time(execution_time)
     finally:
+        #if the session library path is in the sys.path, remove it
+        if os.getcwd() +'\\' +  session_library_path in sys.path:
+            sys.path.remove(os.getcwd() +'\\' +  session_library_path)
         if FILE_DATE_ID:
             model_FILE_DATE_IDs[user_id] = FILE_DATE_ID
         sys.stdout = sys.__stdout__

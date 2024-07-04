@@ -61,7 +61,7 @@ However you will also need to run the following command to get the submodule whe
 ```bash
 git submodule update --init --recursive
 ```
-And to update the submodel use (which will also update the main repo):
+And to update the submodel use (which will also update the main repo -  i think the second one is the only one you need to use though):
 ```bash
 git pull --recurse-submodules
 git submodule update --remote --merge

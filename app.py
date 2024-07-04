@@ -35,6 +35,8 @@ mail = user_manager.mail
 s = URLSafeTimedSerializer(os.getenv('SECRET_KEY'))
 # Global dictionary to track model progress
 
+estimated_time = None #this will be updated and made global in the running_model() function
+
 # Pass the global model_progress_tracker to backend
 # backend.set_model_progress_tracker(model_progress_tracker)
 ############################################################################
@@ -420,6 +422,10 @@ def running_model():
             global_logger.info('User model is running. User must restart the session before running a new model.')
         return redirect(url_for('model_progress'))
     
+    #update estimated_time 
+    global estimated_time
+    estimated_time = backend.calculate_average_time()
+    
     try:
         # Start the model run in a separate thread. also initiate alll variables now, since we are about to start a new thread and things could get messy if we dont
         session['model_thread_running'] = True
@@ -469,10 +475,6 @@ def model_progress():
                     global_logger.info('model_progress() POST: Model is not running and results not available. Redirecting to index page.')
                 return jsonify({'redirect': url_for('index')})
         
-        estimated_time = backend.calculate_average_time()
-        if estimated_time is None:
-            estimated_time = "No previous execution times available to estimate."
-        
         logs = backend.get_logs_from_file(session['session_log_filename'])
         
         return jsonify({'progress': progress_tracker.get(session['user_id'], 0), 'logs': logs, 'estimated_time': estimated_time})
@@ -506,9 +508,6 @@ def model_progress():
                 return redirect(url_for('results'))
             
             else:   
-                estimated_time = backend.calculate_average_time()
-                if estimated_time is None:
-                    estimated_time = "No previous execution times available to estimate."
                 logs = backend.get_logs_from_file(session['session_log_filename'])
                 return render_template('model_progress.html', progress=progress_tracker[session['user_id']], logs=logs, estimated_time=estimated_time)
         
@@ -520,25 +519,25 @@ def model_progress():
     
 ####################################################
 # METHODOLOGY RELATED
-@app.route('/content/<page_name>')
-def content_page(page_name):
-    content_folder = os.path.join('content', page_name)
-    explanation_file = os.path.join(content_folder, 'explanation.md')
+# @app.route('/content/<page_name>')
+# def content_page(page_name):
+#     content_folder = os.path.join('content', page_name)
+#     explanation_file = os.path.join(content_folder, 'explanation.md')
 
-    if not os.path.exists(explanation_file):
-        flash('FLASH: Content not found.')
-        return redirect(url_for('index'))
+#     if not os.path.exists(explanation_file):
+#         flash('FLASH: Content not found.')
+#         return redirect(url_for('index'))
 
-    with open(explanation_file, 'r') as f:
-        explanation = f.read()
+#     with open(explanation_file, 'r') as f:
+#         explanation = f.read()
 
-    # Replace custom placeholders with actual HTML content
-    explanation = replace_placeholders(explanation, content_folder)
+#     # Replace custom placeholders with actual HTML content
+#     explanation = replace_placeholders(explanation, content_folder)
 
-    # Convert markdown to HTML
-    explanation_html = markdown.markdown(explanation)
+#     # Convert markdown to HTML
+#     explanation_html = markdown.markdown(explanation)
 
-    return render_template('content_page.html', title=page_name, explanation=explanation_html)
+#     return render_template('content_page.html', title=page_name, explanation=explanation_html)
 
 def replace_placeholders(explanation, content_folder):
     import re
@@ -559,7 +558,7 @@ def replace_placeholders(explanation, content_folder):
             return f'<div style="color:red;">{file_type.capitalize()} file not found: {file_name}</div>'
 
     return pattern.sub(replacement, explanation)
-
+@app.route('/content/<page_name>')
 def content_page(page_name):
     content_folder = os.path.join('content', page_name)
     #check for html and md files in the folder and render them
