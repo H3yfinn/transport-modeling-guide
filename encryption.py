@@ -28,16 +28,6 @@ def generate_keys(filepath=".env"):
     encryption_key = Fernet.generate_key().decode()
     secret_key = secrets.token_urlsafe(32)
     
-    with open(filepath, "a") as key_file:
-        key_file.write(f'\nENCRYPTION_KEY={encryption_key}\n')
-        key_file.write(f'SECRET_KEY={secret_key}\n')
-    
-    print("Keys generated and appended to .env file.")
-    
-def generate_keys(filepath="secret.key"):
-    encryption_key = Fernet.generate_key().decode()
-    secret_key = secrets.token_urlsafe(32)
-    
     # Read the existing content and filter out old keys
     if os.path.exists(filepath):
         with open(filepath, "r") as key_file:
@@ -47,8 +37,8 @@ def generate_keys(filepath="secret.key"):
         lines = []
     
     # Append new keys
-    lines.append(f'ENCRYPTION_KEY={encryption_key}\n')
-    lines.append(f'SECRET_KEY={secret_key}\n')
+    lines.append(f'ENCRYPTION_KEY="{encryption_key}"\n')
+    lines.append(f'SECRET_KEY="{secret_key}"\n')
     
     # Write everything back
     with open(filepath, "w") as key_file:
