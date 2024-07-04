@@ -15,7 +15,7 @@ import uuid
 from shared import progress_tracker, global_logger, model_threads,model_FILE_DATE_IDs
 
 # Load environment variables from .env file and keys from secret.key file
-load_dotenv()
+load_dotenv()#also done in .wsgi file but to help with local testing do it here as well
 
 from config import Config
 from user_management import UserManagement
