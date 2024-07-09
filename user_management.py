@@ -310,7 +310,7 @@ class UserManagement:
                     if Config.DEBUG:
                         pass
                     else:
-                        shutil.rmtree(user_session_data['session_folder'])
+                        shutil.rmtree(user_session_data['session_folder'], ignore_errors=True)
                     if Config.LOGGING:
                         global_logger.info(f'Deleting session folder: {user_session_data["session_folder"]}')
                 
@@ -318,7 +318,7 @@ class UserManagement:
                     if Config.DEBUG:
                         pass
                     else:
-                        shutil.rmtree(user_session_data['session_library_path'])
+                        shutil.rmtree(user_session_data['session_library_path'], ignore_errors=True)
                     if Config.LOGGING:
                         global_logger.info(f'Deleting session library path: {user_session_data["session_library_path"]}')
                 
@@ -355,13 +355,13 @@ class UserManagement:
                         if Config.DEBUG:
                             pass
                         else:
-                            shutil.rmtree(user_session_data['session_folder'])
+                            shutil.rmtree(user_session_data['session_folder'], ignore_errors=True)
                     
                     if os.path.exists(user_session_data['session_library_path']):
                         if Config.DEBUG:
                             pass
                         else:
-                            shutil.rmtree(user_session_data['session_library_path'])
+                            shutil.rmtree(user_session_data['session_library_path'], ignore_errors=True)
                     
                     backend.archive_log(user_session_data['session_log_filename'])
                     
