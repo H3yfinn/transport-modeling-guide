@@ -76,18 +76,26 @@ class UserManagement:
         """Send an email with the generated password."""
         if Config.LOGGING:
             global_logger.info(f'Sending password email to {email}')
-        msg = Message('Your Login Password', sender=self.app.config['MAIL_USERNAME'], recipients=[email])
-        msg.body = f'Your password is: {password}'
-        self.mail.send(msg)
+            
+        new_values_dict={}
+        new_values_dict['password'] = password
+        
+        from_email = 'new-password' + self.app.config['MAIL_USERNAME']
+        backend.setup_and_send_email(email, from_email,
+        new_values_dict, email_template='templates/new_password_email_template.html', subject_title='Your Login Password')
+        
         if Config.LOGGING:
             global_logger.info('Password email sent')
 
     def send_reset_password_email(self, email, reset_link):
         if Config.LOGGING:
             global_logger.info(f'Sending password reset email to {email}')
-        msg = Message('Password Reset Request', sender=self.app.config['MAIL_USERNAME'], recipients=[email])
-        msg.body = f'Your link to reset your password is: {reset_link}'
-        self.mail.send(msg)
+        new_values_dict={}
+        new_values_dict['reset_link'] = reset_link
+        
+        from_email = 'reset-password' + self.app.config['MAIL_USERNAME']
+        backend.setup_and_send_email(email, from_email, new_values_dict, email_template='templates/reset_password_email_template.html', subject_title='Password Reset Request')
+        
         if Config.LOGGING:
             global_logger.info('Password reset email sent')
         

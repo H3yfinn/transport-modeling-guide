@@ -7,7 +7,8 @@ import time
 import importlib.util
 import threading
 from datetime import datetime, timedelta
-
+import boto3
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from config import Config
 # from flask import session#trying to avoid using flask session within this module
 
@@ -74,7 +75,7 @@ def run_model_thread(log_filename, session_library_path, economy_to_run, user_id
     """
     if Config.LOGGING:
         global_logger.info(f'Running model thread for economy: {economy_to_run}')
-        
+    FILE_DATE_ID = None
     logger = StreamToLogger(log_filename)
     sys.stdout = logger
     sys.stderr = logger
@@ -111,7 +112,9 @@ def run_model_thread(log_filename, session_library_path, economy_to_run, user_id
         else:
             try:
                 #set sys.path to include the session library path. Note that if we have multiple users running models at the same time, this will mean multiple paths for duplicates of the same module are added to the path. in that case sys.path will just use the first one it finds
-                FILE_DATE_ID = main_module.main(economy_to_run=economy_to_run, progress_callback=progress_callback, root_dir_param=root_dir_param, script_dir_param=root_dir_param)
+                FILE_DATE_ID, COMPLETED = main_module.main(economy_to_run=economy_to_run, progress_callback=progress_callback, root_dir_param=root_dir_param, script_dir_param=root_dir_param)
+                if not COMPLETED:#sometimes dont get error from model so catch it via this variable
+                    raise Exception("Model execution did not complete successfully.")
                 # print("PRINT: Model execution completed successfully.")
                 logging.getLogger('model_logger').info("Model execution completed successfully.")
                 if Config.LOGGING:
@@ -193,3 +196,52 @@ def test_dummy_run_model(economy_to_run, progress_callback, logger):
     logger.info(f"Model run completed for {economy_to_run}")
     if Config.LOGGING:
         global_logger.info(f'Dummy model run completed for economy: {economy_to_run}')
+
+def setup_email(email, from_email, new_values_dict, email_template, subject_title):
+    """Send an email with the generated password. e.g. 
+        backend.setup_and_send_email(email, new_values_dict, email_template='reset_password_email_template.html', subject_title='Password Reset Request')"""
+    if Config.LOGGING:
+        global_logger.info(f'Sending password email to {email}')
+    
+    # Read HTML content from file
+    with open(email_template, 'r') as file:
+        html_content = file.read()
+
+    # Replace placeholder with actual password
+    for key, value in new_values_dict.items():
+        html_content = html_content.replace('{{{}}}'.format(key),value)
+
+    # AWS SES client setup
+    ses_client = boto3.client('ses', region_name='us-east-1', aws_access_key_id=Config.AWS_ACCESS_KEY_ID, aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY)
+    
+    try:
+        # Send email using AWS SES
+        response = ses_client.send_email(
+            Source=from_email,
+            Destination={
+                'ToAddresses': [email]
+            },
+            Message={
+                'Subject': {
+                    'Data': subject_title,
+                    'Charset': 'UTF-8'
+                },
+                'Body': {
+                    'Html': {
+                        'Data': html_content,
+                        'Charset': 'UTF-8'
+                    }
+                }
+            }
+        )
+        if Config.LOGGING:
+            global_logger.info('Password email sent')
+            global_logger.info("Email sent! Message ID:", response['MessageId'])
+    except NoCredentialsError:
+        global_logger.error("Credentials not available.")
+    except PartialCredentialsError:
+        global_logger.error("Incomplete credentials provided.")
+    except Exception as e:
+        global_logger.error(f"Error sending email: {e}")
+
+    
