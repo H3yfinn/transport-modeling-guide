@@ -380,6 +380,26 @@ def logout():
     flash('FLASH: You have been logged out.')
     return redirect(url_for('login'))
 
+@app.route('/feedback_form')
+def feedback_form():
+    if not user_manager.is_session_valid():
+        user_manager.clear_invalid_session()
+        return redirect(url_for('login'))
+    return render_template('feedback_form.html')
+
+@app.route('/submit_feedback', methods=['POST'])
+def submit_feedback():
+    name = request.form['name']
+    email = request.form['email']
+    message = request.form['message']
+    
+    try:
+        backend.process_feedback(name, email, message)
+        flash('Thank you for your feedback!', 'success')
+    except Exception as e:
+        flash('An error occurred while processing your feedback. Please try again later.', 'danger')
+    
+    return redirect(url_for('index'))
 ####################################################
 @app.route('/running_model', methods=['POST'])
 def running_model():

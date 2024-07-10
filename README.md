@@ -108,11 +108,11 @@ sudo pip3 install virtualenv
 Set Up Your Flask Application:
 
 ```bash
+virtualenv venv
 mkdir -p /var/www/
 sudo git clone https://github.com/H3yfinn/transport-modeling-guide.git
 git submodule update --init --recursive #make sure to get the submodule
 cd /var/www/transport-modeling-guide
-virtualenv venv
 source venv/bin/activate #this means ur virtual environment is activated and is called venv
 pip install flask gunicorn
 

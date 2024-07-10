@@ -29,6 +29,8 @@ class Config:
     ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_REGION = os.getenv('AWS_REGION')
+    PERSONAL_EMAIL = os.getenv('PERSONAL_EMAIL')
     # app.config['MAIL_DEFAULT_SENDER'] = ('Your Name', os.getenv('MAIL_USERNAME'))
     
     # APScheduler configuration

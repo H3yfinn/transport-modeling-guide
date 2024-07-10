@@ -212,7 +212,7 @@ def setup_email(email, from_email, new_values_dict, email_template, subject_titl
         html_content = html_content.replace('{{{}}}'.format(key),value)
 
     # AWS SES client setup
-    ses_client = boto3.client('ses', region_name='us-east-1', aws_access_key_id=Config.AWS_ACCESS_KEY_ID, aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY)
+    ses_client = boto3.client('ses', region_name=Config.PERSONAL_EMAIL, aws_access_key_id=Config.AWS_ACCESS_KEY_ID, aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY)
     
     try:
         # Send email using AWS SES
@@ -244,4 +244,39 @@ def setup_email(email, from_email, new_values_dict, email_template, subject_titl
     except Exception as e:
         global_logger.error(f"Error sending email: {e}")
 
+def process_feedback(name, email, message):
+    logging.info(f"Feedback received from {name} ({email}): {message}")
+    send_feedback_email(name, email, message)
+
+def send_feedback_email(name, email, message):
+    ses_client = boto3.client(
+        'ses',
+        Config.AWS_REGION, Config.AWS_ACCESS_KEY_ID, Config.AWS_SECRET_ACCESS_KEY
+    )
     
+    feedback_email = Config.PERSONAL_EMAIL
+    subject = "New Feedback Received"
+    body = f"Name: {name}\nEmail: {email}\nMessage:\n{message}"
+    
+    try:
+        response = ses_client.send_email(
+            Source=feedback_email,
+            Destination={
+                'ToAddresses': [feedback_email]
+            },
+            Message={
+                'Subject': {
+                    'Data': subject,
+                    'Charset': 'UTF-8'
+                },
+                'Body': {
+                    'Text': {
+                        'Data': body,
+                        'Charset': 'UTF-8'
+                    }
+                }
+            }
+        )
+        logging.info(f"Feedback email sent successfully: {response}")
+    except Exception as e:
+        logging.error(f"Error sending feedback email: {e}")
