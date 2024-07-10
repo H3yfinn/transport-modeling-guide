@@ -14,15 +14,15 @@ def load_secret_key():
         raise ValueError("SECRET_KEY is not set in the environment.")
     return key.encode()
 
-def encrypt_password(password):
+def encrypt_data(data):
     key = load_encryption_key()
     cipher_suite = Fernet(key)
-    return cipher_suite.encrypt(password.encode()).decode()
+    return cipher_suite.encrypt(data.encode()).decode()
 
-def decrypt_password(encrypted_password):
+def decrypt_data(encrypted_data):
     key = load_encryption_key()
     cipher_suite = Fernet(key)
-    return cipher_suite.decrypt(encrypted_password.encode()).decode()
+    return cipher_suite.decrypt(encrypted_data.encode()).decode()
 
 def generate_keys(filepath=".env"):
     encryption_key = Fernet.generate_key().decode()

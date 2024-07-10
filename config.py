@@ -31,6 +31,8 @@ class Config:
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     AWS_REGION = os.getenv('AWS_REGION')
     PERSONAL_EMAIL = os.getenv('PERSONAL_EMAIL')
+    MASTER_USER_EMAIL = os.getenv('MASTER_USER_EMAIL')
+    MASTER_USER_PASSWORD = os.getenv('MASTER_USER_PASSWORD')
     # app.config['MAIL_DEFAULT_SENDER'] = ('Your Name', os.getenv('MAIL_USERNAME'))
     
     # APScheduler configuration

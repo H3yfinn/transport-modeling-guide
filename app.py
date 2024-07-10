@@ -20,7 +20,7 @@ load_dotenv()#also done in .wsgi file but to help with local testing do it here 
 
 from config import Config
 from user_management import UserManagement
-from encryption import encrypt_password, decrypt_password
+from encryption import encrypt_data, decrypt_data
 import backend
 from backend import global_logger
 
@@ -37,6 +37,8 @@ s = URLSafeTimedSerializer(os.getenv('SECRET_KEY'))
 
 estimated_time = None #this will be updated and made global in the running_model() function
 
+# Call the function to create the master user
+user_manager.create_master_user()
 # Pass the global model_progress_tracker to backend
 # backend.set_model_progress_tracker(model_progress_tracker)
 ############################################################################
@@ -294,8 +296,8 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        user = user_manager.find_user_in_user_data_by_key_value('email', email)
-        if user and decrypt_password(user['password']) == password:
+        user = user_manager.find_user_in_user_data_by_key_value('email', encrypt_data(email))
+        if user and decrypt_data(user['password']) == password:
             session['user_id'] = user['user_id']
             session['username'] = user['username']
             user_manager.restart_user_session()
@@ -304,7 +306,7 @@ def login():
         elif not user:
             flash('FLASH: User does not exist. Please register first.')
             return redirect(url_for('register'))
-        elif decrypt_password(user['password']) != password:
+        elif decrypt_data(user['password']) != password:
             flash('FLASH: Invalid password.')
             return redirect(url_for('login'))
         else:
@@ -318,7 +320,7 @@ def register():
     if request.method == 'POST':
         email = request.form['email']
         if user_manager.register_user(email):
-            user = user_manager.find_user_in_user_data_by_key_value('email', email)
+            user = user_manager.find_user_in_user_data_by_key_value('email', encrypt_data(email))
             session['user_id'] = user['user_id']
             session['username'] = user['username']
             flash('FLASH: Registration successful. Please check your email for your password.')
@@ -335,7 +337,7 @@ def forgot_password():
     
     if request.method == 'POST':
         email = request.form['email']
-        user = user_manager.find_user_in_user_data_by_key_value('email', email)
+        user = user_manager.find_user_in_user_data_by_key_value('email', encrypt_data(email))
         
         if user:
             token = s.dumps(email, salt='password-reset-salt')
@@ -398,6 +400,7 @@ def submit_feedback():
         flash('Thank you for your feedback!', 'success')
     except Exception as e:
         flash('An error occurred while processing your feedback. Please try again later.', 'danger')
+        global_logger.error(f'Error processing feedback: {str(e)}')
     
     return redirect(url_for('index'))
 ####################################################

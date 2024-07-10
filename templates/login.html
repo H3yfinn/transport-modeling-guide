@@ -7,6 +7,7 @@
 <body>
     <h1>Login</h1>
     <p>If you have already registered, please check your emails for your password.</p>
+    <p>We won't use your email for anything besides setting up an account for you.</p>
     <form action="{{ url_for('login') }}" method="post">
         <label for="email">Email:</label>
         <input type="email" name="email" required><br>

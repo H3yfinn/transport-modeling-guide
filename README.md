@@ -36,6 +36,17 @@ The application enables users to upload input files, select an economy, run a mo
 3. **Running the Model**: The model is executed for the selected economy using the provided input files.
 4. **Results Display**: Results are shown in a new tab, and users can download key result/input CSV files.
 
+# Standard update procedure
+
+```bash
+ssh -i "~/.ssh/transport-model-web-app.pem"  ec2-user@ec2-3-113-59-243.ap-northeast-1.compute.amazonaws.com 
+cd /var/www/transport-modeling-guide
+git pull --recurse-submodules && git submodule update --remote --merge
+source venv/bin/activate
+pip3 install --ignore-installed -r /var/www/transport-modeling-guide/requirements.txt
+sudo systemctl daemon-reload && sudo systemctl restart gunicorn && sudo systemctl restart nginx  && sudo certbot renew && sudo systemctl status gunicorn
+```
+
 # Guide for getting website up and running
 Using Amazon EC2 to deploy the website.
 First set up the requirements.txt file.

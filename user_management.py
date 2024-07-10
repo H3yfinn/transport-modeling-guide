@@ -7,7 +7,7 @@ from flask import session, flash, url_for
 from flask_mail import Mail, Message
 import string
 import random
-from encryption import encrypt_password, decrypt_password
+from encryption import encrypt_data, decrypt_data
 import jwt
 import backend
 from config import Config
@@ -59,10 +59,10 @@ class UserManagement:
     
     def update_user_password(self, email, new_password):
         if Config.LOGGING:
-            global_logger.info(f'Updating password for user: {email}')
-        user_data = self.find_user_in_user_data_by_key_value('email', email)
+            global_logger.info(f'Updating password for user: {encrypt_data(email)}')
+        user_data = self.find_user_in_user_data_by_key_value('email', encrypt_data(email))
         if user_data:
-            user_data['password'] = encrypt_password(new_password)
+            user_data['password'] = encrypt_data(new_password)
             self.save_user_data(user_data)
             if Config.LOGGING:
                 global_logger.info('Password updated successfully')
@@ -75,7 +75,7 @@ class UserManagement:
     def send_password_email(self, email, password):
         """Send an email with the generated password."""
         if Config.LOGGING:
-            global_logger.info(f'Sending password email to {email}')
+            global_logger.info(f'Sending password email to {encrypt_data(email)}')
             
         new_values_dict={}
         new_values_dict['password'] = password
@@ -89,7 +89,7 @@ class UserManagement:
 
     def send_reset_password_email(self, email, reset_link):
         if Config.LOGGING:
-            global_logger.info(f'Sending password reset email to {email}')
+            global_logger.info(f'Sending password reset email to {encrypt_data(email)}')
         new_values_dict={}
         new_values_dict['reset_link'] = reset_link
         
@@ -114,18 +114,18 @@ class UserManagement:
 
     def register_user(self, email):
         if Config.LOGGING:
-            global_logger.info(f'Registering user with email: {email}')
+            global_logger.info(f'Registering user with email: {encrypt_data(email)}')
         user_data = self.read_user_data()
-        user = self.find_user_in_user_data_by_key_value('email', email)
+        user = self.find_user_in_user_data_by_key_value('email', encrypt_data(email))
         if user:
             if Config.LOGGING:
                 global_logger.info('User already exists')
             return False
-        user = self.create_user(email)
+        user = self.create_user(encrypt_data(email))
         user_id = user['user_id']
         password = self.generate_password()
         user_data[user_id] = user
-        user_data[user_id]['password'] = encrypt_password(password)
+        user_data[user_id]['password'] = encrypt_data(password)
         self.write_user_data(user_data)
         self.send_password_email(email, password)
         if Config.LOGGING:
@@ -252,19 +252,6 @@ class UserManagement:
         #     global_logger.info(f'Session valid: {is_valid}')
         return is_valid
         
-    # def is_session_active(self):
-    #     if Config.LOGGING:
-    #         global_logger.info('Checking if session is active')
-    #     user = self.get_user_by_session()
-    #     if not user:
-    #         if Config.LOGGING:
-    #             global_logger.error('User not found in session')
-    #         raise Exception('User not found in session')
-    #     is_active = user['user_session_active']
-    #     if Config.LOGGING:
-    #         global_logger.info(f'Session active: {is_active}')
-    #     return is_active
-
     def check_if_results_available(self):
         if Config.LOGGING:
             global_logger.info('Checking if results are available')
@@ -374,17 +361,16 @@ class UserManagement:
                     self.save_user_data(user)
         if Config.LOGGING:
             global_logger.info('Inactive user sessions deleted successfully')
-    
-    def authenticate(auth):
+
+    def create_master_user(self):
+        user_data = self.read_user_data()
+        user = self.create_user(encrypt_data(Config.MASTER_USER_EMAIL))
+        user_id = user['user_id']
+        user_data[user_id] = user
+        user_data[user_id]['password'] = encrypt_data(Config.MASTER_USER_PASSWORD)
+        self.write_user_data(user_data)
+        self.send_password_email(Config.MASTER_USER_EMAIL, Config.MASTER_USER_PASSWORD)
         if Config.LOGGING:
-            global_logger.info('Authenticating user')
-        try:
-            payload = jwt.decode(auth, SECRET_KEY, algorithms=['HS256'])
-            email = payload['email'] if 'email' in payload else None
-            if Config.LOGGING:
-                global_logger.info(f'User authenticated: {email}')
-            return email
-        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError) as e:
-            if Config.LOGGING:
-                global_logger.error(f'Authentication error: {e}')
-            return None
+            global_logger.info('Master user created successfully')
+
+
