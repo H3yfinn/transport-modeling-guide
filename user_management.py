@@ -148,14 +148,14 @@ class UserManagement:
             'email': email,
             'user_id': user_id,
             'last_active': time.time(),
-            'economy_to_run': session.get('economy_to_run', None) if session else None,
+            'economy_to_run': session.get('economy_to_run', '01_AUS') if session else '01_AUS',#set to the first value in the dropdown list by default
             'progress': session.get('progress', 0) if session else 0,
             # 'user_session_active': False,
             'model_thread_running': False,
             'results_available': False,
             'session_folder': os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], user_id),
             'session_library_path': os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], user_id, self.app.config['ORIGINAL_MODEL_LIBRARY_NAME']),
-            'session_log_filename': os.path.join(self.app.config['BASE_LOGS_FOLDER'], f"model_output_{user_id}.log"),
+            'session_log_filename': os.path.join(self.app.config['BASE_LOGS_FOLDER'], f"model_output_{user_id}.log")
         }
         if Config.LOGGING:
             global_logger.info(f'User created: {user}')
@@ -193,7 +193,7 @@ class UserManagement:
             global_logger.info('Saving session data')
         user = self.get_user_by_session()
         if user:
-            user['economy_to_run'] = session.get('economy_to_run', None)
+            user['economy_to_run'] = session.get('economy_to_run', '01_AUS')
             user['progress'] = session.get('progress', 0)
             user['model_thread_running'] = session.get('model_thread_running', False)
             user['results_available'] = session.get('results_available', False)
@@ -309,7 +309,7 @@ class UserManagement:
                 backend.archive_log(user['session_log_filename'])
             
             user['session_data'] = {}
-            user['economy_to_run'] = None
+            user['economy_to_run'] = '01_AUS'
             user['progress'] = 0
             user['model_thread_running'] = False
             user['results_available'] = False
@@ -343,7 +343,7 @@ class UserManagement:
                 
                 user['session_data'] = {}
                 user['model_thread_running'] = False
-                user['economy_to_run'] = None
+                user['economy_to_run'] = '01_AUS'
                 user['progress'] = 0
                 user['results_available'] = False
                 self.save_user_data(user)

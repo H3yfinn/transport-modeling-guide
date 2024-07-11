@@ -219,13 +219,10 @@ def results():
             return redirect(url_for('model_progress'))
         else:
             return redirect(url_for('index'))
-        
+    
+    if request.method == 'POST':
+        session['economy_to_run'] = request.form.get('economy')
     economy_to_run = session.get('economy_to_run')
-    if not economy_to_run:
-        if Config.LOGGING:
-            global_logger.info('No economy selected. Please run the model first.')
-        flash('No economy selected. Please run the model first.')
-        return redirect(url_for('index'))
     
     results_files = [
         f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_results.html',
@@ -263,6 +260,53 @@ def results():
     # global_logger.info(results_paths)
     return render_template('results.html', results_paths=results_paths, key_csv_paths=key_csv_paths, logs=logs)
 
+####################################################
+@app.route('/default_results', methods=['GET', 'POST'])
+def default_results():
+    #this is a copy of the results() function but with the paths changed to the original model library and no logs shown
+    if not user_manager.is_session_valid():
+        user_manager.clear_invalid_session()
+        return redirect(url_for('login'))
+        
+    if request.method == 'POST':
+        session['economy_to_run'] = request.form.get('economy')
+    economy_to_run = session.get('economy_to_run')
+    
+    results_files = [
+        f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_results.html',
+        f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_assumptions.html',
+        #f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_assumptions_extra.html',
+        f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_results.html',
+        f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions.html'#,
+        #f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions_extra.html'
+    ]
+    
+    results_paths = [os.path.join(Config.ORIGINAL_MODEL_LIBRARY_NAME, 'plotting_output', file) for file in results_files]
+    #check that they exist, otherwise remove them from the list
+    results_paths = [file for file in results_paths if os.path.exists(file)]
+    
+    key_csv_files = results_files
+    #     f'plotting_output/key_results_{economy_to_run}.csv',
+    #     input_data/key_input_{economy_to_run}.csv'
+    # ]
+    if session['user_id'] in model_FILE_DATE_IDs.keys():
+        model_FILE_DATE_ID = model_FILE_DATE_IDs[session['user_id']]
+        
+        key_csv_files += [f'output_data/for_other_modellers/{economy_to_run}/{model_FILE_DATE_ID}_{economy_to_run}_transport_stocks.csv',
+        f'output_data/for_other_modellers/{economy_to_run}/{model_FILE_DATE_ID}_{economy_to_run}_transport_stock_shares.csv',
+        f'output_data/for_other_modellers/{economy_to_run}/{model_FILE_DATE_ID}_{economy_to_run}_transport_activity.csv',
+        f'output_data/for_other_modellers/{economy_to_run}/{economy_to_run}_{model_FILE_DATE_ID}_transport_energy_use.csv']
+
+    key_csv_paths = [os.path.join(Config.ORIGINAL_MODEL_LIBRARY_NAME, file) for file in key_csv_files]
+    #check that they exist, otherwise remove them from the list
+    key_csv_paths = [file for file in key_csv_paths if os.path.exists(file)]
+    
+    if Config.LOGGING:
+        global_logger.info('Displaying results.')
+    # global_logger.info(results_paths)
+    return render_template('default_results.html', results_paths=results_paths, key_csv_paths=key_csv_paths)
+
+######################################################
 @app.route('/serve_file/<path:filename>')
 def serve_file(filename):
     if not user_manager.is_session_valid():
