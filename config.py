@@ -20,11 +20,7 @@ class Config:
     load_dotenv()
     LOGGING = os.getenv('LOGGING', 'True').lower() in ['true', '1', 't']
     DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1', 't']
-    MAIL_SERVER = os.getenv('MAIL_SERVER')
-    MAIL_PORT = int(os.getenv('MAIL_PORT'))
-    MAIL_USE_TLS = os.getenv('MAIL_USE_TLS') == 'True'
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
-    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     SECRET_KEY = os.getenv('SECRET_KEY')
     ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')

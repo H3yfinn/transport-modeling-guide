@@ -12,7 +12,8 @@
         <nav>
             <a href="{{ url_for('index') }}">Home</a> | 
             <a href="{{ url_for('login') }}">Login</a> | 
-            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('logout') }}">Logout</a> |
+            <a href="{{ url_for('feedback_form') }}">Submit Feedback</a>
         </nav>
         <section>
             <h2>Select Economy to Run</h2>
@@ -23,6 +24,9 @@
                     {% endfor %}
                 </select>
                 <button type="submit">Run Model</button>
+            </form>
+            <form action="{{ url_for('results') }}" method="post" style="margin-top: 20px;">
+                <button type="submit">Results</button>
             </form>
             <form action="{{ url_for('reset_user_session') }}" method="post" style="margin-top: 20px;">
                 <button type="submit">Reset Session</button>
@@ -35,11 +39,6 @@
                 <li><a href="{{ url_for('content_page', page_name='non_road') }}">Non Road</a></li>
                 <!-- Add more links as needed -->
             </ul>
-        </section>
-
-        <section>
-            <h2>Feedback</h2>
-            <a href="{{ url_for('feedback_form') }}">Submit Feedback</a>
         </section>
     </div>
 </body>

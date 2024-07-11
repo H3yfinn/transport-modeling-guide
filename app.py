@@ -152,23 +152,23 @@ def upload_file():
         return redirect(url_for('login'))
 
     if 'file' not in request.files:
-        flash('FLASH: No file part')
+        flash('No file part')
         return redirect(url_for('staging'))
     
     file = request.files['file']
     if file.filename == '':
-        flash('FLASH: No selected file')
+        flash('No selected file')
         return redirect(url_for('staging'))
     
     if file:
         filename = file.filename
         if filename not in file_dict:
-            flash(f'FLASH: {filename} is not a required input file. Maybe you need to name it correctly.')
+            flash(f'{filename} is not a required input file. Maybe you need to name it correctly.')
             return redirect(url_for('staging'))
         
         new_filepath = os.path.join(session['session_library_path'], 'input_data', filename)
         file.save(new_filepath)
-        flash(f'FLASH: File {filename} uploaded successfully')
+        flash(f'File {filename} uploaded successfully')
     
     return redirect(url_for('staging'))
     
@@ -182,7 +182,7 @@ def download_input_file(filename):
     if os.path.exists(file_path):
         return send_file(file_path, as_attachment=True)
     else:
-        flash('FLASH: File not found.')
+        flash('File not found.')
         return redirect(url_for('staging'))
     
 @app.route('/reset_user_session', methods=['GET', 'POST'])
@@ -193,7 +193,7 @@ def reset_user_session():
         
     #double check user is not still running the model. if so they must wait for it to finish
     if user_manager.check_model_is_running():
-        flash('FLASH: Model is still running. Please wait for it to finish.')
+        flash('Model is still running. Please wait for it to finish.')
         
     user_manager.reset_user_session()
     return redirect(url_for('index'))
@@ -208,7 +208,7 @@ def hard_reset_user_session():
     user_manager.reset_user_session()
     return redirect(url_for('index'))
 
-@app.route('/results')
+@app.route('/results', methods=['GET', 'POST'])
 def results():
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
@@ -273,7 +273,7 @@ def serve_file(filename):
     if os.path.exists(file_path):
         return send_file(file_path)
     else:
-        flash('FLASH: File not found.')
+        flash('File not found.')
         return redirect(url_for('results'))
 
 @app.route('/download/<path:filename>')
@@ -286,7 +286,7 @@ def download_file(filename):
     if os.path.exists(file_path):
         return send_file(file_path, as_attachment=True)
     else:
-        flash('FLASH: File not found.')
+        flash('File not found.')
         return redirect(url_for('results'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -296,21 +296,21 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        user = user_manager.find_user_in_user_data_by_key_value('email', encrypt_data(email))
+        user = user_manager.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
         if user and decrypt_data(user['password']) == password:
             session['user_id'] = user['user_id']
             session['username'] = user['username']
             user_manager.restart_user_session()
-            flash('FLASH: Login successful.')
+            flash('Login successful.')
             return redirect(url_for('index'))
         elif not user:
-            flash('FLASH: User does not exist. Please register first.')
+            flash('User does not exist. Please register first.')
             return redirect(url_for('register'))
         elif decrypt_data(user['password']) != password:
-            flash('FLASH: Invalid password.')
+            flash('Invalid password.')
             return redirect(url_for('login'))
         else:
-            flash('FLASH: An unknown error occurred.')
+            flash('An unknown error occurred.')
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -319,14 +319,14 @@ def register():
         return redirect(url_for('index'))
     if request.method == 'POST':
         email = request.form['email']
-        if user_manager.register_user(email):
-            user = user_manager.find_user_in_user_data_by_key_value('email', encrypt_data(email))
+        if user_manager.register_user(email): 
+            user = user_manager.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
             session['user_id'] = user['user_id']
             session['username'] = user['username']
-            flash('FLASH: Registration successful. Please check your email for your password.')
+            flash('Registration successful. Please check your email for your password.')
             return redirect(url_for('login'))
         else:
-            flash('FLASH: Email already registered.')
+            flash('Email already registered.')
             return redirect(url_for('register'))
     return render_template('register.html')
 
@@ -337,15 +337,15 @@ def forgot_password():
     
     if request.method == 'POST':
         email = request.form['email']
-        user = user_manager.find_user_in_user_data_by_key_value('email', encrypt_data(email))
+        user = user_manager.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
         
         if user:
             token = s.dumps(email, salt='password-reset-salt')
             reset_link = url_for('reset_password', token=token, _external=True)
             user_manager.send_reset_password_email(email, reset_link)
-            flash('FLASH: A password reset link has been sent to your email.', 'info')
+            flash('A password reset link has been sent to your email.', 'info')
         else:
-            flash('FLASH: Email address not found.', 'danger')
+            flash('Email address not found.', 'danger')
         return redirect(url_for('forgot_password'))
     
     return render_template('forgot_password.html')
@@ -355,16 +355,16 @@ def reset_password(token):
     try:
         email = s.loads(token, salt='password-reset-salt', max_age=3600)
     except:
-        flash('FLASH: The reset link is invalid or has expired.', 'danger')
+        flash('The reset link is invalid or has expired.', 'danger')
         return redirect(url_for('forgot_password'))
 
     if request.method == 'POST':
         new_password = request.form['password']
         if user_manager.update_user_password(email, new_password):
-            flash('FLASH: Your password has been updated!', 'success')
+            flash('Your password has been updated!', 'success')
             return redirect(url_for('login'))
         else:
-            flash('FLASH: An error occurred while updating your password.', 'danger')
+            flash('An error occurred while updating your password.', 'danger')
             return redirect(url_for('reset_password', token=token))
 
     return render_template('reset_password.html', token=token)
@@ -379,7 +379,7 @@ def logout():
     user_manager.save_session_data()
 
     session.clear()  # Clear the session without using delete_session
-    flash('FLASH: You have been logged out.')
+    flash('You have been logged out.')
     return redirect(url_for('login'))
 
 @app.route('/feedback_form')
@@ -392,11 +392,10 @@ def feedback_form():
 @app.route('/submit_feedback', methods=['POST'])
 def submit_feedback():
     name = request.form['name']
-    email = request.form['email']
     message = request.form['message']
     
     try:
-        backend.process_feedback(name, email, message)
+        backend.process_feedback(name, message)
         flash('Thank you for your feedback!', 'success')
     except Exception as e:
         flash('An error occurred while processing your feedback. Please try again later.', 'danger')
@@ -472,7 +471,7 @@ def running_model():
         if Config.LOGGING:
             app.logger.error(f'Error running model: {str(e)}')
             global_logger.error(f'Error running model: {str(e)}')
-        flash(f'FLASH: Error running model: {str(e)}')
+        flash(f'Error running model: {str(e)}')
 
         return redirect(url_for('error_page', error_message=str(e)))
     
@@ -548,7 +547,7 @@ def model_progress():
 #     explanation_file = os.path.join(content_folder, 'explanation.md')
 
 #     if not os.path.exists(explanation_file):
-#         flash('FLASH: Content not found.')
+#         flash('Content not found.')
 #         return redirect(url_for('index'))
 
 #     with open(explanation_file, 'r') as f:
@@ -581,6 +580,7 @@ def replace_placeholders(explanation, content_folder):
             return f'<div style="color:red;">{file_type.capitalize()} file not found: {file_name}</div>'
 
     return pattern.sub(replacement, explanation)
+
 @app.route('/content/<page_name>')
 def content_page(page_name):
     content_folder = os.path.join('content', page_name)

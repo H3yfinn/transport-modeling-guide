@@ -60,7 +60,7 @@ class UserManagement:
     def update_user_password(self, email, new_password):
         if Config.LOGGING:
             global_logger.info(f'Updating password for user: {encrypt_data(email)}')
-        user_data = self.find_user_in_user_data_by_key_value('email', encrypt_data(email))
+        user_data = self.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
         if user_data:
             user_data['password'] = encrypt_data(new_password)
             self.save_user_data(user_data)
@@ -99,24 +99,31 @@ class UserManagement:
         if Config.LOGGING:
             global_logger.info('Password reset email sent')
         
-    def find_user_in_user_data_by_key_value(self, key, value):
+    def find_user_in_user_data_by_key_value(self, key, value, ENCRYPTED=False):
+        #note that because the Fernet encryption scheme, uses a unique initialization vector (IV) for each encryption operation, resulting in different ciphertexts for the same plaintext each time it's encrypted. We need to decrypt the data before comparing it to the value as the encrypted data will be different each time it is encrypted.
         if Config.LOGGING:
             global_logger.info(f'Finding user by {key}: {value}')
         user_data = self.read_user_data()
         for user in user_data.values():
-            if user.get(key) == value:
-                if Config.LOGGING:
-                    global_logger.info(f'User found: {user}')
-                return user
+            if ENCRYPTED:
+                if decrypt_data(user.get(key)) == value:
+                    if Config.LOGGING:
+                        global_logger.info(f'User found: {user}')
+                    return user
+            else:
+                if user.get(key) == value:
+                    if Config.LOGGING:
+                        global_logger.info(f'User found: {user}')
+                    return user
         if Config.LOGGING:
             global_logger.info('User not found')
-        return None
+        return None 
 
     def register_user(self, email):
         if Config.LOGGING:
             global_logger.info(f'Registering user with email: {encrypt_data(email)}')
         user_data = self.read_user_data()
-        user = self.find_user_in_user_data_by_key_value('email', encrypt_data(email))
+        user = self.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
         if user:
             if Config.LOGGING:
                 global_logger.info('User already exists')
@@ -141,10 +148,14 @@ class UserManagement:
             'email': email,
             'user_id': user_id,
             'last_active': time.time(),
-            'session_data': {},
+            'economy_to_run': session.get('economy_to_run', None) if session else None,
+            'progress': session.get('progress', 0) if session else 0,
             # 'user_session_active': False,
             'model_thread_running': False,
-            'results_available': False
+            'results_available': False,
+            'session_folder': os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], user_id),
+            'session_library_path': os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], user_id, self.app.config['ORIGINAL_MODEL_LIBRARY_NAME']),
+            'session_log_filename': os.path.join(self.app.config['BASE_LOGS_FOLDER'], f"model_output_{user_id}.log"),
         }
         if Config.LOGGING:
             global_logger.info(f'User created: {user}')
@@ -172,12 +183,8 @@ class UserManagement:
 
     def get_user_by_session(self):
         if 'user_id' in session:
-            # if Config.LOGGING:
-            #     global_logger.info('Retrieving user by session')
             user_data = self.read_user_data()
             user = user_data.get(session['user_id'])
-            # if Config.LOGGING:
-            #     global_logger.info(f'User retrieved: {user}')
             return user
         return None
 
@@ -186,37 +193,25 @@ class UserManagement:
             global_logger.info('Saving session data')
         user = self.get_user_by_session()
         if user:
-            session_data = {
-                'last_active': session['last_active'],
-                'session_folder': session.get('session_folder', None),
-                'session_library_path': session.get('session_library_path', None),
-                'economy_to_run': session.get('economy_to_run', None),
-                'session_log_filename': session.get('session_log_filename', None),
-                'progress': session.get('progress', 0),
-            }
-            user['session_data'] = session_data
-            # user['user_session_active'] = session.get('user_session_active', False)
+            user['economy_to_run'] = session.get('economy_to_run', None)
+            user['progress'] = session.get('progress', 0)
             user['model_thread_running'] = session.get('model_thread_running', False)
             user['results_available'] = session.get('results_available', False)
             self.update_user_data(user)
-            # if Config.LOGGING:
-            #     global_logger.info(f'Session data saved successfully: {user}')
 
     def setup_user_session(self):
         if Config.LOGGING:
             global_logger.info('Activating user session')
         session['last_active'] = time.time()
+        user = self.get_user_by_session()
         
-        session_folder = os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], session['user_id'])
-        os.makedirs(session_folder, exist_ok=True)
-        session_library_path = os.path.join(session_folder, self.app.config['ORIGINAL_MODEL_LIBRARY_NAME'])
-        if not os.path.exists(session_library_path):
-            shutil.copytree(self.app.config['ORIGINAL_MODEL_LIBRARY_NAME'], session_library_path)
-        session_log_filename = os.path.join(self.app.config['BASE_LOGS_FOLDER'], f"model_output_{session['user_id']}.log")
+        os.makedirs(user['session_folder'], exist_ok=True)
+        if not os.path.exists(user['session_library_path']):
+            shutil.copytree(self.app.config['ORIGINAL_MODEL_LIBRARY_NAME'], user['session_library_path'])
         
-        session['session_folder'] = session_folder
-        session['session_library_path'] = session_library_path
-        session['session_log_filename'] = session_log_filename
+        session['session_folder'] = user['session_folder']
+        session['session_library_path'] = user['session_library_path']
+        session['session_log_filename'] = user['session_log_filename']
         
         # session['user_session_active'] = True
         session['model_thread_running'] = False
@@ -231,15 +226,14 @@ class UserManagement:
             global_logger.info('Restarting user session')
         user = self.get_user_by_session()
         if user:
-            user_session_data = user['session_data']
-            if user_session_data:
-                session['last_active'] = time.time()
-                session['session_folder'] = user_session_data['session_folder']
-                session['session_library_path'] = user_session_data['session_library_path']
-                session['economy_to_run'] = user_session_data['economy_to_run']
-                session['session_log_filename'] = user_session_data['session_log_filename']
-                session['results_available'] = user['results_available']
-                session['model_thread_running'] = user['model_thread_running']
+            session['session_folder'] = user['session_folder']
+            session['session_library_path'] = user['session_library_path']
+            session['session_log_filename'] = user['session_log_filename']
+            session['results_available'] = user['results_available']
+            session['model_thread_running'] = user['model_thread_running']
+            session['last_active'] = time.time()
+            session['economy_to_run'] = user['economy_to_run']
+            session['progress'] = user['progress']
         if Config.LOGGING:
             global_logger.info(f'User session restarted successfully. User session is {session}')
 
@@ -291,40 +285,37 @@ class UserManagement:
             global_logger.info('Resetting user session')
         user = self.get_user_by_session()
         if user:
-            user_session_data = user['session_data']
-            if user_session_data:
-                if os.path.exists(user_session_data['session_folder']):
-                    if Config.DEBUG:
-                        pass
-                    else:
-                        shutil.rmtree(user_session_data['session_folder'], ignore_errors=True)
-                    if Config.LOGGING:
-                        global_logger.info(f'Deleting session folder: {user_session_data["session_folder"]}')
-                
-                if os.path.exists(user_session_data['session_library_path']):
-                    if Config.DEBUG:
-                        pass
-                    else:
-                        shutil.rmtree(user_session_data['session_library_path'], ignore_errors=True)
-                    if Config.LOGGING:
-                        global_logger.info(f'Deleting session library path: {user_session_data["session_library_path"]}')
-                
-                if os.path.exists(user_session_data['session_log_filename']):
-                    if Config.DEBUG:
-                        pass
-                    if Config.LOGGING:
-                        global_logger.info(f'Archiving log file: {user_session_data["session_log_filename"]}')
-                    backend.archive_log(user_session_data['session_log_filename'])
-                
-                user['session_data'] = {}
-                # user['user_session_active'] = False
-                user['model_thread_running'] = False
-                user['results_available'] = False
-                # #drop the user_id from progress tracker dictionary
-                # progress_tracker.pop(user['user_id'], None)
-                self.save_user_data(user)
+            if os.path.exists(user['session_folder']):
+                if Config.DEBUG:
+                    pass
+                else:
+                    shutil.rmtree(user['session_folder'], ignore_errors=True)
                 if Config.LOGGING:
-                    global_logger.info('User session reset successfully')
+                    global_logger.info(f'Deleting session folder: {user["session_folder"]}')
+            
+            if os.path.exists(user['session_library_path']):
+                if Config.DEBUG:
+                    pass
+                else:
+                    shutil.rmtree(user['session_library_path'], ignore_errors=True)
+                if Config.LOGGING:
+                    global_logger.info(f'Deleting session library path: {user["session_library_path"]}')
+            
+            if os.path.exists(user['session_log_filename']):
+                if Config.DEBUG:
+                    pass
+                if Config.LOGGING:
+                    global_logger.info(f'Archiving log file: {user["session_log_filename"]}')
+                backend.archive_log(user['session_log_filename'])
+            
+            user['session_data'] = {}
+            user['economy_to_run'] = None
+            user['progress'] = 0
+            user['model_thread_running'] = False
+            user['results_available'] = False
+            self.save_user_data(user)
+            if Config.LOGGING:
+                global_logger.info('User session reset successfully')
                 
     def delete_inactive_users_sessions(self):
         if Config.LOGGING:
@@ -333,37 +324,45 @@ class UserManagement:
         
         retention_period = 60*60*24*7
         for user in user_data.values():
-            user_session_data = user['session_data']
-            if user_session_data:
-                if user_session_data['last_active'] < time.time() - retention_period:
-                    if Config.LOGGING:
-                        global_logger.info(f'Deleting session data for inactive user: {user["user_id"]}')
-                    if os.path.exists(user_session_data['session_folder']):
-                        if Config.DEBUG:
-                            pass
-                        else:
-                            shutil.rmtree(user_session_data['session_folder'], ignore_errors=True)
-                    
-                    if os.path.exists(user_session_data['session_library_path']):
-                        if Config.DEBUG:
-                            pass
-                        else:
-                            shutil.rmtree(user_session_data['session_library_path'], ignore_errors=True)
-                    
-                    backend.archive_log(user_session_data['session_log_filename'])
-                    
-                    user['session_data'] = {}
-                    user['model_thread_running'] = False
-                    # user['user_session_active'] = False
-                    user['results_available'] = False
-                    # #drop the user_id from progress tracker dictionary
-                    # progress_tracker.pop(user['user_id'], None)
-                    self.save_user_data(user)
+            if user['last_active'] < time.time() - retention_period:
+                if Config.LOGGING:
+                    global_logger.info(f'Deleting session data for inactive user: {user["user_id"]}')
+                if os.path.exists(user['session_folder']):
+                    if Config.DEBUG:
+                        pass
+                    else:
+                        shutil.rmtree(user['session_folder'], ignore_errors=True)
+                
+                if os.path.exists(user['session_library_path']):
+                    if Config.DEBUG:
+                        pass
+                    else:
+                        shutil.rmtree(user['session_library_path'], ignore_errors=True)
+                
+                backend.archive_log(user['session_log_filename'])
+                
+                user['session_data'] = {}
+                user['model_thread_running'] = False
+                user['economy_to_run'] = None
+                user['progress'] = 0
+                user['results_available'] = False
+                self.save_user_data(user)
         if Config.LOGGING:
             global_logger.info('Inactive user sessions deleted successfully')
 
     def create_master_user(self):
         user_data = self.read_user_data()
+        if user_data is None:
+            user_data = {}
+        #check that the master user does not already exist
+        if self.find_user_in_user_data_by_key_value('email', Config.MASTER_USER_EMAIL, ENCRYPTED=True):
+            if Config.LOGGING:
+                global_logger.error('Master user already exists')
+            return
+        
+        if Config.LOGGING:
+            global_logger.info('Creating master user')
+            
         user = self.create_user(encrypt_data(Config.MASTER_USER_EMAIL))
         user_id = user['user_id']
         user_data[user_id] = user

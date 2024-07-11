@@ -11,7 +11,7 @@ import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from config import Config
 # from flask import session#trying to avoid using flask session within this module
-
+from encryption import encrypt_data, decrypt_data
 import user_management as user_manager
 from shared import progress_tracker, global_logger, setup_logger, model_threads,model_FILE_DATE_IDs
 class StreamToLogger:
@@ -197,11 +197,11 @@ def test_dummy_run_model(economy_to_run, progress_callback, logger):
     if Config.LOGGING:
         global_logger.info(f'Dummy model run completed for economy: {economy_to_run}')
 
-def setup_email(email, from_email, new_values_dict, email_template, subject_title):
+def setup_and_send_email(email, from_email, new_values_dict, email_template, subject_title):
     """Send an email with the generated password. e.g. 
         backend.setup_and_send_email(email, new_values_dict, email_template='reset_password_email_template.html', subject_title='Password Reset Request')"""
     if Config.LOGGING:
-        global_logger.info(f'Sending password email to {email}')
+        global_logger.info(f'Sending password email to {encrypt_data(email)}')
     
     # Read HTML content from file
     with open(email_template, 'r') as file:
@@ -212,7 +212,7 @@ def setup_email(email, from_email, new_values_dict, email_template, subject_titl
         html_content = html_content.replace('{{{}}}'.format(key),value)
 
     # AWS SES client setup
-    ses_client = boto3.client('ses', region_name=Config.PERSONAL_EMAIL, aws_access_key_id=Config.AWS_ACCESS_KEY_ID, aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY)
+    ses_client = boto3.client('ses', region_name=Config.AWS_REGION, aws_access_key_id=Config.AWS_ACCESS_KEY_ID, aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY)
     
     try:
         # Send email using AWS SES
@@ -244,11 +244,11 @@ def setup_email(email, from_email, new_values_dict, email_template, subject_titl
     except Exception as e:
         global_logger.error(f"Error sending email: {e}")
 
-def process_feedback(name, email, message):
-    logging.info(f"Feedback received from {name} ({email}): {message}")
-    send_feedback_email(name, email, message)
+def process_feedback(name, message):
+    logging.info(f"Feedback received from {name}: {message}")
+    send_feedback_email(name, message)
 
-def send_feedback_email(name, email, message):
+def send_feedback_email(name, message):
     ses_client = boto3.client(
         'ses',
         Config.AWS_REGION, Config.AWS_ACCESS_KEY_ID, Config.AWS_SECRET_ACCESS_KEY
@@ -256,7 +256,7 @@ def send_feedback_email(name, email, message):
     
     feedback_email = Config.PERSONAL_EMAIL
     subject = "New Feedback Received"
-    body = f"Name: {name}\nEmail: {email}\nMessage:\n{message}"
+    body = f"Name: {name}\nMessage:\n{message}"
     
     try:
         response = ses_client.send_email(

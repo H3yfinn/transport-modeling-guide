@@ -10,8 +10,9 @@
     <div class="container">
         <h1>Staging - {{ economy }}</h1>
         <nav>
-            <a href="{{ url_for('index') }}">Home</a> | 
-            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('index') }}">Home</a> |
+            <a href="{{ url_for('logout') }}">Logout</a> |
+            <a href="{{ url_for('feedback_form') }}">Submit Feedback</a>
         </nav>
         <section>
             <h2>Upload Input Files</h2>
@@ -34,6 +35,19 @@
         <form action="{{ url_for('running_model') }}" method="post" style="margin-top: 20px;">
             <button type="submit">Run Model</button>
         </form>
+    </div>
+    <div>
+        <p>Please note that the requirements for the formatting and what values can be used in these charts is quite strict. If you want to learn, read the notes on this below:</p>
+        
+        <section>
+            <h2>Methodology Content</h2>
+            <ul>
+                <li><a href="{{ url_for('content_page', page_name='filling_out_vehicle_sales_shares') }}">Vehicle sales shares</a></li>
+                <li><a href="{{ url_for('content_page', page_name='filling_out_fuel_mixing') }}">Fuel Mixing</a></li>
+                <li><a href="{{ url_for('content_page', page_name='filling_out_other_inputs') }}">Other inputs</a></li>
+                <!-- Add more links as needed -->
+            </ul>
+        </section>
     </div>
 </body>
 </html>

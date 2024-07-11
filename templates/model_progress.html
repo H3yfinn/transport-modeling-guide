@@ -20,12 +20,18 @@
 <body>
     <div id="content-container">
         <h1>Running Model</h1>
-        <a href="{{ url_for('index') }}">Go back to Home</a>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a> | 
+            <a href="{{ url_for('login') }}">Login</a> | 
+            <a href="{{ url_for('logout') }}">Logout</a> |
+            <a href="{{ url_for('feedback_form') }}">Submit Feedback</a>
+        </nav>
         <div id="progress-container">
             <h3>Progress: <span id="progress">0</span>%</h3>
             <h3>Estimated Time (seconds): <span id="estimated-time">0</span></h3>
         </div>
         <h3>Logs:</h3>
+        <p>If there is an error in the model run we will just show results from a previous APERC modelling session</p>
         <div id="log-container"></div>
     </div>
 
@@ -69,5 +75,6 @@
             setInterval(update, 4000);  // Start updating every 4 seconds after an initial 4-second delay
         }, 4000);  // Update every 4 seconds
     </script>
+    
 </body>
 </html>
