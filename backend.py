@@ -99,7 +99,6 @@ def run_model_thread(log_filename, session_library_path, economy_to_run, user_id
             main_module = importlib.util.module_from_spec(main_module_spec)
             main_module_spec.loader.exec_module(main_module)
 
-        start_time = time.time()
         progress_tracker[user_id] = 0
 
         def progress_callback(progress_value):
@@ -111,6 +110,7 @@ def run_model_thread(log_filename, session_library_path, economy_to_run, user_id
             test_dummy_run_model(economy_to_run, progress_callback, logger)
         else:
             try:
+                start_time = time.time()
                 #set sys.path to include the session library path. Note that if we have multiple users running models at the same time, this will mean multiple paths for duplicates of the same module are added to the path. in that case sys.path will just use the first one it finds
                 FILE_DATE_ID, COMPLETED = main_module.main(economy_to_run=economy_to_run, progress_callback=progress_callback, root_dir_param=root_dir_param, script_dir_param=root_dir_param)
                 if not COMPLETED:#sometimes dont get error from model so catch it via this variable
@@ -120,6 +120,10 @@ def run_model_thread(log_filename, session_library_path, economy_to_run, user_id
                 if Config.LOGGING:
                     global_logger.info(f"Model execution completed successfully for economy: {economy_to_run}")
                 logging.getLogger('model_logger').info(f"Progress: {progress_tracker[user_id]}")
+                        
+                execution_time = time.time() - start_time
+                if not Config.DEBUG:
+                    save_execution_time(execution_time)
             except Exception as e:
                 # print(f"PRINT: An error occurred during model execution: {e}")
                 logging.getLogger('model_logger').info(f"An error occurred during model execution: {e}")
@@ -127,9 +131,6 @@ def run_model_thread(log_filename, session_library_path, economy_to_run, user_id
                     global_logger.error(f"An error occurred during model execution: {e}")
                 logging.getLogger('model_logger').info(f"Progress: {progress_tracker[user_id]}")
 
-        execution_time = time.time() - start_time
-        if not Config.DEBUG:
-            save_execution_time(execution_time)
     finally:
         #if the session library path is in the sys.path, remove it
         if os.getcwd() +'\\' +  session_library_path in sys.path:
