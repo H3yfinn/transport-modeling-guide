@@ -385,7 +385,11 @@ def forgot_password():
         
         if user:
             token = s.dumps(email, salt='password-reset-salt')
+            if Config.LOGGING:
+                global_logger.info(f'Password reset token: {token}')
             reset_link = url_for('reset_password', token=token, _external=True)
+            if Config.LOGGING:
+                global_logger.info(f'Password reset link: {reset_link}')
             try:
                 user_manager.send_reset_password_email(email, reset_link)
                 flash('A password reset link has been sent to your email.', 'info')

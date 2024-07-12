@@ -1,10 +1,17 @@
 import os
 import backend
 from config import Config
+from itsdangerous import URLSafeTimedSerializer
+
+def generate_reset_token(email, secret_key, salt='password-reset-salt'):
+    serializer = URLSafeTimedSerializer(secret_key)
+    return serializer.dumps(email, salt=salt)
 
 def test_send_reset_email():
     email = Config.PERSONAL_EMAIL
-    reset_link = "https://transport-energy-modelling.com//reset_password"
+    secret_key = Config.SECRET_KEY  # Replace with your actual secret key
+    token = generate_reset_token(email, secret_key)
+    reset_link = f"https://transport-energy-modelling.com/reset_password/{token}"
     from_email = Config.MAIL_USERNAME
     
     new_values_dict = {'reset_link': reset_link}

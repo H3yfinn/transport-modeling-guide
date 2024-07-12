@@ -95,6 +95,9 @@ class UserManagement:
         
         from_email = self.app.config["MAIL_USERNAME"]
         
+        if Config.LOGGING:
+            global_logger.info(f'Sending password reset email to {email} with reset link: {reset_link}')
+            
         try:
             backend.setup_and_send_email(
                 email=email,
