@@ -25,8 +25,6 @@ class Config:
     LOGGING = os.getenv('LOGGING', 'True').lower() in ['true', '1', 't']
     DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1', 't']
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
     AWS_ACCESS_KEY_ID = ses_client._request_signer._credentials.access_key
     AWS_SECRET_ACCESS_KEY = ses_client._request_signer._credentials.secret_key
     AWS_REGION = ses_client.meta.region_name

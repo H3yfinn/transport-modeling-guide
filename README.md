@@ -44,6 +44,11 @@ cd /var/www/transport-modeling-guide && git pull --recurse-submodules && git sub
 source venv/bin/activate && pip3 install --ignore-installed -r /var/www/transport-modeling-guide/requirements.txt
 sudo systemctl daemon-reload && sudo systemctl restart gunicorn && sudo systemctl restart nginx  && sudo certbot renew && sudo systemctl status gunicorn
 ```
+All together (except ssh and requirements update):
+```bash
+ssh -i "~/.ssh/transport-model-web-app.pem"  ec2-user@ec2-3-113-59-243.ap-northeast-1.compute.amazonaws.com 
+cd /var/www/transport-modeling-guide && git pull --recurse-submodules && git submodule update --remote --merge && source venv/bin/activate && sudo systemctl daemon-reload && sudo systemctl restart gunicorn && sudo systemctl restart nginx  && sudo certbot renew && sudo systemctl status gunicorn
+```
 
 # Guide for getting website up and running
 Using Amazon EC2 to deploy the website.
@@ -81,8 +86,6 @@ We manage the secret keys using generate_key,py and the .env file. The .env file
 LOGGING=
 DEBUG=
 MAIL_USERNAME=
-ENCRYPTION_KEY=
-SECRET_KEY=
 PERSONAL_EMAIL=
 MASTER_USER_EMAIL=
 MASTER_USER_PASSWORD=
