@@ -25,7 +25,9 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
 
     # Replace placeholders with actual values
     for key, value in new_values_dict.items():
-        html_content = html_content.replace('{{{}}}'.format(key), value)
+        html_content = html_content.replace('{{' + key + '}}', value)
+        #and cover for any with spaces around them:
+        html_content = html_content.replace('{{ ' + key + ' }}', value)
 
     # AWS SES client setup
     ses_client = boto3.client('ses', region_name='ap-northeast-1')

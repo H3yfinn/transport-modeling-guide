@@ -210,6 +210,8 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
     # Replace placeholders with actual values
     for key, value in new_values_dict.items():
         html_content = html_content.replace('{{' + key + '}}', value)
+        #and cover for any with spaces around them:
+        html_content = html_content.replace('{{ ' + key + ' }}', value)
 
     try:
         # Send email using AWS SES
@@ -246,14 +248,14 @@ def process_feedback(name, message):
     send_feedback_email(name, message)
 
 def send_feedback_email(name, message):
-    
+    from_email = Config.MAIL_USERNAME
     feedback_email = Config.PERSONAL_EMAIL
     subject = "New Feedback Received"
     body = f"Name: {name}\nMessage:\n{message}"
     
     try:
         response = Config.ses_client.send_email(
-            Source=feedback_email,
+            Source=from_email,
             Destination={
                 'ToAddresses': [feedback_email]
             },

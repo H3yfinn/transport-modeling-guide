@@ -591,26 +591,6 @@ def model_progress():
             return redirect(url_for('hard_reset_user_session'))
     
 ####################################################
-# METHODOLOGY RELATED
-# @app.route('/content/<page_name>')
-# def content_page(page_name):
-#     content_folder = os.path.join('content', page_name)
-#     explanation_file = os.path.join(content_folder, 'explanation.md')
-
-#     if not os.path.exists(explanation_file):
-#         flash('Content not found.')
-#         return redirect(url_for('index'))
-
-#     with open(explanation_file, 'r') as f:
-#         explanation = f.read()
-
-#     # Replace custom placeholders with actual HTML content
-#     explanation = replace_placeholders(explanation, content_folder)
-
-#     # Convert markdown to HTML
-#     explanation_html = markdown.markdown(explanation)
-
-#     return render_template('content_page.html', title=page_name, explanation=explanation_html)
 
 def replace_placeholders(explanation, content_folder):
     import re
@@ -647,12 +627,15 @@ def content_page(page_name):
         graph_files_list += [graph_file]
     # with open(explanation_file, 'r') as f:
     #     explanation = markdown.markdown(f.read())
+
     explanation = ''
     for explanation_file in explanation_files:
-        explanation_file = os.path.join(content_folder, explanation_file)
-        with open(explanation_file, 'r') as f:
-            explanation += markdown.markdown(f.read())
-
+        explanation_file_path = os.path.join(content_folder, explanation_file)
+        with open(explanation_file_path, 'r', encoding='utf-8') as f:
+            explanation_content = f.read()
+            explanation_markdown = markdown.markdown(explanation_content)
+            explanation += replace_placeholders(explanation_markdown, content_folder)
+            
     return render_template('content_page.html', title=page_name, graph=graph_files_list, explanation=explanation)
 
 ####################################################
