@@ -234,7 +234,7 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
         )
         if Config.LOGGING:
             global_logger.info('Password email sent')
-            global_logger.info("Email sent! Message ID:", response['MessageId'])
+            global_logger.info(f"Email sent! Message ID: {response['MessageId']}")
     except NoCredentialsError:
         global_logger.error("Credentials not available.")
     except PartialCredentialsError:
