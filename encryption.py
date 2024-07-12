@@ -1,52 +1,27 @@
-from cryptography.fernet import Fernet
-import secrets
-import os
+import boto3
+import base64
+import logging
 
-def load_encryption_key():
-    key = os.getenv('ENCRYPTION_KEY')
-    if key is None:
-        raise ValueError("ENCRYPTION_KEY is not set in the environment.")
-    return key.encode()
+# Enable logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger()
 
-def load_secret_key():
-    key = os.getenv('SECRET_KEY')
-    if key is None:
-        raise ValueError("SECRET_KEY is not set in the environment.")
-    return key.encode()
+# Initialize the KMS client using the IAM role credentials
+kms_client = boto3.client('kms', region_name='ap-northeast-1')
 
-def encrypt_data(data):
-    key = load_encryption_key()
-    cipher_suite = Fernet(key)
-    return cipher_suite.encrypt(data.encode()).decode()
+# Specify the KMS key ID (ARN of the KMS key)
+KMS_KEY_ID = 'arn:aws:kms:ap-northeast-1:192888286458:key/05c2dfcf-5163-4c2a-83e9-8df291a08d34'
 
-def decrypt_data(encrypted_data):
-    key = load_encryption_key()
-    cipher_suite = Fernet(key)
-    return cipher_suite.decrypt(encrypted_data.encode()).decode()
+def encrypt_data_with_kms(data):
+    response = kms_client.encrypt(
+        KeyId=KMS_KEY_ID,
+        Plaintext=data.encode('utf-8')
+    )
+    return base64.b64encode(response['CiphertextBlob']).decode('utf-8')
 
-def generate_keys(filepath=".env"):
-    encryption_key = Fernet.generate_key().decode()
-    secret_key = secrets.token_urlsafe(32)
-    
-    # Read the existing content and filter out old keys
-    if os.path.exists(filepath):
-        with open(filepath, "r") as key_file:
-            lines = key_file.readlines()
-        lines = [line for line in lines if not line.startswith('ENCRYPTION_KEY=') and not line.startswith('SECRET_KEY=')]
-    else:
-        lines = []
-    
-    # Append new keys
-    lines.append(f'ENCRYPTION_KEY="{encryption_key}"\n')
-    lines.append(f'SECRET_KEY="{secret_key}"\n')
-    
-    # Write everything back
-    with open(filepath, "w") as key_file:
-        key_file.writelines(lines)
-    
-    print("Keys generated and saved to secret.key file.")
-    
-    
-# Example usage
-# generate_keys()
-# load_keys_from_file()
+def decrypt_data_with_kms(encrypted_data):
+    decoded_encrypted_data = base64.b64decode(encrypted_data)
+    response = kms_client.decrypt(
+        CiphertextBlob=decoded_encrypted_data
+    )
+    return response['Plaintext'].decode('utf-8')

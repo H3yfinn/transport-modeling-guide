@@ -40,10 +40,8 @@ The application enables users to upload input files, select an economy, run a mo
 
 ```bash
 ssh -i "~/.ssh/transport-model-web-app.pem"  ec2-user@ec2-3-113-59-243.ap-northeast-1.compute.amazonaws.com 
-cd /var/www/transport-modeling-guide
-git pull --recurse-submodules && git submodule update --remote --merge
-source venv/bin/activate
-pip3 install --ignore-installed -r /var/www/transport-modeling-guide/requirements.txt
+cd /var/www/transport-modeling-guide && git pull --recurse-submodules && git submodule update --remote --merge
+source venv/bin/activate && pip3 install --ignore-installed -r /var/www/transport-modeling-guide/requirements.txt
 sudo systemctl daemon-reload && sudo systemctl restart gunicorn && sudo systemctl restart nginx  && sudo certbot renew && sudo systemctl status gunicorn
 ```
 
@@ -80,16 +78,14 @@ git pull --recurse-submodules && git submodule update --remote --merge
 # .env files:
 We manage the secret keys using generate_key,py and the .env file. The .env file is not uploaded to the git repo. It is used to store the secret keys and other sensitive information. The .env file should look like this:
 ```bash
-MAIL_SERVER=
-MAIL_PORT=
-MAIL_USE_TLS=
-MAIL_USE_SSL=
+LOGGING=
+DEBUG=
 MAIL_USERNAME=
-MAIL_PASSWORD=
-MAIL_DEFAULT_SENDER=
 ENCRYPTION_KEY=
 SECRET_KEY=
-
+PERSONAL_EMAIL=
+MASTER_USER_EMAIL=
+MASTER_USER_PASSWORD=
 ```
 You will need to copy/paste the values for everything except the keys, as the keys are generated using the generate_key.py file.
 

@@ -11,7 +11,7 @@ import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from config import Config
 # from flask import session#trying to avoid using flask session within this module
-from encryption import encrypt_data, decrypt_data
+from encryption import encrypt_data_with_kms, decrypt_data_with_kms
 import user_management as user_manager
 from shared import progress_tracker, global_logger, setup_logger, model_threads,model_FILE_DATE_IDs
 class StreamToLogger:
@@ -202,7 +202,7 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
     """Send an email with the generated password. e.g. 
         backend.setup_and_send_email(email, new_values_dict, email_template='reset_password_email_template.html', subject_title='Password Reset Request')"""
     if Config.LOGGING:
-        global_logger.info(f'Sending password email to {encrypt_data(email)}')
+        global_logger.info(f'Sending password email to {encrypt_data_with_kms(email)}')
     
     # Read HTML content from file
     with open(email_template, 'r') as file:

@@ -1,7 +1,11 @@
 # config.py
 import os
 from dotenv import load_dotenv
-    
+import boto3
+
+# Initialize the SES client using the IAM role credentials
+ses_client = boto3.client('ses', region_name='ap-northeast-1')
+
 class Config:
         
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__))    #is thjer any need for this?
@@ -23,9 +27,9 @@ class Config:
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     SECRET_KEY = os.getenv('SECRET_KEY')
     ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
-    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    AWS_REGION = os.getenv('AWS_REGION')
+    AWS_ACCESS_KEY_ID = ses_client._request_signer._credentials.access_key
+    AWS_SECRET_ACCESS_KEY = ses_client._request_signer._credentials.secret_key
+    AWS_REGION = ses_client.meta.region_name
     PERSONAL_EMAIL = os.getenv('PERSONAL_EMAIL')
     MASTER_USER_EMAIL = os.getenv('MASTER_USER_EMAIL')
     MASTER_USER_PASSWORD = os.getenv('MASTER_USER_PASSWORD')

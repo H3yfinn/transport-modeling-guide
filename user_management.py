@@ -7,7 +7,7 @@ from flask import session, flash, url_for
 from flask_mail import Mail, Message
 import string
 import random
-from encryption import encrypt_data, decrypt_data
+from encryption import encrypt_data_with_kms, decrypt_data_with_kms
 import jwt
 import backend
 from config import Config
@@ -59,10 +59,10 @@ class UserManagement:
     
     def update_user_password(self, email, new_password):
         if Config.LOGGING:
-            global_logger.info(f'Updating password for user: {encrypt_data(email)}')
+            global_logger.info(f'Updating password for user: {encrypt_data_with_kms(email)}')
         user_data = self.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
         if user_data:
-            user_data['password'] = encrypt_data(new_password)
+            user_data['password'] = encrypt_data_with_kms(new_password)
             self.save_user_data(user_data)
             if Config.LOGGING:
                 global_logger.info('Password updated successfully')
@@ -75,7 +75,7 @@ class UserManagement:
     def send_password_email(self, email, password):
         """Send an email with the generated password."""
         if Config.LOGGING:
-            global_logger.info(f'Sending password email to {encrypt_data(email)}')
+            global_logger.info(f'Sending password email to {encrypt_data_with_kms(email)}')
             
         new_values_dict={}
         new_values_dict['password'] = password
@@ -89,7 +89,7 @@ class UserManagement:
 
     def send_reset_password_email(self, email, reset_link):
         if Config.LOGGING:
-            global_logger.info(f'Sending password reset email to {encrypt_data(email)}')
+            global_logger.info(f'Sending password reset email to {encrypt_data_with_kms(email)}')
         new_values_dict={}
         new_values_dict['reset_link'] = reset_link
         
@@ -106,7 +106,7 @@ class UserManagement:
         user_data = self.read_user_data()
         for user in user_data.values():
             if ENCRYPTED:
-                if decrypt_data(user.get(key)) == value:
+                if decrypt_data_with_kms(user.get(key)) == value:
                     if Config.LOGGING:
                         global_logger.info(f'User found: {user}')
                     return user
@@ -121,18 +121,18 @@ class UserManagement:
 
     def register_user(self, email):
         if Config.LOGGING:
-            global_logger.info(f'Registering user with email: {encrypt_data(email)}')
+            global_logger.info(f'Registering user with email: {encrypt_data_with_kms(email)}')
         user_data = self.read_user_data()
         user = self.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
         if user:
             if Config.LOGGING:
                 global_logger.info('User already exists')
             return False
-        user = self.create_user(encrypt_data(email))
+        user = self.create_user(encrypt_data_with_kms(email))
         user_id = user['user_id']
         password = self.generate_password()
         user_data[user_id] = user
-        user_data[user_id]['password'] = encrypt_data(password)
+        user_data[user_id]['password'] = encrypt_data_with_kms(password)
         self.write_user_data(user_data)
         self.send_password_email(email, password)
         if Config.LOGGING:
@@ -363,10 +363,10 @@ class UserManagement:
         if Config.LOGGING:
             global_logger.info('Creating master user')
             
-        user = self.create_user(encrypt_data(Config.MASTER_USER_EMAIL))
+        user = self.create_user(encrypt_data_with_kms(Config.MASTER_USER_EMAIL))
         user_id = user['user_id']
         user_data[user_id] = user
-        user_data[user_id]['password'] = encrypt_data(Config.MASTER_USER_PASSWORD)
+        user_data[user_id]['password'] = encrypt_data_with_kms(Config.MASTER_USER_PASSWORD)
         self.write_user_data(user_data)
         self.send_password_email(Config.MASTER_USER_EMAIL, Config.MASTER_USER_PASSWORD)
         if Config.LOGGING:

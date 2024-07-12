@@ -20,7 +20,7 @@ load_dotenv()#also done in .wsgi file but to help with local testing do it here 
 
 from config import Config
 from user_management import UserManagement
-from encryption import encrypt_data, decrypt_data
+from encryption import encrypt_data_with_kms, decrypt_data_with_kms
 import backend
 from backend import global_logger
 
@@ -341,7 +341,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
         user = user_manager.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
-        if user and decrypt_data(user['password']) == password:
+        if user and decrypt_data_with_kms(user['password']) == password:
             session['user_id'] = user['user_id']
             session['username'] = user['username']
             user_manager.restart_user_session()
@@ -350,7 +350,7 @@ def login():
         elif not user:
             flash('User does not exist. Please register first.')
             return redirect(url_for('register'))
-        elif decrypt_data(user['password']) != password:
+        elif decrypt_data_with_kms(user['password']) != password:
             flash('Invalid password.')
             return redirect(url_for('login'))
         else:

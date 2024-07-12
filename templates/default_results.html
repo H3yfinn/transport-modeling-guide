@@ -43,10 +43,5 @@
         <iframe src="{{ url_for('serve_file', filename=path) }}" width="100%" height="600px"></iframe>
     {% endfor %}
     
-    <h1>Download Key Results and Input Files</h1>
-    {% for path in key_csv_paths %}
-        <a class="download-link" href="{{ url_for('serve_file', filename=path) }}">Download {{ path.split('/')[-1] }}</a>
-    {% endfor %}
-    
 </body>
 </html>
