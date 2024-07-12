@@ -197,21 +197,20 @@ def test_dummy_run_model(economy_to_run, progress_callback, logger):
     logger.info(f"Model run completed for {economy_to_run}")
     if Config.LOGGING:
         global_logger.info(f'Dummy model run completed for economy: {economy_to_run}')
-
 def setup_and_send_email(email, from_email, new_values_dict, email_template, subject_title):
     """Send an email with the generated password. e.g. 
         backend.setup_and_send_email(email, new_values_dict, email_template='reset_password_email_template.html', subject_title='Password Reset Request')"""
     if Config.LOGGING:
-        global_logger.info(f'Sending password email to {encrypt_data_with_kms(email)}')
+        print(f'Sending email to {encrypt_data_with_kms(email)}')
     
     # Read HTML content from file
     with open(email_template, 'r') as file:
         html_content = file.read()
 
-    # Replace placeholder with actual password
+    # Replace placeholders with actual values
     for key, value in new_values_dict.items():
-        html_content = html_content.replace('{{{}}}'.format(key),value)
-    
+        html_content = html_content.replace('{{' + key + '}}', value)
+
     try:
         # Send email using AWS SES
         response = Config.ses_client.send_email(
