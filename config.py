@@ -15,7 +15,6 @@ class Config:
     SESSION_TIMEOUT = 3600  # Session timeout in seconds
     SAVED_FOLDER_STRUCTURE_PATH = 'folder_structure.txt' 
     ORIGINAL_MODEL_LIBRARY_NAME = 'transport_model_9th_edition'
-
     
     EXECUTION_TIMES_FILE = 'execution_times.json'
     # Flask-Mail configuration
@@ -32,6 +31,8 @@ class Config:
     MASTER_USER_EMAIL = os.getenv('MASTER_USER_EMAIL')
     MASTER_USER_PASSWORD = os.getenv('MASTER_USER_PASSWORD')
     KMS_KEY_ID = os.getenv('KMS_KEY_ID')
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    NON_KMS_ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
     # app.config['MAIL_DEFAULT_SENDER'] = ('Your Name', os.getenv('MAIL_USERNAME'))
     
     # APScheduler configuration
