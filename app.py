@@ -32,7 +32,7 @@ app.config.from_object(Config)
 user_manager = UserManagement(app)
 mail = user_manager.mail
 
-# s = URLSafeTimedSerializer(os.getenv('SECRET_KEY'))#is this needed?
+s = URLSafeTimedSerializer(os.getenv('SECRET_KEY'))#is this needed?
 # Global dictionary to track model progress
 
 estimated_time = None #this will be updated and made global in the running_model() function
