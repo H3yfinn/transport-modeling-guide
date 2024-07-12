@@ -92,6 +92,7 @@ MASTER_USER_PASSWORD=
 ```
 You will need to copy/paste the values for everything except the keys, as the keys are generated using the generate_key.py file.
 
+Also i found alt-shift-s to be useful for softwrapping things in nano. good for user_data.json viewin
 # New EC2 instance
 I'm going to try to set up a new EC2 instance instaed of using elastic beanstalk. Maybe it will be easier to manage.
 

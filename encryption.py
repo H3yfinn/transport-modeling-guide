@@ -42,14 +42,12 @@ def decrypt_data_with_kms(encrypted_data):
         
         decoded_encrypted_data = base64.b64decode(encrypted_data)
         if Config.LOGGING:
-            global_logger.debug(f"Decoded encrypted data: {decoded_encrypted_data}")
+            global_logger.debug(f"Decoded encrypted data.")
 
         response = kms_client.decrypt(
             CiphertextBlob=decoded_encrypted_data
         )
         decrypted_data = response['Plaintext'].decode('utf-8')
-        if Config.LOGGING:
-            global_logger.debug(f"Decrypted data: {decrypted_data}")
         
         return decrypted_data
     except Exception as e:

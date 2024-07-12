@@ -54,7 +54,7 @@ class UserManagement:
         characters = string.ascii_letters + string.digits
         password = ''.join(random.choice(characters) for _ in range(length))
         if Config.LOGGING:
-            global_logger.info(f'Password generated: {password}')
+            global_logger.info(f'Password generated')
         return password
     
     def update_user_password(self, email, new_password):
