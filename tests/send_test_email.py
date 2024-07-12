@@ -1,10 +1,12 @@
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
-
+import os
 class Config:
     LOGGING = True
     AWS_REGION = 'ap-northeast-1'  # or your actual AWS region
-
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    PERSONAL_EMAIL = os.getenv('PERSONAL_EMAIL')
+    
 def encrypt_data_with_kms(data):
     # Placeholder for your actual KMS encryption function
     return data
@@ -58,10 +60,10 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
 
 if __name__ == "__main__":
     # Test parameters
-    test_email = 'recipient@example.com'
-    from_email = 'your-email@example.com'
-    new_values_dict = {'username': 'John Doe', 'password': '123456'}
-    email_template = 'email_template.html'
+    test_email = Config.PERSONAL_EMAIL
+    from_email = Config.MAIL_USERNAME
+    new_values_dict = {'password': '123456'}
+    email_template = 'templates/new_password_email_template.html'
     subject_title = 'Test Email'
 
     setup_and_send_email(test_email, from_email, new_values_dict, email_template, subject_title)
