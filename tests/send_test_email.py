@@ -3,9 +3,7 @@ from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
 class Config:
     LOGGING = True
-    AWS_REGION = 'us-east-1'  # or your actual AWS region
-    AWS_ACCESS_KEY_ID = 'YOUR_ACCESS_KEY_ID'  # replace with your actual access key ID
-    AWS_SECRET_ACCESS_KEY = 'YOUR_SECRET_ACCESS_KEY'  # replace with your actual secret access key
+    AWS_REGION = 'ap-northeast-1'  # or your actual AWS region
 
 def encrypt_data_with_kms(data):
     # Placeholder for your actual KMS encryption function
