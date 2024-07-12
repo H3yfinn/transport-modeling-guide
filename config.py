@@ -31,6 +31,7 @@ class Config:
     PERSONAL_EMAIL = os.getenv('PERSONAL_EMAIL')
     MASTER_USER_EMAIL = os.getenv('MASTER_USER_EMAIL')
     MASTER_USER_PASSWORD = os.getenv('MASTER_USER_PASSWORD')
+    KMS_KEY_ID = os.getenv('KMS_KEY_ID')
     # app.config['MAIL_DEFAULT_SENDER'] = ('Your Name', os.getenv('MAIL_USERNAME'))
     
     # APScheduler configuration

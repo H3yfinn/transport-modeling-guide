@@ -22,7 +22,7 @@ from config import Config
 from user_management import UserManagement
 from encryption import encrypt_data_with_kms, decrypt_data_with_kms
 import backend
-from backend import global_logger
+from shared import global_logger
 
 # Initialize the app
 app = Flask(__name__)
@@ -32,7 +32,7 @@ app.config.from_object(Config)
 user_manager = UserManagement(app)
 mail = user_manager.mail
 
-s = URLSafeTimedSerializer(os.getenv('SECRET_KEY'))
+# s = URLSafeTimedSerializer(os.getenv('SECRET_KEY'))#is this needed?
 # Global dictionary to track model progress
 
 estimated_time = None #this will be updated and made global in the running_model() function

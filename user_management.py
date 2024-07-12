@@ -108,10 +108,15 @@ class UserManagement:
             if Config.LOGGING:
                 global_logger.info(f'Checking user: {user}')
             if ENCRYPTED:
-                if decrypt_data_with_kms(user.get(key)) == value:
+                try:
+                    if decrypt_data_with_kms(user.get(key)) == value:
+                        if Config.LOGGING:
+                            global_logger.info(f'User found: {user}')
+                        return user
+                except Exception as e:
                     if Config.LOGGING:
-                        global_logger.info(f'User found: {user}')
-                    return user
+                        global_logger.error(f'Error decrypting data: {e}')
+                    continue
             else:
                 if user.get(key) == value:
                     if Config.LOGGING:
