@@ -386,8 +386,11 @@ def forgot_password():
         if user:
             token = s.dumps(email, salt='password-reset-salt')
             reset_link = url_for('reset_password', token=token, _external=True)
-            user_manager.send_reset_password_email(email, reset_link)
-            flash('A password reset link has been sent to your email.', 'info')
+            try:
+                user_manager.send_reset_password_email(email, reset_link)
+                flash('A password reset link has been sent to your email.', 'info')
+            except Exception as e:
+                flash('Failed to send password reset email. Please try again later.', 'danger')
         else:
             flash('Email address not found.', 'danger')
         return redirect(url_for('forgot_password'))

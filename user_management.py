@@ -98,6 +98,29 @@ class UserManagement:
         
         if Config.LOGGING:
             global_logger.info('Password reset email sent')
+            
+    def send_reset_password_email(self, email, reset_link):
+        if Config.LOGGING:
+            global_logger.info(f'Sending password reset email to {encrypt_data_with_kms(email)}')
+        
+        new_values_dict = {'reset_link': reset_link}
+        
+        from_email = f'reset-password@{self.app.config["MAIL_USERNAME"]}'
+        
+        try:
+            backend.setup_and_send_email(
+                email=email,
+                from_email=from_email,
+                new_values_dict=new_values_dict,
+                email_template='templates/reset_password_email_template.html',
+                subject_title='Password Reset Request'
+            )
+            if Config.LOGGING:
+                global_logger.info('Password reset email sent')
+        except Exception as e:
+            if Config.LOGGING:
+                global_logger.error(f'Failed to send password reset email: {e}')
+            raise e
         
     def find_user_in_user_data_by_key_value(self, key, value, ENCRYPTED=False):
         #note that because the Fernet encryption scheme, uses a unique initialization vector (IV) for each encryption operation, resulting in different ciphertexts for the same plaintext each time it's encrypted. We need to decrypt the data before comparing it to the value as the encrypted data will be different each time it is encrypted.
