@@ -90,22 +90,10 @@ class UserManagement:
     def send_reset_password_email(self, email, reset_link):
         if Config.LOGGING:
             global_logger.info(f'Sending password reset email to {encrypt_data_with_kms(email)}')
-        new_values_dict={}
-        new_values_dict['reset_link'] = reset_link
-        
-        from_email = 'reset-password' + self.app.config['MAIL_USERNAME']
-        backend.setup_and_send_email(email, from_email, new_values_dict, email_template='templates/reset_password_email_template.html', subject_title='Password Reset Request')
-        
-        if Config.LOGGING:
-            global_logger.info('Password reset email sent')
-            
-    def send_reset_password_email(self, email, reset_link):
-        if Config.LOGGING:
-            global_logger.info(f'Sending password reset email to {encrypt_data_with_kms(email)}')
         
         new_values_dict = {'reset_link': reset_link}
         
-        from_email = f'reset-password@{self.app.config["MAIL_USERNAME"]}'
+        from_email = self.app.config["MAIL_USERNAME"]
         
         try:
             backend.setup_and_send_email(

@@ -5,7 +5,7 @@ from config import Config
 def test_send_reset_email():
     email = Config.PERSONAL_EMAIL
     reset_link = "https://transport-energy-modelling.com//reset_password"
-    from_email = f"reset-password@{Config.MAIL_USERNAME}"
+    from_email = Config.MAIL_USERNAME
     
     new_values_dict = {'reset_link': reset_link}
     
