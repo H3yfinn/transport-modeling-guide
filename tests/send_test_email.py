@@ -1,9 +1,11 @@
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 import os
+from dotenv import load_dotenv
 class Config:
     LOGGING = True
     AWS_REGION = 'ap-northeast-1'  # or your actual AWS region
+    load_dotenv()
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     PERSONAL_EMAIL = os.getenv('PERSONAL_EMAIL')
     
