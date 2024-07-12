@@ -105,6 +105,8 @@ class UserManagement:
             global_logger.info(f'Finding user by {key}: {value}')
         user_data = self.read_user_data()
         for user in user_data.values():
+            if Config.LOGGING:
+                global_logger.info(f'Checking user: {user}')
             if ENCRYPTED:
                 if decrypt_data_with_kms(user.get(key)) == value:
                     if Config.LOGGING:
@@ -349,12 +351,12 @@ class UserManagement:
                 self.save_user_data(user)
         if Config.LOGGING:
             global_logger.info('Inactive user sessions deleted successfully')
-
+            
     def create_master_user(self):
         user_data = self.read_user_data()
         if user_data is None:
             user_data = {}
-        #check that the master user does not already exist
+        # Check that the master user does not already exist
         if self.find_user_in_user_data_by_key_value('email', Config.MASTER_USER_EMAIL, ENCRYPTED=True):
             if Config.LOGGING:
                 global_logger.error('Master user already exists')
@@ -362,14 +364,20 @@ class UserManagement:
         
         if Config.LOGGING:
             global_logger.info('Creating master user')
-            
-        user = self.create_user(encrypt_data_with_kms(Config.MASTER_USER_EMAIL))
+        
+        encrypted_email = encrypt_data_with_kms(Config.MASTER_USER_EMAIL)
+        encrypted_password = encrypt_data_with_kms(Config.MASTER_USER_PASSWORD)
+        
+        if Config.LOGGING:
+            global_logger.debug(f"Encrypted master user email: {encrypted_email}")
+            global_logger.debug(f"Encrypted master user password: {encrypted_password}")
+        
+        user = self.create_user(encrypted_email)
         user_id = user['user_id']
         user_data[user_id] = user
-        user_data[user_id]['password'] = encrypt_data_with_kms(Config.MASTER_USER_PASSWORD)
+        user_data[user_id]['password'] = encrypted_password
         self.write_user_data(user_data)
         self.send_password_email(Config.MASTER_USER_EMAIL, Config.MASTER_USER_PASSWORD)
+        
         if Config.LOGGING:
             global_logger.info('Master user created successfully')
-
-
