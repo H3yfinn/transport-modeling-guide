@@ -211,13 +211,10 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
     # Replace placeholder with actual password
     for key, value in new_values_dict.items():
         html_content = html_content.replace('{{{}}}'.format(key),value)
-
-    # AWS SES client setup
-    ses_client = boto3.client('ses', region_name=Config.AWS_REGION, aws_access_key_id=Config.AWS_ACCESS_KEY_ID, aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY)
     
     try:
         # Send email using AWS SES
-        response = ses_client.send_email(
+        response = Config.ses_client.send_email(
             Source=from_email,
             Destination={
                 'ToAddresses': [email]
@@ -250,17 +247,13 @@ def process_feedback(name, message):
     send_feedback_email(name, message)
 
 def send_feedback_email(name, message):
-    ses_client = boto3.client(
-        'ses',
-        Config.AWS_REGION, Config.AWS_ACCESS_KEY_ID, Config.AWS_SECRET_ACCESS_KEY
-    )
     
     feedback_email = Config.PERSONAL_EMAIL
     subject = "New Feedback Received"
     body = f"Name: {name}\nMessage:\n{message}"
     
     try:
-        response = ses_client.send_email(
+        response = Config.ses_client.send_email(
             Source=feedback_email,
             Destination={
                 'ToAddresses': [feedback_email]
