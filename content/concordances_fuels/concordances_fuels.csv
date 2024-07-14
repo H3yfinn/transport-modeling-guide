@@ -1,0 +1,515 @@
+Medium,Transport Type,Vehicle Type,Drive,Scenario,Frequency,Fuel,Supply_side_fuel_mixing,Demand_side_fuel_mixing
+road,passenger,2w,bev,Reference,Yearly,17_electricity,FALSE,FALSE
+road,passenger,2w,ice_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,2w,ice_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,2w,ice_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,passenger,2w,ice_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,2w,ice_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,2w,ice_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+air,passenger,all,air_av_gas,Reference,Yearly,16_x_efuel,New fuel,FALSE
+air,passenger,all,air_av_gas,Reference,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,passenger,all,air_av_gas,Reference,Yearly,07_02_aviation_gasoline,Original fuel,FALSE
+air,passenger,all,air_diesel,Reference,Yearly,16_x_efuel,New fuel,FALSE
+air,passenger,all,air_diesel,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+air,passenger,all,air_diesel,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+air,passenger,all,air_fuel_oil,Reference,Yearly,07_08_fuel_oil,FALSE,FALSE
+air,passenger,all,air_gasoline,Reference,Yearly,16_x_efuel,New fuel,FALSE
+air,passenger,all,air_gasoline,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+air,passenger,all,air_gasoline,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+air,passenger,all,air_jet_fuel,Reference,Yearly,16_x_efuel,New fuel,FALSE
+air,passenger,all,air_jet_fuel,Reference,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,passenger,all,air_jet_fuel,Reference,Yearly,07_x_jet_fuel,Original fuel,FALSE
+air,passenger,all,air_kerosene,Reference,Yearly,16_x_efuel,New fuel,FALSE
+air,passenger,all,air_kerosene,Reference,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,passenger,all,air_kerosene,Reference,Yearly,07_06_kerosene,Original fuel,FALSE
+air,passenger,all,air_lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+air,passenger,all,air_lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+rail,passenger,all,rail_coal,Reference,Yearly,01_x_thermal_coal,FALSE,FALSE
+road,passenger,bus,bev,Reference,Yearly,17_electricity,FALSE,FALSE
+road,passenger,bus,cng,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,bus,cng,Reference,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,passenger,bus,fcev,Reference,Yearly,16_x_hydrogen,FALSE,FALSE
+road,passenger,bus,ice_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,bus,ice_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,bus,ice_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,passenger,bus,ice_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,bus,ice_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,bus,ice_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,passenger,bus,lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,bus,lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+road,passenger,bus,phev_d,Reference,Yearly,17_electricity,FALSE,New fuel
+road,passenger,bus,phev_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,bus,phev_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,bus,phev_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,passenger,bus,phev_g,Reference,Yearly,17_electricity,FALSE,New fuel
+road,passenger,bus,phev_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,bus,phev_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,bus,phev_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+road,passenger,car,bev,Reference,Yearly,17_electricity,FALSE,FALSE
+road,passenger,car,cng,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,car,cng,Reference,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,passenger,car,fcev,Reference,Yearly,16_x_hydrogen,FALSE,FALSE
+road,passenger,car,ice_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,car,ice_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,car,ice_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,passenger,car,ice_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,car,ice_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,car,ice_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,passenger,car,lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,car,lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+road,passenger,car,phev_d,Reference,Yearly,17_electricity,FALSE,New fuel
+road,passenger,car,phev_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,car,phev_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,car,phev_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,passenger,car,phev_g,Reference,Yearly,17_electricity,FALSE,New fuel
+road,passenger,car,phev_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,car,phev_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,car,phev_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+road,passenger,lt,bev,Reference,Yearly,17_electricity,FALSE,FALSE
+road,passenger,lt,cng,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,lt,cng,Reference,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,passenger,lt,fcev,Reference,Yearly,16_x_hydrogen,FALSE,FALSE
+road,passenger,lt,ice_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,lt,ice_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,lt,ice_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,passenger,lt,ice_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,lt,ice_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,lt,ice_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,passenger,lt,lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,lt,lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+road,passenger,lt,phev_d,Reference,Yearly,17_electricity,FALSE,New fuel
+road,passenger,lt,phev_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,lt,phev_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,lt,phev_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,passenger,lt,phev_g,Reference,Yearly,17_electricity,FALSE,New fuel
+road,passenger,lt,phev_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,lt,phev_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,lt,phev_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+road,passenger,suv,bev,Reference,Yearly,17_electricity,FALSE,FALSE
+road,passenger,suv,cng,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,suv,cng,Reference,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,passenger,suv,fcev,Reference,Yearly,16_x_hydrogen,FALSE,FALSE
+road,passenger,suv,ice_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,suv,ice_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,suv,ice_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,passenger,suv,ice_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,suv,ice_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,suv,ice_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,passenger,suv,lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,suv,lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+road,passenger,suv,phev_d,Reference,Yearly,17_electricity,FALSE,New fuel
+road,passenger,suv,phev_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,suv,phev_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,suv,phev_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,passenger,suv,phev_g,Reference,Yearly,17_electricity,FALSE,New fuel
+road,passenger,suv,phev_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,suv,phev_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,suv,phev_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+rail,passenger,all,rail_diesel,Reference,Yearly,16_x_efuel,New fuel,FALSE
+rail,passenger,all,rail_diesel,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+rail,passenger,all,rail_diesel,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+rail,passenger,all,rail_electricity,Reference,Yearly,17_electricity,FALSE,FALSE
+rail,passenger,all,rail_fuel_oil,Reference,Yearly,07_08_fuel_oil,FALSE,FALSE
+rail,passenger,all,rail_gasoline,Reference,Yearly,16_x_efuel,New fuel,FALSE
+rail,passenger,all,rail_gasoline,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+rail,passenger,all,rail_gasoline,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+rail,passenger,all,rail_kerosene,Reference,Yearly,16_x_efuel,New fuel,FALSE
+rail,passenger,all,rail_kerosene,Reference,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+rail,passenger,all,rail_kerosene,Reference,Yearly,07_06_kerosene,Original fuel,FALSE
+rail,passenger,all,rail_lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+rail,passenger,all,rail_lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+ship,passenger,all,ship_ammonia,Reference,Yearly,16_x_ammonia,FALSE,FALSE
+ship,passenger,all,ship_diesel,Reference,Yearly,16_x_efuel,New fuel,FALSE
+ship,passenger,all,ship_diesel,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+ship,passenger,all,ship_diesel,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+ship,passenger,all,ship_fuel_oil,Reference,Yearly,07_08_fuel_oil,Original fuel,FALSE
+ship,passenger,all,ship_fuel_oil,Reference,Yearly,16_x_efuel,New fuel,FALSE
+ship,passenger,all,ship_fuel_oil,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+ship,passenger,all,ship_gasoline,Reference,Yearly,16_x_efuel,New fuel,FALSE
+ship,passenger,all,ship_gasoline,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+ship,passenger,all,ship_gasoline,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+ship,passenger,all,ship_kerosene,Reference,Yearly,16_x_efuel,New fuel,FALSE
+ship,passenger,all,ship_kerosene,Reference,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+ship,passenger,all,ship_kerosene,Reference,Yearly,07_06_kerosene,Original fuel,FALSE
+ship,passenger,all,ship_lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+ship,passenger,all,ship_lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+air,freight,all,air_av_gas,Reference,Yearly,16_x_efuel,New fuel,FALSE
+air,freight,all,air_av_gas,Reference,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,freight,all,air_av_gas,Reference,Yearly,07_02_aviation_gasoline,Original fuel,FALSE
+air,freight,all,air_diesel,Reference,Yearly,16_x_efuel,New fuel,FALSE
+air,freight,all,air_diesel,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+air,freight,all,air_diesel,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+air,freight,all,air_fuel_oil,Reference,Yearly,07_08_fuel_oil,FALSE,FALSE
+air,freight,all,air_gasoline,Reference,Yearly,16_x_efuel,New fuel,FALSE
+air,freight,all,air_gasoline,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+air,freight,all,air_gasoline,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+air,freight,all,air_jet_fuel,Reference,Yearly,16_x_efuel,New fuel,FALSE
+air,freight,all,air_jet_fuel,Reference,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,freight,all,air_jet_fuel,Reference,Yearly,07_x_jet_fuel,Original fuel,FALSE
+air,freight,all,air_kerosene,Reference,Yearly,16_x_efuel,New fuel,FALSE
+air,freight,all,air_kerosene,Reference,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,freight,all,air_kerosene,Reference,Yearly,07_06_kerosene,Original fuel,FALSE
+air,freight,all,air_lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+air,freight,all,air_lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+rail,freight,all,rail_coal,Reference,Yearly,01_x_thermal_coal,FALSE,FALSE
+road,freight,ht,bev,Reference,Yearly,17_electricity,FALSE,FALSE
+road,freight,ht,cng,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,ht,cng,Reference,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,freight,ht,fcev,Reference,Yearly,16_x_hydrogen,FALSE,FALSE
+road,freight,ht,ice_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,ht,ice_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,ht,ice_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,freight,ht,ice_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,ht,ice_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,ht,ice_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,freight,ht,lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,ht,lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+road,freight,ht,phev_d,Reference,Yearly,17_electricity,FALSE,New fuel
+road,freight,ht,phev_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,ht,phev_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,ht,phev_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,freight,ht,phev_g,Reference,Yearly,17_electricity,FALSE,New fuel
+road,freight,ht,phev_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,ht,phev_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,ht,phev_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+road,freight,lcv,bev,Reference,Yearly,17_electricity,FALSE,FALSE
+road,freight,lcv,cng,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,lcv,cng,Reference,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,freight,lcv,fcev,Reference,Yearly,16_x_hydrogen,FALSE,FALSE
+road,freight,lcv,ice_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,lcv,ice_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,lcv,ice_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,freight,lcv,ice_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,lcv,ice_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,lcv,ice_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,freight,lcv,lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,lcv,lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+road,freight,lcv,phev_d,Reference,Yearly,17_electricity,FALSE,New fuel
+road,freight,lcv,phev_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,lcv,phev_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,lcv,phev_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,freight,lcv,phev_g,Reference,Yearly,17_electricity,FALSE,New fuel
+road,freight,lcv,phev_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,lcv,phev_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,lcv,phev_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+road,freight,mt,bev,Reference,Yearly,17_electricity,FALSE,FALSE
+road,freight,mt,cng,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,mt,cng,Reference,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,freight,mt,fcev,Reference,Yearly,16_x_hydrogen,FALSE,FALSE
+road,freight,mt,ice_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,mt,ice_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,mt,ice_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,freight,mt,ice_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,mt,ice_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,mt,ice_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,freight,mt,lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,mt,lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+road,freight,mt,phev_d,Reference,Yearly,17_electricity,FALSE,New fuel
+road,freight,mt,phev_d,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,mt,phev_d,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,mt,phev_d,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,freight,mt,phev_g,Reference,Yearly,17_electricity,FALSE,New fuel
+road,freight,mt,phev_g,Reference,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,mt,phev_g,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,mt,phev_g,Reference,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+rail,freight,all,rail_diesel,Reference,Yearly,16_x_efuel,New fuel,FALSE
+rail,freight,all,rail_diesel,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+rail,freight,all,rail_diesel,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+rail,freight,all,rail_electricity,Reference,Yearly,17_electricity,FALSE,FALSE
+rail,freight,all,rail_fuel_oil,Reference,Yearly,07_08_fuel_oil,FALSE,FALSE
+rail,freight,all,rail_gasoline,Reference,Yearly,16_x_efuel,New fuel,FALSE
+rail,freight,all,rail_gasoline,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+rail,freight,all,rail_gasoline,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+rail,freight,all,rail_kerosene,Reference,Yearly,16_x_efuel,New fuel,FALSE
+rail,freight,all,rail_kerosene,Reference,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+rail,freight,all,rail_kerosene,Reference,Yearly,07_06_kerosene,Original fuel,FALSE
+rail,freight,all,rail_lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+rail,freight,all,rail_lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+ship,freight,all,ship_ammonia,Reference,Yearly,16_x_ammonia,FALSE,FALSE
+ship,freight,all,ship_diesel,Reference,Yearly,16_x_efuel,New fuel,FALSE
+ship,freight,all,ship_diesel,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+ship,freight,all,ship_diesel,Reference,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+ship,freight,all,ship_fuel_oil,Reference,Yearly,07_08_fuel_oil,Original fuel,FALSE
+ship,freight,all,ship_fuel_oil,Reference,Yearly,16_x_efuel,New fuel,FALSE
+ship,freight,all,ship_fuel_oil,Reference,Yearly,16_06_biodiesel,New fuel,FALSE
+ship,freight,all,ship_gasoline,Reference,Yearly,16_x_efuel,New fuel,FALSE
+ship,freight,all,ship_gasoline,Reference,Yearly,16_05_biogasoline,New fuel,FALSE
+ship,freight,all,ship_gasoline,Reference,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+ship,freight,all,ship_kerosene,Reference,Yearly,16_x_efuel,New fuel,FALSE
+ship,freight,all,ship_kerosene,Reference,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+ship,freight,all,ship_kerosene,Reference,Yearly,07_06_kerosene,Original fuel,FALSE
+ship,freight,all,ship_lpg,Reference,Yearly,16_01_biogas,New fuel,FALSE
+ship,freight,all,ship_lpg,Reference,Yearly,07_09_lpg,Original fuel,FALSE
+rail,freight,all,rail_natural_gas,Reference,Yearly,16_01_biogas,New fuel,FALSE
+rail,freight,all,rail_natural_gas,Reference,Yearly,08_01_natural_gas,Original fuel,FALSE
+rail,passenger,all,rail_natural_gas,Reference,Yearly,16_01_biogas,New fuel,FALSE
+rail,passenger,all,rail_natural_gas,Reference,Yearly,08_01_natural_gas,Original fuel,FALSE
+ship,passenger,all,ship_electric,Reference,Yearly,17_electricity,FALSE,FALSE
+ship,freight,all,ship_electric,Reference,Yearly,17_electricity,FALSE,FALSE
+air,freight,all,air_electric,Reference,Yearly,17_electricity,FALSE,FALSE
+air,passenger,all,air_electric,Reference,Yearly,17_electricity,FALSE,FALSE
+air,freight,all,air_hydrogen,Reference,Yearly,16_x_hydrogen,FALSE,FALSE
+air,passenger,all,air_hydrogen,Reference,Yearly,16_x_hydrogen,FALSE,FALSE
+ship,freight,all,ship_lng,Reference,Yearly,08_02_lng,Original fuel,FALSE
+ship,freight,all,ship_lng,Reference,Yearly,16_01_biogas,New fuel,FALSE
+ship,passenger,all,ship_lng,Reference,Yearly,08_02_lng,Original fuel,FALSE
+ship,passenger,all,ship_lng,Reference,Yearly,16_01_biogas,New fuel,FALSE
+ship,freight,all,ship_hydrogen,Reference,Yearly,16_x_hydrogen,FALSE,FALSE
+ship,passenger,all,ship_hydrogen,Reference,Yearly,16_x_hydrogen,FALSE,FALSE
+road,passenger,2w,bev,Target,Yearly,17_electricity,FALSE,FALSE
+road,passenger,2w,ice_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,2w,ice_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,2w,ice_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,passenger,2w,ice_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,2w,ice_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,2w,ice_g,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+air,passenger,all,air_av_gas,Target,Yearly,16_x_efuel,New fuel,FALSE
+air,passenger,all,air_av_gas,Target,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,passenger,all,air_av_gas,Target,Yearly,07_02_aviation_gasoline,Original fuel,FALSE
+air,passenger,all,air_diesel,Target,Yearly,16_x_efuel,New fuel,FALSE
+air,passenger,all,air_diesel,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+air,passenger,all,air_diesel,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+air,passenger,all,air_fuel_oil,Target,Yearly,07_08_fuel_oil,FALSE,FALSE
+air,passenger,all,air_gasoline,Target,Yearly,16_x_efuel,New fuel,FALSE
+air,passenger,all,air_gasoline,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+air,passenger,all,air_gasoline,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+air,passenger,all,air_jet_fuel,Target,Yearly,16_x_efuel,New fuel,FALSE
+air,passenger,all,air_jet_fuel,Target,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,passenger,all,air_jet_fuel,Target,Yearly,07_x_jet_fuel,Original fuel,FALSE
+air,passenger,all,air_kerosene,Target,Yearly,16_x_efuel,New fuel,FALSE
+air,passenger,all,air_kerosene,Target,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,passenger,all,air_kerosene,Target,Yearly,07_06_kerosene,Original fuel,FALSE
+air,passenger,all,air_lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+air,passenger,all,air_lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+rail,passenger,all,rail_coal,Target,Yearly,01_x_thermal_coal,FALSE,FALSE
+road,passenger,bus,bev,Target,Yearly,17_electricity,FALSE,FALSE
+road,passenger,bus,cng,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,bus,cng,Target,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,passenger,bus,fcev,Target,Yearly,16_x_hydrogen,FALSE,FALSE
+road,passenger,bus,ice_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,bus,ice_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,bus,ice_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,passenger,bus,ice_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,bus,ice_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,bus,ice_g,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,passenger,bus,lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,bus,lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+road,passenger,bus,phev_d,Target,Yearly,17_electricity,FALSE,New fuel
+road,passenger,bus,phev_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,bus,phev_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,bus,phev_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,passenger,bus,phev_g,Target,Yearly,17_electricity,FALSE,New fuel
+road,passenger,bus,phev_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,bus,phev_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,bus,phev_g,Target,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+road,passenger,car,bev,Target,Yearly,17_electricity,FALSE,FALSE
+road,passenger,car,cng,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,car,cng,Target,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,passenger,car,fcev,Target,Yearly,16_x_hydrogen,FALSE,FALSE
+road,passenger,car,ice_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,car,ice_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,car,ice_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,passenger,car,ice_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,car,ice_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,car,ice_g,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,passenger,car,lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,car,lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+road,passenger,car,phev_d,Target,Yearly,17_electricity,FALSE,New fuel
+road,passenger,car,phev_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,car,phev_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,car,phev_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,passenger,car,phev_g,Target,Yearly,17_electricity,FALSE,New fuel
+road,passenger,car,phev_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,car,phev_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,car,phev_g,Target,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+road,passenger,lt,bev,Target,Yearly,17_electricity,FALSE,FALSE
+road,passenger,lt,cng,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,lt,cng,Target,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,passenger,lt,fcev,Target,Yearly,16_x_hydrogen,FALSE,FALSE
+road,passenger,lt,ice_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,lt,ice_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,lt,ice_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,passenger,lt,ice_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,lt,ice_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,lt,ice_g,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,passenger,lt,lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,lt,lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+road,passenger,lt,phev_d,Target,Yearly,17_electricity,FALSE,New fuel
+road,passenger,lt,phev_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,lt,phev_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,lt,phev_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,passenger,lt,phev_g,Target,Yearly,17_electricity,FALSE,New fuel
+road,passenger,lt,phev_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,lt,phev_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,lt,phev_g,Target,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+road,passenger,suv,bev,Target,Yearly,17_electricity,FALSE,FALSE
+road,passenger,suv,cng,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,suv,cng,Target,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,passenger,suv,fcev,Target,Yearly,16_x_hydrogen,FALSE,FALSE
+road,passenger,suv,ice_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,suv,ice_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,suv,ice_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,passenger,suv,ice_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,suv,ice_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,suv,ice_g,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,passenger,suv,lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,passenger,suv,lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+road,passenger,suv,phev_d,Target,Yearly,17_electricity,FALSE,New fuel
+road,passenger,suv,phev_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,suv,phev_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,passenger,suv,phev_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,passenger,suv,phev_g,Target,Yearly,17_electricity,FALSE,New fuel
+road,passenger,suv,phev_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,passenger,suv,phev_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,passenger,suv,phev_g,Target,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+rail,passenger,all,rail_diesel,Target,Yearly,16_x_efuel,New fuel,FALSE
+rail,passenger,all,rail_diesel,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+rail,passenger,all,rail_diesel,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+rail,passenger,all,rail_electricity,Target,Yearly,17_electricity,FALSE,FALSE
+rail,passenger,all,rail_fuel_oil,Target,Yearly,07_08_fuel_oil,FALSE,FALSE
+rail,passenger,all,rail_gasoline,Target,Yearly,16_x_efuel,New fuel,FALSE
+rail,passenger,all,rail_gasoline,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+rail,passenger,all,rail_gasoline,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+rail,passenger,all,rail_kerosene,Target,Yearly,16_x_efuel,New fuel,FALSE
+rail,passenger,all,rail_kerosene,Target,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+rail,passenger,all,rail_kerosene,Target,Yearly,07_06_kerosene,Original fuel,FALSE
+rail,passenger,all,rail_lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+rail,passenger,all,rail_lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+ship,passenger,all,ship_ammonia,Target,Yearly,16_x_ammonia,FALSE,FALSE
+ship,passenger,all,ship_diesel,Target,Yearly,16_x_efuel,New fuel,FALSE
+ship,passenger,all,ship_diesel,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+ship,passenger,all,ship_diesel,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+ship,passenger,all,ship_fuel_oil,Target,Yearly,07_08_fuel_oil,Original fuel,FALSE
+ship,passenger,all,ship_fuel_oil,Target,Yearly,16_x_efuel,New fuel,FALSE
+ship,passenger,all,ship_fuel_oil,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+ship,passenger,all,ship_gasoline,Target,Yearly,16_x_efuel,New fuel,FALSE
+ship,passenger,all,ship_gasoline,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+ship,passenger,all,ship_gasoline,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+ship,passenger,all,ship_kerosene,Target,Yearly,16_x_efuel,New fuel,FALSE
+ship,passenger,all,ship_kerosene,Target,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+ship,passenger,all,ship_kerosene,Target,Yearly,07_06_kerosene,Original fuel,FALSE
+ship,passenger,all,ship_lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+ship,passenger,all,ship_lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+air,freight,all,air_av_gas,Target,Yearly,16_x_efuel,New fuel,FALSE
+air,freight,all,air_av_gas,Target,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,freight,all,air_av_gas,Target,Yearly,07_02_aviation_gasoline,Original fuel,FALSE
+air,freight,all,air_diesel,Target,Yearly,16_x_efuel,New fuel,FALSE
+air,freight,all,air_diesel,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+air,freight,all,air_diesel,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+air,freight,all,air_fuel_oil,Target,Yearly,07_08_fuel_oil,FALSE,FALSE
+air,freight,all,air_gasoline,Target,Yearly,16_x_efuel,New fuel,FALSE
+air,freight,all,air_gasoline,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+air,freight,all,air_gasoline,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+air,freight,all,air_jet_fuel,Target,Yearly,16_x_efuel,New fuel,FALSE
+air,freight,all,air_jet_fuel,Target,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,freight,all,air_jet_fuel,Target,Yearly,07_x_jet_fuel,Original fuel,FALSE
+air,freight,all,air_kerosene,Target,Yearly,16_x_efuel,New fuel,FALSE
+air,freight,all,air_kerosene,Target,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+air,freight,all,air_kerosene,Target,Yearly,07_06_kerosene,Original fuel,FALSE
+air,freight,all,air_lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+air,freight,all,air_lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+rail,freight,all,rail_coal,Target,Yearly,01_x_thermal_coal,FALSE,FALSE
+road,freight,ht,bev,Target,Yearly,17_electricity,FALSE,FALSE
+road,freight,ht,cng,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,ht,cng,Target,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,freight,ht,fcev,Target,Yearly,16_x_hydrogen,FALSE,FALSE
+road,freight,ht,ice_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,ht,ice_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,ht,ice_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,freight,ht,ice_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,ht,ice_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,ht,ice_g,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,freight,ht,lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,ht,lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+road,freight,ht,phev_d,Target,Yearly,17_electricity,FALSE,New fuel
+road,freight,ht,phev_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,ht,phev_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,ht,phev_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,freight,ht,phev_g,Target,Yearly,17_electricity,FALSE,New fuel
+road,freight,ht,phev_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,ht,phev_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,ht,phev_g,Target,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+road,freight,lcv,bev,Target,Yearly,17_electricity,FALSE,FALSE
+road,freight,lcv,cng,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,lcv,cng,Target,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,freight,lcv,fcev,Target,Yearly,16_x_hydrogen,FALSE,FALSE
+road,freight,lcv,ice_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,lcv,ice_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,lcv,ice_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,freight,lcv,ice_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,lcv,ice_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,lcv,ice_g,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,freight,lcv,lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,lcv,lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+road,freight,lcv,phev_d,Target,Yearly,17_electricity,FALSE,New fuel
+road,freight,lcv,phev_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,lcv,phev_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,lcv,phev_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,freight,lcv,phev_g,Target,Yearly,17_electricity,FALSE,New fuel
+road,freight,lcv,phev_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,lcv,phev_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,lcv,phev_g,Target,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+road,freight,mt,bev,Target,Yearly,17_electricity,FALSE,FALSE
+road,freight,mt,cng,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,mt,cng,Target,Yearly,08_01_natural_gas,Original fuel,FALSE
+road,freight,mt,fcev,Target,Yearly,16_x_hydrogen,FALSE,FALSE
+road,freight,mt,ice_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,mt,ice_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,mt,ice_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+road,freight,mt,ice_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,mt,ice_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,mt,ice_g,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+road,freight,mt,lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+road,freight,mt,lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+road,freight,mt,phev_d,Target,Yearly,17_electricity,FALSE,New fuel
+road,freight,mt,phev_d,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,mt,phev_d,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+road,freight,mt,phev_d,Target,Yearly,07_07_gas_diesel_oil,Original fuel,Original fuel
+road,freight,mt,phev_g,Target,Yearly,17_electricity,FALSE,New fuel
+road,freight,mt,phev_g,Target,Yearly,16_x_efuel,New fuel,FALSE
+road,freight,mt,phev_g,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+road,freight,mt,phev_g,Target,Yearly,07_01_motor_gasoline,Original fuel,Original fuel
+rail,freight,all,rail_diesel,Target,Yearly,16_x_efuel,New fuel,FALSE
+rail,freight,all,rail_diesel,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+rail,freight,all,rail_diesel,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+rail,freight,all,rail_electricity,Target,Yearly,17_electricity,FALSE,FALSE
+rail,freight,all,rail_fuel_oil,Target,Yearly,07_08_fuel_oil,FALSE,FALSE
+rail,freight,all,rail_gasoline,Target,Yearly,16_x_efuel,New fuel,FALSE
+rail,freight,all,rail_gasoline,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+rail,freight,all,rail_gasoline,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+rail,freight,all,rail_kerosene,Target,Yearly,16_x_efuel,New fuel,FALSE
+rail,freight,all,rail_kerosene,Target,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+rail,freight,all,rail_kerosene,Target,Yearly,07_06_kerosene,Original fuel,FALSE
+rail,freight,all,rail_lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+rail,freight,all,rail_lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+ship,freight,all,ship_ammonia,Target,Yearly,16_x_ammonia,FALSE,FALSE
+ship,freight,all,ship_diesel,Target,Yearly,16_x_efuel,New fuel,FALSE
+ship,freight,all,ship_diesel,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+ship,freight,all,ship_diesel,Target,Yearly,07_07_gas_diesel_oil,Original fuel,FALSE
+ship,freight,all,ship_fuel_oil,Target,Yearly,07_08_fuel_oil,Original fuel,FALSE
+ship,freight,all,ship_fuel_oil,Target,Yearly,16_x_efuel,New fuel,FALSE
+ship,freight,all,ship_fuel_oil,Target,Yearly,16_06_biodiesel,New fuel,FALSE
+ship,freight,all,ship_gasoline,Target,Yearly,16_x_efuel,New fuel,FALSE
+ship,freight,all,ship_gasoline,Target,Yearly,16_05_biogasoline,New fuel,FALSE
+ship,freight,all,ship_gasoline,Target,Yearly,07_01_motor_gasoline,Original fuel,FALSE
+ship,freight,all,ship_kerosene,Target,Yearly,16_x_efuel,New fuel,FALSE
+ship,freight,all,ship_kerosene,Target,Yearly,16_07_bio_jet_kerosene,New fuel,FALSE
+ship,freight,all,ship_kerosene,Target,Yearly,07_06_kerosene,Original fuel,FALSE
+ship,freight,all,ship_lpg,Target,Yearly,16_01_biogas,New fuel,FALSE
+ship,freight,all,ship_lpg,Target,Yearly,07_09_lpg,Original fuel,FALSE
+rail,freight,all,rail_natural_gas,Target,Yearly,16_01_biogas,New fuel,FALSE
+rail,freight,all,rail_natural_gas,Target,Yearly,08_01_natural_gas,Original fuel,FALSE
+rail,passenger,all,rail_natural_gas,Target,Yearly,16_01_biogas,New fuel,FALSE
+rail,passenger,all,rail_natural_gas,Target,Yearly,08_01_natural_gas,Original fuel,FALSE
+ship,passenger,all,ship_electric,Target,Yearly,17_electricity,FALSE,FALSE
+ship,freight,all,ship_electric,Target,Yearly,17_electricity,FALSE,FALSE
+air,freight,all,air_electric,Target,Yearly,17_electricity,FALSE,FALSE
+air,passenger,all,air_electric,Target,Yearly,17_electricity,FALSE,FALSE
+air,freight,all,air_hydrogen,Target,Yearly,16_x_hydrogen,FALSE,FALSE
+air,passenger,all,air_hydrogen,Target,Yearly,16_x_hydrogen,FALSE,FALSE
+ship,freight,all,ship_lng,Target,Yearly,08_02_lng,Original fuel,FALSE
+ship,freight,all,ship_lng,Target,Yearly,16_01_biogas,New fuel,FALSE
+ship,passenger,all,ship_lng,Target,Yearly,08_02_lng,Original fuel,FALSE
+ship,passenger,all,ship_lng,Target,Yearly,16_01_biogas,New fuel,FALSE
+ship,freight,all,ship_hydrogen,Target,Yearly,16_x_hydrogen,FALSE,FALSE
+ship,passenger,all,ship_hydrogen,Target,Yearly,16_x_hydrogen,FALSE,FALSE

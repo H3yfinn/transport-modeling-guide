@@ -9,11 +9,12 @@ import threading
 from datetime import datetime, timedelta
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
-from config import Config
+from flask import current_app
 # from flask import session#trying to avoid using flask session within this module
-from encryption import encrypt_data_with_kms, decrypt_data_with_kms
+from encryption import encrypt_data, decrypt_data
 import user_management as user_manager
-from shared import progress_tracker, global_logger, setup_logger, model_threads,model_FILE_DATE_IDs
+from shared import progress_tracker, global_logger, error_logger, setup_logger, model_threads, model_FILE_DATE_IDs
+
 class StreamToLogger:
     def __init__(self, log_filename):
         self.logger = setup_logger('model_logger', log_filename)
@@ -33,7 +34,7 @@ class StreamToLogger:
         self.logger.handlers.clear()
         
 def get_logs_from_file(log_filename):
-    if Config.LOGGING:
+    if current_app.config['LOGGING']:
         global_logger.info('Getting logs from file')
     if not os.path.exists(log_filename):
         return ''
@@ -44,7 +45,7 @@ def get_logs_from_file(log_filename):
         return logs
 
 def archive_log(log_filename):
-    if Config.LOGGING:
+    if current_app.config['LOGGING']:
         global_logger.info(f'Archiving log file: {log_filename}')
     if os.path.exists(log_filename):
         try:
@@ -54,103 +55,97 @@ def archive_log(log_filename):
             
             archived_log_filename = os.path.join('logs', 'archive', f'{datetime.now().strftime("%Y%m%d_%H%M%S")}_{os.path.basename(log_filename)}')
             shutil.move(log_filename, archived_log_filename)
-            if Config.LOGGING:
+            if current_app.config['LOGGING']:
                 global_logger.info(f'Log file archived: {archived_log_filename}')
         except PermissionError as e:
-            global_logger.error(f"Permission error moving log file: {e}")#normally occurs if user is still running the model
+            global_logger.error(f"Permission error moving log file: {e}")  # Normally occurs if user is still running the model
         except Exception as e:
             global_logger.error(f"Error moving log file: {e}")
 
-def run_model_thread(log_filename, session_library_path, economy_to_run, user_id):
-    """Ok one big issue with this and threading and the way ive moidularised the model is that it uses relative imports and these dont work unless we add the models root folder to the path, but if we are threading multiple models from different paths we will end up importing from the firstt model on the path. However, because of the mdoels redevelopments we can sort of overcome this by assuming that all model are the same code an dinstead changing the paths we pass in to the model, especailly the root_dir path, which defines the relative poiint from which ALL files are read and saved from within the scope of that model. So we will add each model to the sys.path and remove it later, but this shouldnt be an issue.
-
-    Args:
-        log_filename (_type_): _description_
-        session_library_path (_type_): _description_
-        economy_to_run (_type_): _description_
-        user_id (_type_): _description_
-
-    Raises:
-        ImportError: _description_
-    """
-    if Config.LOGGING:
-        global_logger.info(f'Running model thread for economy: {economy_to_run}')
-    FILE_DATE_ID = None
-    logger = StreamToLogger(log_filename)
-    sys.stdout = logger
-    sys.stderr = logger
-    try:
-        if Config.DEBUG:
-            pass
-        else:
-            sys.path.append(os.getcwd() +'\\' +  session_library_path)
-            root_dir_param =  "\\\\?\\"+ os.getcwd()+ '\\' + session_library_path
-            if Config.LOGGING:
-                global_logger.info(f"sys.path: {sys.path}")
-            #this is a hack to allow long paths in windows
-            main_module_spec = importlib.util.spec_from_file_location("main", os.path.join(session_library_path, "main.py"))
-            if main_module_spec is None:
-                if Config.LOGGING:
-                    global_logger.error("Could not find the main module in the session-specific path")
-                raise ImportError("Could not find the main module in the session-specific path")
+def run_model_thread(app, log_filename, session_library_path, economy_to_run, user_id):
+    """Run the model in a separate thread with the Flask application context."""
+    with app.app_context():
+        if current_app.config['LOGGING']:
+            global_logger.info(f'Running model thread for economy: {economy_to_run}')
+        FILE_DATE_ID = None
+        logger = StreamToLogger(log_filename)
+        sys.stdout = logger
+        sys.stderr = logger
+        try:
+            if current_app.config['DEBUG']:
+                pass
             else:
-                if Config.LOGGING:
-                    global_logger.info("Main module found in the session-specific path")
-            main_module = importlib.util.module_from_spec(main_module_spec)
-            main_module_spec.loader.exec_module(main_module)
+                sys.path.append(os.getcwd() +'\\' +  session_library_path)
+                root_dir_param =  "\\\\?\\"+ os.getcwd()+ '\\' + session_library_path
+                if current_app.config['LOGGING']:
+                    global_logger.info(f"sys.path: {sys.path}")
+                # This is a hack to allow long paths in Windows
+                main_module_spec = importlib.util.spec_from_file_location("main", os.path.join(session_library_path, "main.py"))
+                if main_module_spec is None:
+                    if current_app.config['LOGGING']:
+                        global_logger.error("Could not find the main module in the session-specific path")
+                    raise ImportError("Could not find the main module in the session-specific path")
+                else:
+                    if current_app.config['LOGGING']:
+                        global_logger.info("Main module found in the session-specific path")
+                main_module = importlib.util.module_from_spec(main_module_spec)
+                main_module_spec.loader.exec_module(main_module)
 
-        progress_tracker[user_id] = 0
+            progress_tracker[user_id] = 0
 
-        def progress_callback(progress_value):
-            if not 0 <= progress_value <= 100:
-                logger.error(f"Invalid progress value: {progress_value}")
-            progress_tracker[user_id] = progress_value  # Update progress
+            def progress_callback(progress_value):
+                if not 0 <= progress_value <= 100:
+                    logger.error(f"Invalid progress value: {progress_value}")
+                progress_tracker[user_id] = progress_value  # Update progress
 
-        if Config.DEBUG:
-            test_dummy_run_model(economy_to_run, progress_callback, logger)
-        else:
-            try:
-                start_time = time.time()
-                #set sys.path to include the session library path. Note that if we have multiple users running models at the same time, this will mean multiple paths for duplicates of the same module are added to the path. in that case sys.path will just use the first one it finds
-                FILE_DATE_ID, COMPLETED = main_module.main(economy_to_run=economy_to_run, progress_callback=progress_callback, root_dir_param=root_dir_param, script_dir_param=root_dir_param)
-                if not COMPLETED:#sometimes dont get error from model so catch it via this variable
-                    raise Exception("Model execution did not complete successfully.")
-                # print("PRINT: Model execution completed successfully.")
-                logging.getLogger('model_logger').info("Model execution completed successfully.")
-                if Config.LOGGING:
-                    global_logger.info(f"Model execution completed successfully for economy: {economy_to_run}")
-                logging.getLogger('model_logger').info(f"Progress: {progress_tracker[user_id]}")
-                        
-                execution_time = time.time() - start_time
-                if not Config.DEBUG:
-                    save_execution_time(execution_time)
-            except Exception as e:
-                # print(f"PRINT: An error occurred during model execution: {e}")
-                logging.getLogger('model_logger').info(f"An error occurred during model execution: {e}")
-                if Config.LOGGING:
-                    global_logger.error(f"An error occurred during model execution: {e}")
-                logging.getLogger('model_logger').info(f"Progress: {progress_tracker[user_id]}")
+            if current_app.config['DEBUG']:
+                test_dummy_run_model(economy_to_run, progress_callback, logger)
+            else:
+                try:
+                    start_time = time.time()
+                    # Set sys.path to include the session library path. Note that if we have multiple users running models at the same time, this will mean multiple paths for duplicates of the same module are added to the path. In that case, sys.path will just use the first one it finds.
+                    FILE_DATE_ID, COMPLETED = main_module.main(economy_to_run=economy_to_run, progress_callback=progress_callback, root_dir_param=root_dir_param, script_dir_param=root_dir_param)
+                    if not COMPLETED:  # Sometimes don't get error from model so catch it via this variable
+                        error_logger.error(f"Model execution did not complete successfully with economy: {economy_to_run}")
+                        logging.getLogger('model_logger').info("Model execution did not complete successfully.")
+                        raise Exception("Model execution did not complete successfully.")
+                    # print("PRINT: Model execution completed successfully.")
+                    logging.getLogger('model_logger').info("Model execution completed successfully.")
+                    if current_app.config['LOGGING']:
+                        global_logger.info(f"Model execution completed successfully for economy: {economy_to_run}")
+                    logging.getLogger('model_logger').info(f"Progress: {progress_tracker[user_id]}")
+                            
+                    execution_time = time.time() - start_time
+                    if not current_app.config['DEBUG']:
+                        save_execution_time(execution_time)
+                except Exception as e:
+                    # print(f"PRINT: An error occurred during model execution: {e}")
+                    logging.getLogger('model_logger').info(f"An error occurred during model execution: {e}")
+                    if current_app.config['LOGGING']:
+                        global_logger.error(f"An error occurred during model execution: {e}")
+                        error_logger.error(f"An error occurred during model execution: {e}")
+                    logging.getLogger('model_logger').info(f"Progress: {progress_tracker[user_id]}")
 
-    finally:
-        #if the session library path is in the sys.path, remove it
-        if os.getcwd() +'\\' +  session_library_path in sys.path:
-            sys.path.remove(os.getcwd() +'\\' +  session_library_path)
-        if FILE_DATE_ID:
-            model_FILE_DATE_IDs[user_id] = FILE_DATE_ID
-        sys.stdout = sys.__stdout__
-        sys.stderr = sys.__stderr__
-        logger.close()#we dont seem to be getting here?
-        if Config.LOGGING:
-            global_logger.info('Model thread finished execution')
-        progress_tracker[user_id] = 100
-
+        finally:
+            # If the session library path is in the sys.path, remove it
+            if os.getcwd() +'\\' +  session_library_path in sys.path:
+                sys.path.remove(os.getcwd() +'\\' +  session_library_path)
+            if FILE_DATE_ID:
+                model_FILE_DATE_IDs[user_id] = FILE_DATE_ID
+            sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
+            logger.close()  # We don't seem to be getting here?
+            if current_app.config['LOGGING']:
+                global_logger.info('Model thread finished execution')
+            progress_tracker[user_id] = 100
+            
 def calculate_average_time():
-    if Config.LOGGING:
+    if current_app.config.LOGGING:
         global_logger.info('Calculating average execution time')
-    if not os.path.exists(Config.EXECUTION_TIMES_FILE):
+    if not os.path.exists(current_app.config.EXECUTION_TIMES_FILE):
         return "No previous execution times available to estimate."
 
-    with open(Config.EXECUTION_TIMES_FILE, 'r') as f:
+    with open(current_app.config.EXECUTION_TIMES_FILE, 'r') as f:
         try:
             execution_times = json.load(f)
         except json.JSONDecodeError:
@@ -163,12 +158,12 @@ def calculate_average_time():
     return round(average_time, 2)
 
 def save_execution_time(execution_time):
-    if Config.LOGGING:
+    if current_app.config.LOGGING:
         global_logger.info(f'Saving execution time: {execution_time}')
-    if not os.path.exists(Config.EXECUTION_TIMES_FILE):
+    if not os.path.exists(current_app.config.EXECUTION_TIMES_FILE):
         execution_times = []
     else:
-        with open(Config.EXECUTION_TIMES_FILE, 'r') as f:
+        with open(current_app.config.EXECUTION_TIMES_FILE, 'r') as f:
             try:
                 execution_times = json.load(f)
             except json.JSONDecodeError:
@@ -177,13 +172,13 @@ def save_execution_time(execution_time):
     execution_times.append(execution_time)
     execution_times = execution_times[-100:]
 
-    with open(Config.EXECUTION_TIMES_FILE, 'w') as f:
+    with open(current_app.config.EXECUTION_TIMES_FILE, 'w') as f:
         json.dump(execution_times, f)
-    if Config.LOGGING:
+    if current_app.config.LOGGING:
         global_logger.info('Execution time saved successfully')
 
 def test_dummy_run_model(economy_to_run, progress_callback, logger):
-    if Config.LOGGING:
+    if current_app.config.LOGGING:
         global_logger.info(f'Starting dummy run model for economy: {economy_to_run}')
     logger.info(f"Starting dummy model run for {economy_to_run}")
     time.sleep(5)
@@ -195,13 +190,14 @@ def test_dummy_run_model(economy_to_run, progress_callback, logger):
     time.sleep(5)
     progress_callback(100)
     logger.info(f"Model run completed for {economy_to_run}")
-    if Config.LOGGING:
+    if current_app.config.LOGGING:
         global_logger.info(f'Dummy model run completed for economy: {economy_to_run}')
+        
 def setup_and_send_email(email, from_email, new_values_dict, email_template, subject_title):
     """Send an email with the generated password. e.g. 
         backend.setup_and_send_email(email, new_values_dict, email_template='reset_password_email_template.html', subject_title='Password Reset Request')"""
-    if Config.LOGGING:
-        print(f'Sending email to {encrypt_data_with_kms(email)}')
+    if current_app.config.LOGGING:
+        global_logger.info(f'Sending email to {encrypt_data(email)}')
     
     # Read HTML content from file
     with open(email_template, 'r') as file:
@@ -212,10 +208,12 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
         html_content = html_content.replace('{{' + key + '}}', value)
         #and cover for any with spaces around them:
         html_content = html_content.replace('{{ ' + key + ' }}', value)
-
+        
+    if not current_app.config.AWS_CONNECTION_AVAILABLE:
+        return
     try:
         # Send email using AWS SES
-        response = Config.ses_client.send_email(
+        response = current_app.config.ses_client.send_email(
             Source=from_email,
             Destination={
                 'ToAddresses': [email]
@@ -233,28 +231,31 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
                 }
             }
         )
-        if Config.LOGGING:
+        if current_app.config.LOGGING:
             global_logger.info('Password email sent')
             global_logger.info(f"Email sent! Message ID: {response['MessageId']}")
     except NoCredentialsError:
-        global_logger.error("Credentials not available.")
+        global_logger.error("setup_and_send_email: Credentials not available.")
     except PartialCredentialsError:
-        global_logger.error("Incomplete credentials provided.")
+        global_logger.error("setup_and_send_email: Incomplete credentials provided.")
     except Exception as e:
-        global_logger.error(f"Error sending email: {e}")
+        global_logger.error(f"setup_and_send_email: Error sending email: {e}")
+        error_logger.error(f"setup_and_send_email: Error sending email: {e}")
 
 def process_feedback(name, message):
     logging.info(f"Feedback received from {name}: {message}")
     send_feedback_email(name, message)
 
 def send_feedback_email(name, message):
-    from_email = Config.MAIL_USERNAME
-    feedback_email = Config.PERSONAL_EMAIL
+    from_email = current_app.config.MAIL_USERNAME
+    feedback_email = current_app.config.PERSONAL_EMAIL
     subject = "New Feedback Received"
     body = f"Name: {name}\nMessage:\n{message}"
     
+    if not current_app.config.AWS_CONNECTION_AVAILABLE:
+        return
     try:
-        response = Config.ses_client.send_email(
+        response = current_app.config.ses_client.send_email(
             Source=from_email,
             Destination={
                 'ToAddresses': [feedback_email]
@@ -275,3 +276,4 @@ def send_feedback_email(name, message):
         logging.info(f"Feedback email sent successfully: {response}")
     except Exception as e:
         logging.error(f"Error sending feedback email: {e}")
+        error_logger.error(f"Error sending feedback email: {e}")

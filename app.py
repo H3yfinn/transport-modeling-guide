@@ -1,46 +1,35 @@
 #todo check that singvble user having multiple open sessions does not cause issues
-from flask import Flask, request, render_template, send_file, flash, redirect, url_for, session, jsonify, stream_with_context, Response
+from flask import request, render_template, send_file, flash, redirect, url_for, session, jsonify
 import os
-import shutil
-import sys
-from datetime import timedelta, datetime
+from datetime import timedelta
 import markdown
 import time
-from dotenv import load_dotenv
-import importlib.util
 import threading
 import schedule
-import jwt
-import uuid
+import re
+import pandas as pd
 from shared import progress_tracker, global_logger, model_threads,model_FILE_DATE_IDs
 from itsdangerous import URLSafeTimedSerializer
-
-# Load environment variables from .env file and keys from secret.key file
-load_dotenv()#also done in .wsgi file but to help with local testing do it here as well
-
-from config import Config
-from user_management import UserManagement
-from encryption import encrypt_data_with_kms, decrypt_data_with_kms
 import backend
-from shared import global_logger
+from shared import global_logger, error_logger, create_app, SafeConfig
+import validators
 
 # Initialize the app
-app = Flask(__name__)
-app.config.from_object(Config)
+app = create_app()
+app.config = SafeConfig(app.config)
+
+from user_management import UserManagement
+from encryption import decrypt_data
 
 # Initialize user management and mail
 user_manager = UserManagement(app)
 mail = user_manager.mail
 
-s = URLSafeTimedSerializer(os.getenv('SECRET_KEY'))#is this needed?
-# Global dictionary to track model progress
+s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 estimated_time = None #this will be updated and made global in the running_model() function
 
-# Call the function to create the master user
-user_manager.create_master_user()
-# Pass the global model_progress_tracker to backend
-# backend.set_model_progress_tracker(model_progress_tracker)
+app.config['INITIALIZED'] = False
 ############################################################################
 
 def get_required_input_files_and_their_locations(CHECK_FOLDER_STRUCTURE, INPUT_DATA_FOLDER_PATH, SAVED_FOLDER_STRUCTURE_PATH, OVERWRITE_SAVED_FOLDER_STRUCTURE_PATH):
@@ -96,9 +85,12 @@ file_dict = get_required_input_files_and_their_locations(
 #MODEL RELATED
 # Set session lifetime to one week
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(weeks=1)
-
+    
 @app.before_request
 def update_session_timeout():
+    if not app.config['INITIALIZED']:
+        user_manager.create_master_user()
+        app.config['INITIALIZED'] = True
     session.permanent = True
     session.modified = True  # Ensures the session cookie is sent to the client
     session['last_active'] = time.time()
@@ -255,7 +247,7 @@ def results():
     
     logs = backend.get_logs_from_file(session['session_log_filename'])
     
-    if Config.LOGGING:
+    if app.config.LOGGING:
         global_logger.info('Displaying results.')
     # global_logger.info(results_paths)
     return render_template('results.html', results_paths=results_paths, key_csv_paths=key_csv_paths, logs=logs)
@@ -281,7 +273,7 @@ def default_results():
         #f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions_extra.html'
     ]
     
-    results_paths = [os.path.join(Config.ORIGINAL_MODEL_LIBRARY_NAME, 'plotting_output', file) for file in results_files]
+    results_paths = [os.path.join(app.config.ORIGINAL_MODEL_LIBRARY_NAME, 'plotting_output', file) for file in results_files]
     #check that they exist, otherwise remove them from the list
     results_paths = [file for file in results_paths if os.path.exists(file)]
     
@@ -297,11 +289,11 @@ def default_results():
         f'output_data/for_other_modellers/{economy_to_run}/{model_FILE_DATE_ID}_{economy_to_run}_transport_activity.csv',
         f'output_data/for_other_modellers/{economy_to_run}/{economy_to_run}_{model_FILE_DATE_ID}_transport_energy_use.csv']
 
-    key_csv_paths = [os.path.join(Config.ORIGINAL_MODEL_LIBRARY_NAME, file) for file in key_csv_files]
+    key_csv_paths = [os.path.join(app.config.ORIGINAL_MODEL_LIBRARY_NAME, file) for file in key_csv_files]
     #check that they exist, otherwise remove them from the list
     key_csv_paths = [file for file in key_csv_paths if os.path.exists(file)]
     
-    if Config.LOGGING:
+    if app.config.LOGGING:
         global_logger.info('Displaying results.')
     # global_logger.info(results_paths)
     return render_template('default_results.html', results_paths=results_paths, key_csv_paths=key_csv_paths)
@@ -341,7 +333,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
         user = user_manager.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
-        if user and decrypt_data_with_kms(user['password']) == password:
+        if user and decrypt_data(user['password']) == password:
             session['user_id'] = user['user_id']
             session['username'] = user['username']
             user_manager.restart_user_session()
@@ -350,7 +342,7 @@ def login():
         elif not user:
             flash('User does not exist. Please register first.')
             return redirect(url_for('register'))
-        elif decrypt_data_with_kms(user['password']) != password:
+        elif decrypt_data(user['password']) != password:
             flash('Invalid password.')
             return redirect(url_for('login'))
         else:
@@ -385,10 +377,10 @@ def forgot_password():
         
         if user:
             token = s.dumps(email, salt='password-reset-salt')
-            if Config.LOGGING:
+            if app.config.LOGGING:
                 global_logger.info(f'Password reset token: {token}')
             reset_link = url_for('reset_password', token=token, _external=True)
-            if Config.LOGGING:
+            if app.config.LOGGING:
                 global_logger.info(f'Password reset link: {reset_link}')
             try:
                 user_manager.send_reset_password_email(email, reset_link)
@@ -487,11 +479,11 @@ def running_model():
     
     #check if a user session has already been set up. if so the user must restart it before running a new model
     if user_manager.check_if_results_available():
-        if Config.LOGGING:
+        if app.config['LOGGING']:
             global_logger.info('User results are available. User must restart the session before running a new model.')
         return redirect(url_for('results'))
     if user_manager.check_model_is_running():
-        if Config.LOGGING:
+        if app.config['LOGGING']:
             global_logger.info('User model is running. User must restart the session before running a new model.')
         return redirect(url_for('model_progress'))
     
@@ -505,31 +497,39 @@ def running_model():
         session['results_available'] = False
         progress_tracker[session['user_id']] = 0
         
-        thread = threading.Thread(target=backend.run_model_thread, args=(session['session_log_filename'], session['session_library_path'], economy_to_run, session['user_id']))
+        thread = threading.Thread(target=backend.run_model_thread, args=(app, session['session_log_filename'], session['session_library_path'], economy_to_run, session['user_id']))
         
         model_threads[session['user_id']] = thread
         
         thread.start()
-        if Config.LOGGING:
+        if app.config['LOGGING']:
             global_logger.info('Model run started successfully.')
-            app.logger.info('Model run started successfully.')
-        if Config.LOGGING:
+            global_logger.info('Model run started successfully.')
+        if app.config['LOGGING']:
             global_logger.info('Saving session data after starting model run.')
         user_manager.save_session_data()
         return redirect(url_for('model_progress'))
         
     except Exception as e:
-        if Config.LOGGING:
-            app.logger.error(f'Error running model: {str(e)}')
+        if app.config['LOGGING']:
+            global_logger.error(f'Error running model: {str(e)}')
             global_logger.error(f'Error running model: {str(e)}')
         flash(f'Error running model: {str(e)}')
 
         return redirect(url_for('error_page', error_message=str(e)))
     
-@app.route('/error')
+@app.route('/error_page')
 def error_page():
     error_message = request.args.get('error_message', 'An unknown error occurred.')
     return render_template('error.html', error_message=error_message)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
 
 @app.route('/model_progress', methods=['GET', 'POST'])
 def model_progress():
@@ -540,11 +540,11 @@ def model_progress():
         
         if not user_manager.check_model_is_running():
             if user_manager.check_if_results_available():
-                if Config.LOGGING:
+                if app.config.LOGGING:
                     global_logger.info('model_progress() POST: Model is not running and results are available. Redirecting to results page.')
                 return jsonify({'redirect': url_for('results')})
             else:
-                if Config.LOGGING:
+                if app.config.LOGGING:
                     global_logger.info('model_progress() POST: Model is not running and results not available. Redirecting to index page.')
                 return jsonify({'redirect': url_for('index')})
         
@@ -559,11 +559,11 @@ def model_progress():
             return redirect(url_for('login'))
         if not user_manager.check_model_is_running():
             if user_manager.check_if_results_available():
-                if Config.LOGGING:
+                if app.config.LOGGING:
                     global_logger.info('model_progress() GET: Model is not running and results are available. Redirecting to results page.')
                 return redirect(url_for('results'))
             else:
-                if Config.LOGGING:
+                if app.config.LOGGING:
                     global_logger.info('model_progress() GET: Model is not running and results not available. Redirecting to index page.')
                 return redirect(url_for('index'))
         
@@ -573,7 +573,7 @@ def model_progress():
             thread = model_threads[user_id]
             session['model_thread_running'] = thread.is_alive()
             if not session['model_thread_running']:
-                if Config.LOGGING:
+                if app.config.LOGGING:
                     global_logger.info('model_progress() GET: Model completed running. Redirecting to results page.')
                 del model_threads[user_id]
                 session['results_available'] = True
@@ -585,49 +585,77 @@ def model_progress():
                 return render_template('model_progress.html', progress=progress_tracker[session['user_id']], logs=logs, estimated_time=estimated_time)
         
         else:
-            if Config.LOGGING:
+            if app.config.LOGGING:
                 global_logger.error('Model thread not found yet model_running is True. This should not happen.')
-                app.logger.error('Model thread not found yet model_running is True. This should not happen.')
             return redirect(url_for('hard_reset_user_session'))
     
 ####################################################
 
+# Define the function to replace placeholders
 def replace_placeholders(explanation, content_folder):
-    import re
-    pattern = re.compile(r'#insert (table|graph) here<(.+?)>')
+    file_pattern = re.compile(r'\{\{(table|graph):(.+?)\}\}')        
+    link_pattern = re.compile(r'\{\{(link):(.+?):(text):(.+?)\}\}')#{{link:https://transport-energy-modelling.com/content/activity_growth:text:here}}
 
-    def replacement(match):
+    def replace_with_link(match):
+        link = match.group(2)
+        text = match.group(4)
+        #if https is not in the link, add it
+        if not link.startswith('http://') and not link.startswith('https://'):
+            link = 'https://' + link
+        # Check if link is correct using validators.url
+        if not validators.url(link):
+            # put an error in the error.log file for me to check, but otehrwsie jsut let the 404 page handle it
+            error_logger.error(f'replace_placeholders: Invalid link: {link}')
+        return f'<a href="{link}" target="_blank">{text}</a>'
+        
+    def replace_with_file(match):
         file_type = match.group(1)
         file_name = match.group(2)
         file_path = os.path.join(content_folder, file_name)
 
-        if os.path.exists(file_path):
+        if file_type == 'table' and os.path.exists(file_path):
             try:
-                with open(file_path, 'r', encoding='utf-8') as file:
-                    return file.read()
-            except UnicodeDecodeError:
-                return f'<div style="color:red;">Error reading {file_type} file: {file_name} (encoding issue)</div>'
+                df = pd.read_csv(file_path)
+                return df.to_html(classes='table table-striped', index=False)
+            except Exception as e:
+                error_logger.error(f'Error reading table file: {file_name} ({str(e)})')
+                return ''#f'<div style="color:red;">Error reading table file: {file_name} ({str(e)})</div>'
+            
+        elif os.path.exists(file_path):
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as file:
+                        return file.read()
+                except UnicodeDecodeError:
+                    error_logger.error(f'Error reading {file_type} file: {file_name} (encoding issue)')
+                    return f'<div style="color:red;">Error reading {file_type} file: {file_name} (encoding issue)</div>'
         else:
             return f'<div style="color:red;">{file_type.capitalize()} file not found: {file_name}</div>'
 
-    return pattern.sub(replacement, explanation)
+    # Process line by line
+    lines = explanation.split('\n')
+    replaced_lines = []
+    for line in lines:
+        if file_pattern.search(line):
+            line = file_pattern.sub(replace_with_file, line)
+        if link_pattern.search(line):
+            line = link_pattern.sub(replace_with_link, line)
+        replaced_lines.append(line)
+    
+    return '\n'.join(replaced_lines)
 
+# Define the route to serve the content
 @app.route('/content/<page_name>')
 def content_page(page_name):
     content_folder = os.path.join('content', page_name)
-    #check for html and md files in the folder and render them
-    graph_files = [f for f in os.listdir(content_folder) if f.endswith('.html')]
+    
+    # Get all HTML and markdown files in the content folder
     explanation_files = [f for f in os.listdir(content_folder) if f.endswith('.md')]
-    if not graph_files and not explanation_files:
+    if not explanation_files:
         return render_template('error.html', error_message='Content not found.')
-
-    graph_files_list = []
-    for graph_file in graph_files:
-        graph_file = os.path.join(content_folder, graph_file)
-        graph_files_list += [graph_file]
-    # with open(explanation_file, 'r') as f:
-    #     explanation = markdown.markdown(f.read())
-
+    
+    if app.config.get('LOGGING', False):
+        global_logger.info(f'Generating content for page {page_name}')
+    
     explanation = ''
     for explanation_file in explanation_files:
         explanation_file_path = os.path.join(content_folder, explanation_file)
@@ -636,29 +664,8 @@ def content_page(page_name):
             explanation_markdown = markdown.markdown(explanation_content)
             explanation += replace_placeholders(explanation_markdown, content_folder)
             
-    return render_template('content_page.html', title=page_name, graph=graph_files_list, explanation=explanation)
+    return render_template('content_page.html', explanation=explanation)
 
-####################################################
-# @app.route('/stream')
-# def stream():
-#     if not user_manager.is_session_valid():
-#         return user_manager.clear_invalid_session()
-#     if not user_manager.is_session_active():
-#         return redirect(url_for('index'))
-    
-#     user_id = session.get('user_id')
-#     log_filename = f'logs/model_output_{user_id}.log'
-
-#     def generate():
-#         with open(log_filename, 'r') as log_file:
-#             while True:
-#                 line = log_file.readline()
-#                 if not line:
-#                     break
-#                 yield line
-#                 time.sleep(1)
-
-#     return app.response_class(generate(), mimetype='text/plain')
 ####################################################
 # Schedule the cleanup task
 schedule.every().day.at("00:00").do(user_manager.delete_inactive_users_sessions)

@@ -1,0 +1,7 @@
+Region,Fuel,New_fuel,Date,Reference,Target
+00_ECON,07_01_motor_gasoline,16_05_biogasoline,2030,0,0
+00_ECON,07_01_motor_gasoline,16_05_biogasoline,2050,0,0.05
+00_ECON,07_07_gas_diesel_oil,16_06_biodiesel,2030,0.319,0.4
+00_ECON,07_07_gas_diesel_oil,16_06_biodiesel,2050,0.319,0.5
+00_ECON,07_x_jet_fuel,16_07_bio_jet_kerosene,2030,0,0.05
+00_ECON,07_x_jet_fuel,16_07_bio_jet_kerosene,2050,0,0.2

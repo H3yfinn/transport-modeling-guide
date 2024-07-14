@@ -9,7 +9,7 @@ class Config:
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     PERSONAL_EMAIL = os.getenv('PERSONAL_EMAIL')
     
-def encrypt_data_with_kms(data):
+def encrypt_data(data):
     # Placeholder for your actual KMS encryption function
     return data
 
@@ -17,7 +17,7 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
     """Send an email with the generated password. e.g. 
         backend.setup_and_send_email(email, new_values_dict, email_template='reset_password_email_template.html', subject_title='Password Reset Request')"""
     if Config.LOGGING:
-        print(f'Sending email to {encrypt_data_with_kms(email)}')
+        print(f'Sending email to {encrypt_data(email)}')
 
     # Read HTML content from file
     with open(email_template, 'r') as file:

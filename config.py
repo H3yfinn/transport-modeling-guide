@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import boto3
 
 class Config:
-        
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__))    #is thjer any need for this?
     BASE_UPLOAD_FOLDER = 'uploads'
     BASE_LOGS_FOLDER = 'logs'
@@ -14,12 +13,6 @@ class Config:
     ORIGINAL_MODEL_LIBRARY_NAME = 'transport_model_9th_edition'
     
     EXECUTION_TIMES_FILE = 'execution_times.json'
-    
-    # Initialize the SES client using the IAM role credentials
-    ses_client = boto3.client('ses', region_name='ap-northeast-1')
-    AWS_ACCESS_KEY_ID = ses_client._request_signer._credentials.access_key
-    AWS_SECRET_ACCESS_KEY = ses_client._request_signer._credentials.secret_key
-    AWS_REGION = ses_client.meta.region_name
     
     # Flask-Mail configuration
     #now in .env file
@@ -34,8 +27,20 @@ class Config:
     KMS_KEY_ID = os.getenv('KMS_KEY_ID')
     SECRET_KEY = os.getenv('SECRET_KEY')
     NON_KMS_ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
+    AWS_CONNECTION_AVAILABLE = os.getenv('AWS_CONNECTION_AVAILABLE')
     # app.config['MAIL_DEFAULT_SENDER'] = ('Your Name', os.getenv('MAIL_USERNAME'))
     
+    # Initialize the SES client using the IAM role credentials
+    if AWS_CONNECTION_AVAILABLE:
+        ses_client = boto3.client('ses', region_name='ap-northeast-1')
+        AWS_ACCESS_KEY_ID = ses_client._request_signer._credentials.access_key
+        AWS_SECRET_ACCESS_KEY = ses_client._request_signer._credentials.secret_key
+        AWS_REGION = ses_client.meta.region_name
+        
+        kms_client = boto3.client('kms', region_name='ap-northeast-1')
+    else:
+        kms_client = None
+        
     # APScheduler configuration
     JOBS = [
         {
@@ -46,3 +51,4 @@ class Config:
         }
     ]
     SCHEDULER_API_ENABLED = True
+    

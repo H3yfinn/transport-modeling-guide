@@ -3,7 +3,7 @@ import base64
 import logging
 from dotenv import load_dotenv
 import os
-from config import Config
+from flask import current_app
 from cryptography.fernet import Fernet
 import secrets
 
@@ -11,12 +11,26 @@ load_dotenv()
 
 # Enable logging
 from shared import global_logger
-# Initialize the KMS client using the IAM role credentials
-kms_client = boto3.client('kms', region_name='ap-northeast-1')
+
+def decrypt_data(encrypted_data):
+    if current_app.config.AWS_CONNECTION_AVAILABLE and current_app.config.kms_client:
+        return decrypt_data_with_kms(encrypted_data)
+    else:
+        return encrypted_data#decrypt_data_without_kms(encrypted_data)
+
+def encrypt_data(data):
+    if current_app.config.AWS_CONNECTION_AVAILABLE and current_app.config.kms_client:
+        return encrypt_data_with_kms(data)
+    else:
+        return data#encrypt_data_without_kms(data)
 
 def encrypt_data_with_kms(data):
+    if not current_app.config.kms_client:
+        global_logger.error("KMS client not initialized.")
+        return data
+
     try:
-        response = kms_client.encrypt(
+        response =  current_app.config.kms_client.encrypt(
             KeyId=os.getenv('KMS_KEY_ID'),
             Plaintext=data
         )
@@ -29,31 +43,35 @@ def encrypt_data_with_kms(data):
         raise e
 
 def decrypt_data_with_kms(encrypted_data):
+    if not current_app.config.kms_client:
+        global_logger.error("KMS client not initialized.")
+        return encrypted_data
+
     try:
-        if Config.LOGGING:
+        if current_app.config.LOGGING:
             global_logger.debug(f"Original encrypted data: {encrypted_data}")
-        
+
         # Add padding if necessary
         missing_padding = len(encrypted_data) % 4
         if missing_padding:
             encrypted_data += '=' * (4 - missing_padding)
-        if Config.LOGGING:
+        if current_app.config.LOGGING:
             global_logger.debug(f"Padded encrypted data: {encrypted_data}")
-        
+
         decoded_encrypted_data = base64.b64decode(encrypted_data)
-        if Config.LOGGING:
+        if current_app.config.LOGGING:
             global_logger.debug(f"Decoded encrypted data.")
 
-        response = kms_client.decrypt(
+        response = current_app.config.kms_client.decrypt(
             CiphertextBlob=decoded_encrypted_data
         )
         decrypted_data = response['Plaintext'].decode('utf-8')
-        
+
         return decrypted_data
     except Exception as e:
         global_logger.error("Error during decryption:", exc_info=True)
         raise e
-    
+
 ##########Non KMS encryption and decryption functions##########
 
 def load_encryption_key():
@@ -68,12 +86,12 @@ def load_secret_key():
         raise ValueError("SECRET_KEY is not set in the environment.")
     return key.encode()
 
-def encrypt_data(data):
+def encrypt_data_without_kms(data):
     key = load_encryption_key()
     cipher_suite = Fernet(key)
     return cipher_suite.encrypt(data.encode()).decode()
 
-def decrypt_data(encrypted_data):
+def decrypt_data_without_kms(encrypted_data):
     key = load_encryption_key()
     cipher_suite = Fernet(key)
     return cipher_suite.decrypt(encrypted_data.encode()).decode()
