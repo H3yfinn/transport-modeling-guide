@@ -52,6 +52,8 @@
             </form>
         </section>
         <section>
+            <p><a href="{{ url_for('content_page', page_name='about_the_model') }}" target="_blank">About the model</a></p>        
+        <section>
             <h2>Methodology and notes</h2>
             <p>Here you can find the methodology and notes for the transport model. These will be helpful in understanding the results and how the model works.</p>
             <ul>
@@ -67,6 +69,9 @@
                 
                 <li><a href="{{ url_for('content_page', page_name='covid') }}">Modelling the effects of COVID-19</a></li>
                 <li><a href="{{ url_for('content_page', page_name='lmdi') }}">Analysing the drivers of changes in energy use</a></li>
+
+                <li><a href="{{ url_for('content_page', page_name='emissions') }}">Emissions</a></li>
+                <li><a href="{{ url_for('content_page', page_name='charging') }}">Charging</a></li>
 
                 <li><a href="{{ url_for('content_page', page_name='concordances') }}">Concordances</a></li>
                 <li><a href="{{ url_for('content_page', page_name='matching_official_energy_statistics') }}">Matching Official Energy Statistics</a></li>

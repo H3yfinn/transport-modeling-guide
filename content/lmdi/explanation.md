@@ -17,3 +17,7 @@ Some analysis of the chart above:
 - The vehicle efficiency effect is significant in the Reference scenario. This is because with much less engine switching, the efficiency gains on new ICEs (which is assumed to be ~1.5% improvement per year in both scenarios) are more impactful, since there are more new ICE's being sold in the Reference scenario.
 -The activity effect is large and almost the same in both scenarios. This is because we assume that both scenarios have the same activity growth and so it there is only a slight difference because of a slight improvement to activity efficiency (improvements to routing so that people need to drive less to achieve the same goals).
 
+## Multiplicative LMDI
+You can also break down the changes in energy use using a multiplicative LMDI, which shows the same information but in a different way. It has the advantage of being easier to read in a time series and it shows the changes as the product of the multipliers. 
+
+{{graph:10_MAS_Target_passenger_road_2_Emissions_Hierarchical_2070_multiplicative_timeseries.html}}

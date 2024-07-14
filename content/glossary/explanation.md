@@ -1,7 +1,7 @@
 # Glossary
 There's lots of acronyms and shortened names in the input and output data from the model. Below i've tried to define the ones that I think are most important. If you think there are any that I've missed out then please let me know.
 
-{{link:https://github.com/H3yfinn/concordances:text:Here's a link to the concordances for your reference.}}
+{{link:https://transport-energy-modelling.com/content/concordances:text:Here's a link to the concordances for your reference.}}
  
 ## Vehicle types:
 Within freight we have:
