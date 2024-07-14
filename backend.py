@@ -197,7 +197,7 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
     """Send an email with the generated password. e.g. 
         backend.setup_and_send_email(email, new_values_dict, email_template='reset_password_email_template.html', subject_title='Password Reset Request')"""
     if current_app.config.LOGGING:
-        global_logger.info(f'Sending email to {encrypt_data(email)}')
+        global_logger.info(f'Sending email to {(email)}')#encrypt_data
     
     # Read HTML content from file
     with open(email_template, 'r') as file:
@@ -210,6 +210,7 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
         html_content = html_content.replace('{{ ' + key + ' }}', value)
         
     if not current_app.config.AWS_CONNECTION_AVAILABLE:
+        error_logger.error("setup_and_send_email: AWS connection not available.")
         return
     try:
         # Send email using AWS SES
@@ -252,7 +253,11 @@ def send_feedback_email(name, message):
     subject = "New Feedback Received"
     body = f"Name: {name}\nMessage:\n{message}"
     
+    if current_app.config.LOGGING:
+        global_logger.info(f'Sending feedback email to {(feedback_email)}')#encrypt_data
+        
     if not current_app.config.AWS_CONNECTION_AVAILABLE:
+        error_logger.error("send_feedback_email: AWS connection not available.")
         return
     try:
         response = current_app.config.ses_client.send_email(

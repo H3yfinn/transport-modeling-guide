@@ -73,7 +73,7 @@ class UserManagement:
     def send_password_email(self, email, password):
         """Send an email with the generated password."""
         if current_app.config.LOGGING:
-            global_logger.info(f'Sending password email to {encrypt_data(email)}')
+            global_logger.info(f'Sending password email to {(email)}')#encrypt_data
             
         new_values_dict={}
         new_values_dict['password'] = password
@@ -87,7 +87,7 @@ class UserManagement:
 
     def send_reset_password_email(self, email, reset_link):
         if current_app.config.LOGGING:
-            global_logger.info(f'Sending password reset email to {encrypt_data(email)}')
+            global_logger.info(f'Sending password reset email to {(email)}')#encrypt_data
         
         new_values_dict = {'reset_link': reset_link}
         
@@ -95,7 +95,7 @@ class UserManagement:
         
         if current_app.config.LOGGING:
             global_logger.info(f'Sending password reset email with reset link: {reset_link}')
-            
+             
         try:
             backend.setup_and_send_email(
                 email=email,
@@ -140,7 +140,7 @@ class UserManagement:
 
     def register_user(self, email):
         if current_app.config.LOGGING:
-            global_logger.info(f'Registering user with email: {encrypt_data(email)}')
+            global_logger.info(f'Registering user with email: {(email)}')#encrypt_data
         user_data = self.read_user_data()
         user = self.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
         if user:
