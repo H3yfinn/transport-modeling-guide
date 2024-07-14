@@ -1,0 +1,13 @@
+Date,Economy,Measure,Medium,Transport Type,Scenario,Unit,Frequency,Data_available,Value
+2020,00_ECONOMY,Activity_efficiency_improvement,road,freight,Reference,%,Yearly,data_available,1.001
+2021,00_ECONOMY,Activity_efficiency_improvement,road,freight,Reference,%,Yearly,data_available,1.001
+2021,00_ECONOMY,Activity_efficiency_improvement,road,freight,Target,%,Yearly,data_available,1.001
+2022,00_ECONOMY,Activity_efficiency_improvement,road,freight,Reference,%,Yearly,data_available,1.001
+2022,00_ECONOMY,Activity_efficiency_improvement,road,freight,Target,%,Yearly,data_available,1.001
+2020,00_ECONOMY,Activity_efficiency_improvement,road,passenger,Reference,%,Yearly,data_available,1.0005
+2020,00_ECONOMY,Activity_efficiency_improvement,road,freight,Target,%,Yearly,data_available,1.001
+2021,00_ECONOMY,Activity_efficiency_improvement,road,passenger,Target,%,Yearly,data_available,1.0005
+2021,00_ECONOMY,Activity_efficiency_improvement,road,passenger,Reference,%,Yearly,data_available,1.0005
+2022,00_ECONOMY,Activity_efficiency_improvement,road,passenger,Reference,%,Yearly,data_available,1.0005
+2022,00_ECONOMY,Activity_efficiency_improvement,road,passenger,Target,%,Yearly,data_available,1.0005
+2020,00_ECONOMY,Activity_efficiency_improvement,road,passenger,Target,%,Yearly,data_available,1.0005

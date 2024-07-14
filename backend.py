@@ -243,7 +243,7 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
         error_logger.error(f"setup_and_send_email: Error sending email: {e}")
 
 def process_feedback(name, message):
-    logging.info(f"Feedback received from {name}: {message}")
+    global_logger.info(f"Feedback received from {name}: {message}")
     send_feedback_email(name, message)
 
 def send_feedback_email(name, message):
@@ -273,7 +273,7 @@ def send_feedback_email(name, message):
                 }
             }
         )
-        logging.info(f"Feedback email sent successfully: {response}")
+        global_logger.info(f"Feedback email sent successfully: {response}")
     except Exception as e:
-        logging.error(f"Error sending feedback email: {e}")
+        global_logger.error(f"Error sending feedback email: {e}")
         error_logger.error(f"Error sending feedback email: {e}")

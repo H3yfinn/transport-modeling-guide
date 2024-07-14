@@ -1,0 +1,43 @@
+# Glossary
+There's lots of acronyms and shortened names in the input and output data from the model. Below i've tried to define the ones that I think are most important. If you think there are any that I've missed out then please let me know.
+
+{{link:https://github.com/H3yfinn/concordances:text:Here's a link to the concordances for your reference.}}
+ 
+## Vehicle types:
+Within freight we have:
+
+- lcv: light commercial vehicle
+- ht: heavy truck
+- mt: medium truck
+
+Within passenger transport we have:
+
+- car
+- bus
+- 2w: also includes 3 wheelers
+- suv: sports utility vehicle
+- lt: light truck
+
+## Drive types:
+These are also referred to as powertrains or engine types. They include:
+
+- bev: battery electric vehicle
+- phev_g: plug-in hybrid electric vehicle which uses gasoline
+- phev_d: plug-in hybrid electric vehicle which uses diesel
+- ice_g: internal combustion engine which uses gasoline (also includes HEV's)
+- ice_d: internal combustion engine which uses diesel (also includes HEV's)
+- lpg: liquefied petroleum gas
+- cng: compressed natural gas
+- fcev: fuel cell electric vehicle
+
+## Fuel types:
+Will just explain some of the more obscure ones:
+
+- biogasoline: gasoline made from biological sources. To simplify things this also includes ethanol, which is a replacement for gasoline but cannot be used in all vehicles or in large quantities.
+- biodiesel: diesel made from biological sources. To simplify things this also includes HVO, which is a more advanced replacement for diesel that can be used in more vehicles and in larger quantities.
+- biojet: jet fuel made from biological sources. This is otherwise known as SAF (sustainable aviation fuel).
+- efuels: synthetic fuels that are made from combining hydrogen and CO2 using renewable energy. In our model we have not differentiated between the different types of efuels, so they are all grouped together. Also for simplicity we lump methanol and methane in with efuels. This means that it is not strictly necessary that our efuels are created using renewable energy. In the future we will have to make this distinction.
+- ammonia: a fuel that is being considered for use in the shipping industry. It is made from combining hydrogen and nitrogen.
+
+
+

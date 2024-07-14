@@ -436,14 +436,11 @@ def feedback_form():
 def submit_feedback():
     name = request.form['name']
     message = request.form['message']
-    
     try:
         backend.process_feedback(name, message)
-        flash('Thank you for your feedback!', 'success')
     except Exception as e:
-        flash('An error occurred while processing your feedback. Please try again later.', 'danger')
         global_logger.error(f'Error processing feedback: {str(e)}')
-    
+        error_logger.error(f'Error processing feedback: {str(e)}')
     return redirect(url_for('index'))
 ####################################################
 @app.route('/running_model', methods=['POST'])

@@ -4,6 +4,7 @@
 
 {{table:fuel_mixing.csv}}
 After downloading this workbook in the staging page, to fill in the fuel mixing form, you need to keep in mind the following:
+
 - the sum of fuel mix shares should be 1 or less for each year and Fuel in the table above
 - the fuel mix shares should be positive
 - the economy, fuel, new_fuel and year columns are mandatory plus they must match the categories already in the sheet if you download it. See the page on {{link:https://transport-energy-modelling.com/content/concordances:text:concordances}} to see what is currently used in the model.

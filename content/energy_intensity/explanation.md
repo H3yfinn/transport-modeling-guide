@@ -1,5 +1,6 @@
 # Energy intensity and efficiency
 Firstly note that within the framework of this transport energy model:
+
 - efficiency is defined as the distance per unit of energy use (e.g. km/MJ) 
 - intensity is defined as the energy use per unit of activity (e.g. MJ/passenger-km). See {{link:https://transport-energy-modelling.com/content/activity:text:this}} on activity in case you are confused.
 

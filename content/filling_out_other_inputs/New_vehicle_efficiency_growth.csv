@@ -1,0 +1,20 @@
+Date,Economy,Measure,Vehicle Type,Medium,Transport Type,Drive,Scenario,Unit,Frequency,Data_available,Value
+2018,00_ECONOMY,New_vehicle_efficiency_growth,ht,road,freight,ice_d,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,ht,road,freight,fcev,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,2w,road,passenger,bev,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,ht,road,freight,phev_d,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,ht,road,freight,bev,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,bus,road,passenger,phev_d,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,bus,road,passenger,fcev,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,lt,road,passenger,ice_d,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,lt,road,passenger,bev,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,bus,road,passenger,bev,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,2w,road,passenger,ice_d,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,bus,road,passenger,ice_d,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,lt,road,passenger,phev_d,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,lt,road,passenger,fcev,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,bus,road,passenger,cng,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,bus,road,passenger,lpg,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,ht,road,freight,cng,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,ht,road,freight,lpg,Reference,%,Yearly,data_available,1.01
+2018,00_ECONOMY,New_vehicle_efficiency_growth,lt,road,freight,bev,Reference,%,Yearly,data_available,1.01

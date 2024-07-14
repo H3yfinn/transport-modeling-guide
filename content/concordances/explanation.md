@@ -4,4 +4,6 @@ Perhaps its a word that i've bastardized but i use it to refer to the mapping of
 
 You can use the concordances to understand all the different categories that are used in the model. If you want to see more specific ones you can go to the {{link:https://transport-energy-modelling.com/content/concordances_measures:text:measures}} or {{link:https://transport-energy-modelling.com/content/concordances_fuels:text:fuels}} concordances.
 
+Also, if you're confused you can refer to the glossary {{link:https://transport-energy-modelling.com/content/glossary:text:here}}.
+
 {{table:concordances_simplified.csv}}

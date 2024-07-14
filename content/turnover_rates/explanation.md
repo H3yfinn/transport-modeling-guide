@@ -16,6 +16,7 @@ An interesting case is Singapore where the country has very young cars relative 
 Of course, we can never know if this is correct, but something needs to be done to reflect this dynamic in the model. As with many things in modelling, its the best guess we can make with the information we have. Sometimes what is most important is to be able to show clear dynamics and trends that the viewer (e.g. policy advisor) might expect to see in the real world, and then show how they interact to create the results we see.
 
 There are some assumptions i had to sneak in to simplify things, but i felt it wasn't a big deal:
+
 - we still base the turnover rate off the average age of the vehicles but always the oldest vehicles are turned over first. this doesnt quite match reality as there is a chance that any vehicles regardless of its age will be turned over. But it is a simplification that makes the model easier to understand.
 - Non road uses a S curve which allows their 'vehicles' to be turned over later than road vehicles. This is because the non road vehicles are more likely to be used for longer than road vehicles. However if you read the non road section 'here' you will realise that we have simplified things by not using the histogram idea.
 {{graph:insert graph of non raod age representation vs road age representation suign historgram where all non road are single age and road are multiple ages.html}}

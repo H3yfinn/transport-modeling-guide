@@ -1,0 +1,15 @@
+Economy,Measure,Medium,Transport Type,Scenario,Unit,Frequency,Data_available,Value,Comment
+00_ECONOMY,Gompertz_gamma,road,passenger,Target,Stocks_per_thousand_capita,Yearly,data_available,663.12,
+00_ECONOMY,Gompertz_gamma,road,passenger,Reference,Stocks_per_thousand_capita,Yearly,data_available,663.12,
+00_ECONOMY,Gompertz_gamma,road,passenger,Target,Stocks_per_thousand_capita,Yearly,data_available,100,
+00_ECONOMY,Gompertz_gamma,road,passenger,Reference,Stocks_per_thousand_capita,Yearly,data_available,100,
+00_ECONOMY,Gompertz_gamma,road,passenger,Target,Stocks_per_thousand_capita,Yearly,data_available,800,
+00_ECONOMY,Gompertz_gamma,road,passenger,Reference,Stocks_per_thousand_capita,Yearly,data_available,800,
+00_ECONOMY,Gompertz_gamma,road,passenger,Target,Stocks_per_thousand_capita,Yearly,data_available,400,
+00_ECONOMY,Gompertz_gamma,road,passenger,Reference,Stocks_per_thousand_capita,Yearly,data_available,400,
+00_ECONOMY,Gompertz_gamma,road,passenger,Reference,Stocks_per_thousand_capita,Yearly,data_available,600,Expect doubling in ownership from '194 to 400' in REF and '194 to '280' in tgt
+00_ECONOMY,Gompertz_gamma,road,passenger,Target,Stocks_per_thousand_capita,Yearly,data_available,400,Expect doubling in ownership from '194 to 400' in REF and '194 to '280' in tgt
+00_ECONOMY,Gompertz_gamma,road,passenger,Target,Stocks_per_thousand_capita,Yearly,data_available,112.2,
+00_ECONOMY,Gompertz_gamma,road,passenger,Reference,Stocks_per_thousand_capita,Yearly,data_available,112.2,
+00_ECONOMY,Gompertz_gamma,road,passenger,Reference,Stocks_per_thousand_capita,Yearly,data_available,350,needed to decrease to 350 to achieve emissions targets
+00_ECONOMY,Gompertz_gamma,road,passenger,Target,Stocks_per_thousand_capita,Yearly,data_available,350,needed to decrease to 350 to achieve emissions targets

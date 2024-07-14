@@ -1,0 +1,22 @@
+Date,Economy,Measure,Vehicle Type,Medium,Transport Type,Scenario,Unit,Frequency,Data_available,Value,Drive
+2024,00_ECONOMY,Non_road_intensity_improvement,all,air,freight,Reference,%,Yearly,data_available,1.001,air_av_gas
+2024,00_ECONOMY,Non_road_intensity_improvement,all,air,freight,Reference,%,Yearly,data_available,1.001,air_diesel
+2024,00_ECONOMY,Non_road_intensity_improvement,all,air,freight,Reference,%,Yearly,data_available,1.001,air_electric
+2024,00_ECONOMY,Non_road_intensity_improvement,all,air,freight,Reference,%,Yearly,data_available,1.001,air_fuel_oil
+2024,00_ECONOMY,Non_road_intensity_improvement,all,air,freight,Reference,%,Yearly,data_available,1.001,air_gasoline
+2024,00_ECONOMY,Non_road_intensity_improvement,all,air,freight,Reference,%,Yearly,data_available,1.001,air_hydrogen
+2024,00_ECONOMY,Non_road_intensity_improvement,all,air,freight,Reference,%,Yearly,data_available,1.001,air_jet_fuel
+2024,00_ECONOMY,Non_road_intensity_improvement,all,air,freight,Reference,%,Yearly,data_available,1.001,air_kerosene
+2024,00_ECONOMY,Non_road_intensity_improvement,all,air,freight,Reference,%,Yearly,data_available,1.001,air_lpg
+2024,00_ECONOMY,Non_road_intensity_improvement,all,rail,freight,Reference,%,Yearly,data_available,1.001,rail_coal
+2024,00_ECONOMY,Non_road_intensity_improvement,all,rail,freight,Reference,%,Yearly,data_available,1.001,rail_diesel
+2024,00_ECONOMY,Non_road_intensity_improvement,all,rail,freight,Reference,%,Yearly,data_available,1.001,rail_electricity
+2024,00_ECONOMY,Non_road_intensity_improvement,all,rail,freight,Reference,%,Yearly,data_available,1.001,rail_fuel_oil
+2024,00_ECONOMY,Non_road_intensity_improvement,all,rail,freight,Reference,%,Yearly,data_available,1.001,rail_gasoline
+2024,00_ECONOMY,Non_road_intensity_improvement,all,rail,freight,Reference,%,Yearly,data_available,1.001,rail_kerosene
+2024,00_ECONOMY,Non_road_intensity_improvement,all,rail,freight,Reference,%,Yearly,data_available,1.001,rail_lpg
+2024,00_ECONOMY,Non_road_intensity_improvement,all,rail,freight,Reference,%,Yearly,data_available,1.001,rail_natural_gas
+2024,00_ECONOMY,Non_road_intensity_improvement,all,ship,freight,Reference,%,Yearly,data_available,1.001,ship_ammonia
+2024,00_ECONOMY,Non_road_intensity_improvement,all,ship,freight,Reference,%,Yearly,data_available,1.001,ship_diesel
+2024,00_ECONOMY,Non_road_intensity_improvement,all,ship,freight,Reference,%,Yearly,data_available,1.001,ship_electric
+2024,00_ECONOMY,Non_road_intensity_improvement,all,ship,freight,Reference,%,Yearly,data_available,1.001,ship_fuel_oil
