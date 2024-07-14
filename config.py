@@ -28,18 +28,22 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
     NON_KMS_ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
     AWS_CONNECTION_AVAILABLE = os.getenv('AWS_CONNECTION_AVAILABLE')
-    # app.config['MAIL_DEFAULT_SENDER'] = ('Your Name', os.getenv('MAIL_USERNAME'))
     
-    # Initialize the SES client using the IAM role credentials
-    if AWS_CONNECTION_AVAILABLE:
-        ses_client = boto3.client('ses', region_name='ap-northeast-1')
-        AWS_ACCESS_KEY_ID = ses_client._request_signer._credentials.access_key
-        AWS_SECRET_ACCESS_KEY = ses_client._request_signer._credentials.secret_key
-        AWS_REGION = ses_client.meta.region_name
-        
-        kms_client = boto3.client('kms', region_name='ap-northeast-1')
-    else:
+    # Initialize the SES client using the IAM role credentials. it doesnt matter if we dont have access, it  wont cause an error, it just will be set to None
+    ses_client = boto3.client('ses', region_name='ap-northeast-1')
+    AWS_ACCESS_KEY_ID = ses_client._request_signer._credentials.access_key
+    AWS_SECRET_ACCESS_KEY = ses_client._request_signer._credentials.secret_key
+    AWS_REGION = ses_client.meta.region_name
+    kms_client = boto3.client('kms', region_name='ap-northeast-1')
+    if ses_client == None and AWS_CONNECTION_AVAILABLE:
+        print("AWS connection for ses_client not available. Check your IAM role permissions.")
+        raise Exception("AWS connection for ses_client not available. Check your IAM role permissions.")
+    if kms_client == None and AWS_CONNECTION_AVAILABLE:
+        print("AWS connection for kms_client not available. Check your IAM role permissions.")
+        raise Exception("AWS connection for kms_client not available. Check your IAM role")
+    if not AWS_CONNECTION_AVAILABLE:
         kms_client = None
+        ses_client = None
         
     # APScheduler configuration
     JOBS = [
