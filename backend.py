@@ -213,8 +213,9 @@ def setup_and_send_email(email, from_email, new_values_dict, email_template, sub
         error_logger.error("setup_and_send_email: AWS connection not available.")
         return
     try:
+        ses_client = boto3.client('ses', region_name='ap-northeast-1')
         # Send email using AWS SES
-        response = current_app.config.ses_client.send_email(
+        response = ses_client.send_email(
             Source=from_email,
             Destination={
                 'ToAddresses': [email]
@@ -260,7 +261,8 @@ def send_feedback_email(name, message):
         error_logger.error("send_feedback_email: AWS connection not available.")
         return
     try:
-        response = current_app.config.ses_client.send_email(
+        ses_client = boto3.client('ses', region_name='ap-northeast-1')
+        response = ses_client.send_email(
             Source=from_email,
             Destination={
                 'ToAddresses': [feedback_email]

@@ -12,25 +12,23 @@ load_dotenv()
 # Enable logging
 from shared import global_logger
 
-def decrypt_data(encrypted_data):
-    if current_app.config.AWS_CONNECTION_AVAILABLE and current_app.config.kms_client:
+def decrypt_data(encrypted_data, kms_client):
+    kms_client = boto3.client('kms', region_name='ap-northeast-1')
+    if current_app.config.AWS_CONNECTION_AVAILABLE:
         return decrypt_data_with_kms(encrypted_data)
     else:
         return encrypted_data#decrypt_data_without_kms(encrypted_data)
 
 def encrypt_data(data):
-    if current_app.config.AWS_CONNECTION_AVAILABLE and current_app.config.kms_client:
-        return encrypt_data_with_kms(data)
+    kms_client = boto3.client('kms', region_name='ap-northeast-1')
+    if current_app.config.AWS_CONNECTION_AVAILABLE:
+        return encrypt_data_with_kms(data, kms_client)
     else:
         return data#encrypt_data_without_kms(data)
 
-def encrypt_data_with_kms(data):
-    if not current_app.config.kms_client:
-        global_logger.error("KMS client not initialized.")
-        return data
-
+def encrypt_data_with_kms(data, kms_client):
     try:
-        response =  current_app.config.kms_client.encrypt(
+        response =  kms_client.encrypt(
             KeyId=os.getenv('KMS_KEY_ID'),
             Plaintext=data
         )
@@ -42,11 +40,7 @@ def encrypt_data_with_kms(data):
         global_logger.error("Error during encryption:", exc_info=True)
         raise e
 
-def decrypt_data_with_kms(encrypted_data):
-    if not current_app.config.kms_client:
-        global_logger.error("KMS client not initialized.")
-        return encrypted_data
-
+def decrypt_data_with_kms(encrypted_data,kms_client):
     try:
         if current_app.config.LOGGING:
             global_logger.debug(f"Original encrypted data: {encrypted_data}")
@@ -62,7 +56,7 @@ def decrypt_data_with_kms(encrypted_data):
         if current_app.config.LOGGING:
             global_logger.debug(f"Decoded encrypted data.")
 
-        response = current_app.config.kms_client.decrypt(
+        response = kms_client.decrypt(
             CiphertextBlob=decoded_encrypted_data
         )
         decrypted_data = response['Plaintext'].decode('utf-8')
