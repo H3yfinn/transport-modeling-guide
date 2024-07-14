@@ -12,10 +12,10 @@ load_dotenv()
 # Enable logging
 from shared import global_logger
 
-def decrypt_data(encrypted_data, kms_client):
+def decrypt_data(encrypted_data):
     kms_client = boto3.client('kms', region_name='ap-northeast-1')
     if current_app.config.AWS_CONNECTION_AVAILABLE:
-        return decrypt_data_with_kms(encrypted_data)
+        return decrypt_data_with_kms(encrypted_data, kms_client)
     else:
         return encrypted_data#decrypt_data_without_kms(encrypted_data)
 
