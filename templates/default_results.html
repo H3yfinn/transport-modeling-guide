@@ -35,10 +35,11 @@
         <a href="{{ url_for('index') }}">Home</a> |
         <a href="{{ url_for('feedback_form') }}">Submit Feedback</a> ||
         <a href="{{ url_for('content_page', page_name='guide') }}" target="_blank">Reading the results</a> |
-        <a href="{{ url_for('content_page', page_name='how_model_works') }}" target="_blank">How it works</a>
+        <a href="{{ url_for('content_page', page_name='how_model_works') }}" target="_blank">How it works</a>|
+        <a href="{{ url_for('content_page', page_name='glossary') }}" target="_blank">Glossary</a>
     </nav>
     <h1>Default results</h1>
-    <p>These are the default results for the economy you selected. They are based off a model run we did but don't represent our latest views.</p>
+    <p>These are the default results for the economy you selected. They are based off a model run we did but don't represent our latest views. Please read the guides above if you need assistance.</p>
     {% for path in results_paths %}
         <h2>{{ path.split('/')[-1] }}</h2>
         <iframe src="{{ url_for('serve_file', filename=path) }}" width="100%" height="600px"></iframe>

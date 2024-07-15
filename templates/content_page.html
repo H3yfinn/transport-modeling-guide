@@ -10,7 +10,8 @@
     <div class="container">
         <nav>
             <a href="{{ url_for('index') }}">Home</a> |
-            <a href="{{ url_for('feedback_form') }}">Submit Feedback</a>
+            <a href="{{ url_for('feedback_form') }}">Submit Feedback</a> ||
+            <a href="{{ url_for('content_page', page_name='glossary') }}" target="_blank">Glossary</a>
         </nav>
         <section>
             <div id="content-container">

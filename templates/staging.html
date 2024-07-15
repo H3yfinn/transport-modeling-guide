@@ -12,7 +12,8 @@
         <nav>
             <a href="{{ url_for('index') }}">Home</a> |
             <a href="{{ url_for('feedback_form') }}">Submit Feedback</a> |
-            <a href="{{ url_for('content_page', page_name='how_model_works') }}" target="_blank">How it works</a>
+            <a href="{{ url_for('content_page', page_name='how_model_works') }}" target="_blank">How it works</a> |
+            <a href="{{ url_for('content_page', page_name='glossary') }}" target="_blank">Glossary</a>
 
         </nav>
 
@@ -29,8 +30,7 @@
 
         
         <section>
-            <h2>Methodology Content</h2>
-            <p>Please note that the requirements for the formatting and what values can be used in the input files is strict. I recommend reading about them first:</p>
+            <h2>About the inputs</h2>
             <ul>
                 <li><a href="{{ url_for('content_page', page_name='filling_out_vehicle_sales_shares') }}">Vehicle sales shares</a></li>
                 <li><a href="{{ url_for('content_page', page_name='filling_out_fuel_mixing') }}">Fuel Mixing</a></li>

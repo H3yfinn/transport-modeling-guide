@@ -3,6 +3,37 @@ There's lots of acronyms and shortened names in the input and output data from t
 
 {{link:https://transport-energy-modelling.com/content/concordances:text:Here's a link to the concordances for your reference.}}
  
+## Economy codes:
+
+- 01_AUS: Australia
+- 02_BD: Brunei darussalam
+- 03_CDA: Canada
+- 04_CHL: Chile
+- 05_PRC: China
+- 06_HKC: Hong Kong, China
+- 07_INA: Indonesia
+- 08_JPN: Japan
+- 09_ROK: Korea, Republic of
+- 10_MAS: Malaysia
+- 11_MEX: Mexico
+- 12_NZ: New Zealand
+- 13_PNG: Papua New Guinea
+- 14_PE: Peru
+- 15_PHL: Philippines
+- 16_RUS: Russia
+- 17_SGP: Singapore
+- 18_CT: Chinese Taipei
+- 19_THA: Thailand
+- 20_USA: United States
+- 21_VN: Vietnam
+
+## Others:
+
+8th: This refers to the results from the 8th outlook, compared to this which is the 9th outlook. 
+ESTO: This is a statistics division which provides the data used in this model.
+Target: This refers to the target scenario, compared to the reference scenario.
+Reference: This refers to the reference scenario, compared to the target scenario.
+
 ## Vehicle types:
 Within freight we have:
 
@@ -38,28 +69,3 @@ Will just explain some of the more obscure ones:
 - biojet: jet fuel made from biological sources. This is otherwise known as SAF (sustainable aviation fuel).
 - efuels: synthetic fuels that are made from combining hydrogen and CO2 using renewable energy. In our model we have not differentiated between the different types of efuels, so they are all grouped together. Also for simplicity we lump methanol and methane in with efuels. This means that it is not strictly necessary that our efuels are created using renewable energy. In the future we will have to make this distinction.
 - ammonia: a fuel that is being considered for use in the shipping industry. It is made from combining hydrogen and nitrogen.
-
-## Economy codes:
-
-- 01_AUS: Australia
-- 02_BD: Brunei darussalam
-- 03_CDA: Canada
-- 04_CHL: Chile
-- 05_PRC: China
-- 06_HKC: Hong Kong, China
-- 07_INA: Indonesia
-- 08_JPN: Japan
-- 09_ROK: Korea, Republic of
-- 10_MAS: Malaysia
-- 11_MEX: Mexico
-- 12_NZ: New Zealand
-- 13_PNG: Papua New Guinea
-- 14_PE: Peru
-- 15_PHL: Philippines
-- 16_RUS: Russia
-- 17_SGP: Singapore
-- 18_CT: Chinese Taipei
-- 19_THA: Thailand
-- 20_USA: United States
-- 21_VN: Vietnam
-

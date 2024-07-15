@@ -7,7 +7,7 @@ My intention here is to give a view into some of the things I'm writing for our 
 {{graph:00_APEC_road_2_Energy use_Hierarchical_2070_combined.html}}
 {{graph:shares_of_vehicle_type_by_transport_type_Target_all_all_agg.html}}
 
-  - BEV's are currently one of, if not the most promising solution for reducing emissions now. Even so, they require government support to reach the level of preexisiting support that ICE's have. Proof of the benefits of this support can already be seen in China, where trillion(billions?) of dollars of early investment have led to the development of a world-leading BEV industry, as well as the infrastructure to support these cheap, efficient vehicles. This is a model that other economies should follow, as the benefits of BEVs are clear:
+  - BEV's are currently one of, if not the most promising solutions for reducing emissions now. Even so, they require government support to reach the level of preexisiting support that ICE's have. Proof of the benefits of this support can already be seen in China, where trillion(billions?) of dollars of early investment have led to the development of a world-leading BEV industry, as well as the infrastructure to support these cheap, efficient vehicles. This is a model that other economies should follow, as the benefits of BEVs are clear:
 
   - Low conventional and CO2 emissions
   - High efficiency
