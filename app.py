@@ -100,34 +100,35 @@ def index():
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
-    
-    keys = [
-        '01_AUS', '02_BD', '03_CDA', '04_CHL', '05_PRC', '06_HKC',
-        '07_INA', '08_JPN', '09_ROK', '10_MAS', '11_MEX', '12_NZ',
-        '13_PNG', '14_PE', '15_PHL', '16_RUS', '17_SGP', '18_CT',
-        '19_THA', '20_USA', '21_VN'
-    ]
-    return render_template('index.html', keys=keys)
+    return render_template('index.html', keys=app.config.ECONOMY_NAMES.keys())
 
 @app.route('/staging', methods=['GET', 'POST'])
 def staging():
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
-    #double check that theuser isnt mid model run or has results available
-    if user_manager.check_model_is_running():
-        return redirect(url_for('model_progress'))
-    elif user_manager.check_if_results_available():
-        return redirect(url_for('results'))
-    
-    #now we need to set the session data
-    user_manager.setup_user_session()
     
     if request.method == 'POST':
-        economy_to_run = request.form.get('economy')
-        session['economy_to_run'] = economy_to_run
-    
-    elif request.method == 'GET':
+        economy_to_run = app.config.ECONOMY_NAMES.get(request.form.get('economy'), None)
+        if session['economy_to_run'] == economy_to_run:
+            #double check that theuser isnt mid model run or has results available
+            if user_manager.check_model_is_running():
+                return redirect(url_for('model_progress'))
+            elif user_manager.check_if_results_available():
+                return redirect(url_for('results'))
+        else:
+            #now we need to set the session data
+            user_manager.setup_user_session()
+            session['economy_to_run'] = economy_to_run
+            
+    if request.method == 'GET':
+        
+        if user_manager.check_model_is_running():
+            return redirect(url_for('model_progress'))
+        elif user_manager.check_if_results_available():
+            return redirect(url_for('results'))
+        
+        user_manager.setup_user_session()
         economy_to_run = session.get('economy_to_run')
         if not economy_to_run:
             flash('No economy selected. Please select an economy to run the model.')
@@ -213,7 +214,7 @@ def results():
             return redirect(url_for('index'))
     
     if request.method == 'POST':
-        session['economy_to_run'] = request.form.get('economy')
+        session['economy_to_run'] = app.config.ECONOMY_NAMES.get(request.form.get('economy'), None)
     economy_to_run = session.get('economy_to_run')
     
     results_files = [
@@ -261,7 +262,7 @@ def default_results():
         return redirect(url_for('login'))
         
     if request.method == 'POST':
-        session['economy_to_run'] = request.form.get('economy')
+        session['economy_to_run'] = app.config.ECONOMY_NAMES.get(request.form.get('economy'), None)
     economy_to_run = session.get('economy_to_run')
     
     results_files = [
@@ -462,7 +463,8 @@ def running_model():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
     
-    economy_to_run = request.form.get('economy')
+    economy_to_run = app.config.ECONOMY_NAMES.get(request.form.get('economy'), None)
+    session.get('economy_to_run')
     if economy_to_run and economy_to_run != session.get('economy_to_run'):
         #need to reset the user session before running a new model
         user_manager.reset_user_session()

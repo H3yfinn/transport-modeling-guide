@@ -11,42 +11,50 @@
         <h1>Staging - {{ economy }}</h1>
         <nav>
             <a href="{{ url_for('index') }}">Home</a> |
-            <a href="{{ url_for('logout') }}">Logout</a> |
-            <a href="{{ url_for('feedback_form') }}">Submit Feedback</a>
+            <a href="{{ url_for('feedback_form') }}">Submit Feedback</a> |
+            <a href="{{ url_for('content_page', page_name='about_the_model') }}" target="_blank">About</a>
+
         </nav>
-        <section>
-            <h2>Upload Input Files</h2>
-            <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
-                <input type="file" name="file">
-                <button type="submit">Upload</button>
-            </form>
-        </section>
-        <section>
-            <h2>Available Input Files</h2>
-            <ul>
-                {% for file in input_files %}
-                <li><a href="{{ url_for('download_input_file', filename=file) }}">{{ file }}</a></li>
-                {% endfor %}
-            </ul>
-        </section>
-        <form action="{{ url_for('reset_user_session') }}" method="post" style="margin-top: 20px;">
-            <button type="submit">Reset Session</button>
-        </form>
+
         <form action="{{ url_for('running_model') }}" method="post" style="margin-top: 20px;">
             <button type="submit">Run Model</button>
         </form>
+
+        <form action="{{ url_for('reset_user_session') }}" method="post" style="margin-top: 20px;">
+            <button type="submit">Reset Session</button>
+        </form>
+
     </div>
     <div>
-        <p>Please note that the requirements for the formatting and what values can be used in these charts is quite strict. If you want to learn, read the notes on this below:</p>
+
         
         <section>
             <h2>Methodology Content</h2>
+            <p>Please note that the requirements for the formatting and what values can be used in the input files is strict. I recommend reading about them first:</p>
             <ul>
                 <li><a href="{{ url_for('content_page', page_name='filling_out_vehicle_sales_shares') }}">Vehicle sales shares</a></li>
                 <li><a href="{{ url_for('content_page', page_name='filling_out_fuel_mixing') }}">Fuel Mixing</a></li>
                 <li><a href="{{ url_for('content_page', page_name='filling_out_other_inputs') }}">Other inputs</a></li>
                 <!-- Add more links as needed -->
             </ul>
+        </section>
+        
+        <section>
+            <h2>Input Files</h2>
+            <p>You can download then adjust these values before uploading them to the model.</p>
+            <ul>
+                {% for file in input_files %}
+                <li><a href="{{ url_for('download_input_file', filename=file) }}">{{ file }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+        
+        <section>
+            <h2>Upload Input Files</h2>
+            <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+                <input type="file" name="file">
+                <button type="submit">Upload</button>
+            </form>
         </section>
     </div>
 </body>

@@ -342,3 +342,10 @@ This command shows the details of the SSL certificates managed by Certbot.
 
 
 
+## Todo:
+- explain the process of running the model and then the results/assumptions a bit better
+ - its not clear what are assumptions vs results
+ - its not clear how to use the charts and dashboards
+ - changing the economy before urnning the model again doesnt change the economy actually
+- 
+- add a section on the assumptions and results of the model

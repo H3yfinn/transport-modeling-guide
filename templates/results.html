@@ -31,10 +31,11 @@
     </style>
 </head>
 <body>
-    <nav>
+    <nav style="position: fixed; top: 0; width: 100%; background-color: white; z-index: 1000;">
         <a href="{{ url_for('index') }}">Home</a> |
-        <a href="{{ url_for('logout') }}">Logout</a> |
-        <a href="{{ url_for('feedback_form') }}">Submit Feedback</a>
+        <a href="{{ url_for('feedback_form') }}">Submit Feedback</a> ||
+        <a href="{{ url_for('content_page', page_name='reading_the_results') }}" target="_blank">Reading the results</a> |
+        <a href="{{ url_for('content_page', page_name='how_model_works') }}" target="_blank">How it works</a>
     </nav>
     <h1>Results</h1>
     {% for path in results_paths %}

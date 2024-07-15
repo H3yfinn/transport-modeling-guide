@@ -1,0 +1,9 @@
+vehicle_type,average_kwh_of_battery_capacity,public_charger_utilisation_rate,fast_charger_utilisation_rate,parameter,value
+car,50,0.5,0.2,stocks_magnitude,1000000
+bus,100,0.5,0.2,stocks_magnitude_name,millions
+2w,20,0.3,0.0,expected_kw_of_chargers_per_ev,0.1
+mt,200,1.0,1.0,expected_kw_of_chargers_per_kwh_of_battery,0.002
+ht,200,1.0,1.0,average_kw_per_non_fast_charger,50
+lt,100,0.5,0.5,average_kw_per_charger,60
+lcv,100,0.5,0.5,average_kw_per_fast_charger,200
+suv,80,0.5,0.2,average_ratio_of_fast_chargers_to_chargers,0.05

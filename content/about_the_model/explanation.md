@@ -1,4 +1,4 @@
-# About the model
+# For modellers; about the model
 This section will be brief as the intention is that you will learn how the model works by runnning it, inspecting the outputs and then reading the metholodogy to try understand the outputs better. You can even experiment with adjusting the input data. 
 
 You can find the model on github {{link:https://github.com/H3yfinn/transport_model_9th_edition.git:text:here}}. The code is complex and I am hesitant to suggest anyone try to run it without some experience in python and transport modelling. However, if you are interested in learning more about the model, I am happy to help you get it running (contact me using the feedback form). 
@@ -6,7 +6,5 @@ You can find the model on github {{link:https://github.com/H3yfinn/transport_mod
 The model is designed primarily with the goal of producing detailed projections of energy use and emissions in the transport sector. This means including detailed outputs showing projections of vehicle stocks and activity, by many different vehicle types and drive/powertrain/engine types. I also had the personal goal of making sure all processes within my model were realistic depictions of the way transport systems work. This meant including a lot of small extra details when otherwise I could have simplified the model. As an example, the {{link:https://transport-energy-modelling.com/content/turnover_rates:text:turnover rate}} process may seem unneccessary but it is important for ensuring that the ev transition seems realistic, even upon close inspection.
 
 The model is built in python and uses the pandas library for data manipulation and the plotly library for plotting. The model is built in a modular way, with each process in the model being a separate function. This makes it easier to understand the model, to make changes to it, and to be able to run it as a package, like what is done in this website. I have a small, small amount of hope that someone may pick it up and use it for their own purposes, or even contribute to it.
-
-Please note that this page especially may change a lot as I think about how to best write this page.
 
 You can also find the code for this website on my github {{link:https://github.com/H3yfinn/transport-modeling-guide:text:here}}. The website is built using flask and then some very barebones html/css.

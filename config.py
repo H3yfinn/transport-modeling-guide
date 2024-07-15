@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import boto3
 
 class Config:
+    
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__))    #is thjer any need for this?
     BASE_UPLOAD_FOLDER = 'uploads'
     BASE_LOGS_FOLDER = 'logs'
@@ -55,4 +56,13 @@ class Config:
         }
     ]
     SCHEDULER_API_ENABLED = True
+    
+    ECONOMY_NAMES = {
+    'Australia': '01_AUS', 'Brunei': '02_BD', 'Canada': '03_CDA', 'Chile': '04_CHL',
+    'China': '05_PRC', 'Hong Kong, China': '06_HKC', 'Indonesia': '07_INA', 'Japan': '08_JPN',
+    'Korea, Republic of': '09_ROK', 'Malaysia': '10_MAS', 'Mexico': '11_MEX', 'New Zealand': '12_NZ',
+    'Papua New Guinea': '13_PNG', 'Peru': '14_PE', 'Philippines': '15_PHL', 'Russia': '16_RUS',
+    'Singapore': '17_SGP', 'Chinese Taipei': '18_CT', 'Thailand': '19_THA', 'United States': '20_USA',
+    'Vietnam': '21_VN'
+    }
     
