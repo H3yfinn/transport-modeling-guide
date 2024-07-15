@@ -29,10 +29,11 @@ There's lots of acronyms and shortened names in the input and output data from t
 
 ## Others:
 
-8th: This refers to the results from the 8th outlook, compared to this which is the 9th outlook. 
-ESTO: This is a statistics division which provides the data used in this model.
-Target: This refers to the target scenario, compared to the reference scenario.
-Reference: This refers to the reference scenario, compared to the target scenario.
+- 8th: This refers to the results from the 8th outlook, compared to this which is the 9th outlook. 
+- ESTO: This is a statistics division which provides the data used in this model.
+
+- Target: This refers to the target scenario, compared to the reference scenario.
+- Reference: This refers to the reference scenario, compared to the target scenario.
 
 ## Vehicle types:
 Within freight we have:

@@ -11,11 +11,11 @@
         <h1>Feedback</h1>
         <p>This will send me a personal email. I'll get back to you in a day or two.</p>
         <form action="{{ url_for('submit_feedback') }}" method="post">
-            <label for="name">Email:</label>
-            <input type="text" id="name" name="name" required>
+            <label for="name">Email (optional):</label>
+            <input type="text" id="name" name="name">
             <br>
             <label for="message">Message:</label>
-            <textarea id="message" name="message" rows="4" required></textarea>
+            <textarea id="message" name="message" rows="10" required></textarea>
             <br>
             <button type="submit">Submit Feedback</button>
         </form>
