@@ -12,7 +12,7 @@ Then there are extra complications when you start thinking about how you want to
 
 An interesting case is Singapore where the country has very young cars relative to the rest of the world. this is because they have a scheme where you can only ?own a car for 10 years before you have to get rid of it?. To try replicate this dynamic within the model I created a new S curve like below. This can be done just by halving the parameters of the original S curve. 
 
-{{graph:turnover_rate_age_curve_Target_15_SIN.html}}
+{{graph:turnover_rate_age_curve_Target_17_SGP.html}}
 
 Of course, we can never know if this is correct, but something needs to be done to reflect this dynamic in the model. As with many things in modelling, its the best guess we can make with the information we have. Sometimes what is most important is to be able to show clear dynamics and trends that the viewer (e.g. policy advisor) might expect to see in the real world, and then show how they interact to create the results we see.
 
