@@ -10,18 +10,18 @@ import secrets
 load_dotenv()
 
 # Enable logging
-from shared import global_logger
+from shared import global_logger, error_logger
 
 def decrypt_data(encrypted_data):
     kms_client = boto3.client('kms', region_name='ap-northeast-1')
-    if current_app.config.AWS_CONNECTION_AVAILABLE:
+    if current_app.config.AWS_CONNECTION_AVAILABLE:#for some reason this doesnt actually stop the function from running if the connection is not available *hence why i put try except in the function
         return decrypt_data_with_kms(encrypted_data, kms_client)
     else:
         return encrypted_data#decrypt_data_without_kms(encrypted_data)
 
 def encrypt_data(data):
     kms_client = boto3.client('kms', region_name='ap-northeast-1')
-    if current_app.config.AWS_CONNECTION_AVAILABLE:
+    if current_app.config.AWS_CONNECTION_AVAILABLE:#for some reason this doesnt actually stop the function from running if the connection is not available*hence why i put try except in the function
         return encrypt_data_with_kms(data, kms_client)
     else:
         return data#encrypt_data_without_kms(data)
@@ -34,27 +34,28 @@ def encrypt_data_with_kms(data, kms_client):
         )
         ciphertext_blob = response['CiphertextBlob']
         encrypted_data = base64.b64encode(ciphertext_blob).decode('utf-8')
-        global_logger.debug(f"Encrypted data: {encrypted_data}")
+        # global_logger.debug(f"Encrypted data: {encrypted_data}")
         return encrypted_data
     except Exception as e:
-        global_logger.error("Error during encryption:", exc_info=True)
-        raise e
+        global_logger.error(f"Error during encryption: {e}", exc_info=True)
+        error_logger.error(f"Error during encryption: {e}", exc_info=True)
+        return data
 
 def decrypt_data_with_kms(encrypted_data,kms_client):
     try:
-        if current_app.config.LOGGING:
-            global_logger.debug(f"Original encrypted data: {encrypted_data}")
+        # if current_app.config.LOGGING:
+        #     global_logger.debug(f"Original encrypted data: {encrypted_data}")
 
         # Add padding if necessary
         missing_padding = len(encrypted_data) % 4
         if missing_padding:
-            encrypted_data += '=' * (4 - missing_padding)
-        if current_app.config.LOGGING:
-            global_logger.debug(f"Padded encrypted data: {encrypted_data}")
+            new_encrypted_data += '=' * (4 - missing_padding)
+        # if current_app.config.LOGGING:
+        #     global_logger.debug(f"Padded encrypted data: {new_encrypted_data}")
 
-        decoded_encrypted_data = base64.b64decode(encrypted_data)
-        if current_app.config.LOGGING:
-            global_logger.debug(f"Decoded encrypted data.")
+        decoded_encrypted_data = base64.b64decode(new_encrypted_data)
+        # if current_app.config.LOGGING:
+        #     global_logger.debug(f"Decoded encrypted data.")
 
         response = kms_client.decrypt(
             CiphertextBlob=decoded_encrypted_data
@@ -63,8 +64,9 @@ def decrypt_data_with_kms(encrypted_data,kms_client):
 
         return decrypted_data
     except Exception as e:
-        global_logger.error("Error during decryption:", exc_info=True)
-        raise e
+        global_logger.error(f"Error during decryption: {e}", exc_info=True)
+        error_logger.error(f"Error during decryption: {e}", exc_info=True)
+        return encrypted_data
 
 ##########Non KMS encryption and decryption functions##########
 

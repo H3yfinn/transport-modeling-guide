@@ -34,7 +34,7 @@ class StreamToLogger:
         self.logger.handlers.clear()
         
 def get_logs_from_file(log_filename):
-    if current_app.config['LOGGING']:
+    if current_app.config.LOGGING:
         global_logger.info('Getting logs from file')
     if not os.path.exists(log_filename):
         return ''
@@ -45,7 +45,7 @@ def get_logs_from_file(log_filename):
         return logs
 
 def archive_log(log_filename):
-    if current_app.config['LOGGING']:
+    if current_app.config.LOGGING:
         global_logger.info(f'Archiving log file: {log_filename}')
     if os.path.exists(log_filename):
         try:
@@ -55,7 +55,7 @@ def archive_log(log_filename):
             
             archived_log_filename = os.path.join('logs', 'archive', f'{datetime.now().strftime("%Y%m%d_%H%M%S")}_{os.path.basename(log_filename)}')
             shutil.move(log_filename, archived_log_filename)
-            if current_app.config['LOGGING']:
+            if current_app.config.LOGGING:
                 global_logger.info(f'Log file archived: {archived_log_filename}')
         except PermissionError as e:
             global_logger.error(f"Permission error moving log file: {e}")  # Normally occurs if user is still running the model
@@ -65,7 +65,7 @@ def archive_log(log_filename):
 def run_model_thread(app, log_filename, session_library_path, economy_to_run, user_id):
     """Run the model in a separate thread with the Flask application context."""
     with app.app_context():
-        if current_app.config['LOGGING']:
+        if current_app.config.LOGGING:
             global_logger.info(f'Running model thread for economy: {economy_to_run}')
         FILE_DATE_ID = None
         logger = StreamToLogger(log_filename)
@@ -77,16 +77,19 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
             else:
                 sys.path.append(os.getcwd() +'\\' +  session_library_path)
                 root_dir_param =  "\\\\?\\"+ os.getcwd()+ '\\' + session_library_path
-                if current_app.config['LOGGING']:
-                    global_logger.info(f"sys.path: {sys.path}")
+                if current_app.config.LOGGING:
+                    global_logger.info(f"Running model for sys.path[-1]: {sys.path[-1]}")
                 # This is a hack to allow long paths in Windows
                 main_module_spec = importlib.util.spec_from_file_location("main", os.path.join(session_library_path, "main.py"))
+                print(main_module_spec)
+                error_logger.error(f"main_module_spec: {main_module_spec}")
                 if main_module_spec is None:
-                    if current_app.config['LOGGING']:
+                    if current_app.config.LOGGING:
                         global_logger.error("Could not find the main module in the session-specific path")
+                        global_logger.info("Main module found in the session-specific path")
                     raise ImportError("Could not find the main module in the session-specific path")
                 else:
-                    if current_app.config['LOGGING']:
+                    if current_app.config.LOGGING:
                         global_logger.info("Main module found in the session-specific path")
                 main_module = importlib.util.module_from_spec(main_module_spec)
                 main_module_spec.loader.exec_module(main_module)
@@ -104,14 +107,15 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
                 try:
                     start_time = time.time()
                     # Set sys.path to include the session library path. Note that if we have multiple users running models at the same time, this will mean multiple paths for duplicates of the same module are added to the path. In that case, sys.path will just use the first one it finds.
+                    if current_app.config.LOGGING:
+                        global_logger.info('Running model with arguments: economy_to_run={}, progress_callback={}, root_dir_param={}, script_dir_param={}'.format( economy_to_run, progress_callback, root_dir_param, root_dir_param))
                     FILE_DATE_ID, COMPLETED = main_module.main(economy_to_run=economy_to_run, progress_callback=progress_callback, root_dir_param=root_dir_param, script_dir_param=root_dir_param)
                     if not COMPLETED:  # Sometimes don't get error from model so catch it via this variable
                         error_logger.error(f"Model execution did not complete successfully with economy: {economy_to_run}")
                         logging.getLogger('model_logger').info("Model execution did not complete successfully.")
                         raise Exception("Model execution did not complete successfully.")
-                    # print("PRINT: Model execution completed successfully.")
                     logging.getLogger('model_logger').info("Model execution completed successfully.")
-                    if current_app.config['LOGGING']:
+                    if current_app.config.LOGGING:
                         global_logger.info(f"Model execution completed successfully for economy: {economy_to_run}")
                     logging.getLogger('model_logger').info(f"Progress: {progress_tracker[user_id]}")
                             
@@ -121,7 +125,7 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
                 except Exception as e:
                     # print(f"PRINT: An error occurred during model execution: {e}")
                     logging.getLogger('model_logger').info(f"An error occurred during model execution: {e}")
-                    if current_app.config['LOGGING']:
+                    if current_app.config.LOGGING:
                         global_logger.error(f"An error occurred during model execution: {e}")
                         error_logger.error(f"An error occurred during model execution: {e}")
                     logging.getLogger('model_logger').info(f"Progress: {progress_tracker[user_id]}")
@@ -135,12 +139,12 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
             logger.close()  # We don't seem to be getting here?
-            if current_app.config['LOGGING']:
+            if current_app.config.LOGGING:
                 global_logger.info('Model thread finished execution')
             progress_tracker[user_id] = 100
             
 def calculate_average_time():
-    if current_app.config.LOGGING:
+    if current_app.config.DEBUG_LOGGING:
         global_logger.info('Calculating average execution time')
     if not os.path.exists(current_app.config.EXECUTION_TIMES_FILE):
         return "No previous execution times available to estimate."
@@ -158,7 +162,7 @@ def calculate_average_time():
     return round(average_time, 2)
 
 def save_execution_time(execution_time):
-    if current_app.config.LOGGING:
+    if current_app.config.DEBUG_LOGGING:
         global_logger.info(f'Saving execution time: {execution_time}')
     if not os.path.exists(current_app.config.EXECUTION_TIMES_FILE):
         execution_times = []

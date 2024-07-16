@@ -116,6 +116,8 @@ def staging():
                 return redirect(url_for('model_progress'))
             elif user_manager.check_if_results_available():
                 return redirect(url_for('results'))
+            #now we need to set the session data
+            user_manager.setup_user_session()
         else:
             #now we need to set the session data
             user_manager.setup_user_session()
@@ -248,7 +250,7 @@ def results():
     
     logs = backend.get_logs_from_file(session['session_log_filename'])
     
-    if app.config.LOGGING:
+    if app.config.DEBUG_LOGGING:
         global_logger.info('Displaying results.')
     # global_logger.info(results_paths)
     return render_template('results.html', results_paths=results_paths, key_csv_paths=key_csv_paths, logs=logs)
@@ -294,7 +296,7 @@ def default_results():
     #check that they exist, otherwise remove them from the list
     key_csv_paths = [file for file in key_csv_paths if os.path.exists(file)]
     
-    if app.config.LOGGING:
+    if app.config.DEBUG_LOGGING:
         global_logger.info('Displaying results.')
     # global_logger.info(results_paths)
     return render_template('default_results.html', results_paths=results_paths, key_csv_paths=key_csv_paths)
@@ -478,11 +480,11 @@ def running_model():
     
     #check if a user session has already been set up. if so the user must restart it before running a new model
     if user_manager.check_if_results_available():
-        if app.config['LOGGING']:
+        if app.config.LOGGING:
             global_logger.info('User results are available. User must restart the session before running a new model.')
         return redirect(url_for('results'))
     if user_manager.check_model_is_running():
-        if app.config['LOGGING']:
+        if app.config.LOGGING:
             global_logger.info('User model is running. User must restart the session before running a new model.')
         return redirect(url_for('model_progress'))
     
@@ -501,19 +503,15 @@ def running_model():
         model_threads[session['user_id']] = thread
         
         thread.start()
-        if app.config['LOGGING']:
+        if app.config.LOGGING:
             global_logger.info('Model run started successfully.')
-            global_logger.info('Model run started successfully.')
-        if app.config['LOGGING']:
-            global_logger.info('Saving session data after starting model run.')
         user_manager.save_session_data()
         return redirect(url_for('model_progress'))
         
     except Exception as e:
-        if app.config['LOGGING']:
+        if app.config.LOGGING:
             global_logger.error(f'Error running model: {str(e)}')
             global_logger.error(f'Error running model: {str(e)}')
-        flash(f'Error running model: {str(e)}')
 
         return redirect(url_for('error_page', error_message=str(e)))
     
@@ -539,11 +537,11 @@ def model_progress():
         
         if not user_manager.check_model_is_running():
             if user_manager.check_if_results_available():
-                if app.config.LOGGING:
+                if app.config.DEBUG_LOGGING:
                     global_logger.info('model_progress() POST: Model is not running and results are available. Redirecting to results page.')
                 return jsonify({'redirect': url_for('results')})
             else:
-                if app.config.LOGGING:
+                if app.config.DEBUG_LOGGING:
                     global_logger.info('model_progress() POST: Model is not running and results not available. Redirecting to index page.')
                 return jsonify({'redirect': url_for('index')})
         
@@ -558,11 +556,11 @@ def model_progress():
             return redirect(url_for('login'))
         if not user_manager.check_model_is_running():
             if user_manager.check_if_results_available():
-                if app.config.LOGGING:
+                if app.config.DEBUG_LOGGING:
                     global_logger.info('model_progress() GET: Model is not running and results are available. Redirecting to results page.')
                 return redirect(url_for('results'))
             else:
-                if app.config.LOGGING:
+                if app.config.DEBUG_LOGGING:
                     global_logger.info('model_progress() GET: Model is not running and results not available. Redirecting to index page.')
                 return redirect(url_for('index'))
         
@@ -572,7 +570,7 @@ def model_progress():
             thread = model_threads[user_id]
             session['model_thread_running'] = thread.is_alive()
             if not session['model_thread_running']:
-                if app.config.LOGGING:
+                if app.config.DEBUG_LOGGING:
                     global_logger.info('model_progress() GET: Model completed running. Redirecting to results page.')
                 del model_threads[user_id]
                 session['results_available'] = True

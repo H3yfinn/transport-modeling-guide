@@ -19,6 +19,7 @@ class Config:
     #now in .env file
     # Load environment variables from .env file
     load_dotenv()
+    DEBUG_LOGGING = os.getenv('DEBUG_LOGGING', 'True').lower() in ['true', '1', 't']
     LOGGING = os.getenv('LOGGING', 'True').lower() in ['true', '1', 't']
     DEBUG = os.getenv('DEBUG', 'True').lower() in ['true', '1', 't']
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
