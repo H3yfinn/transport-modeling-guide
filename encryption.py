@@ -48,9 +48,9 @@ def decrypt_data_with_kms(encrypted_data,kms_client):
 
         # Add padding if necessary
         missing_padding = len(encrypted_data) % 4
-        
+        new_encrypted_data = encrypted_data
         if missing_padding:
-            new_encrypted_data = encrypted_data + ('=' * (4 - missing_padding))
+            new_encrypted_data += ('=' * (4 - missing_padding))
         # if current_app.config.LOGGING:
         #     global_logger.debug(f"Padded encrypted data: {new_encrypted_data}")
 
