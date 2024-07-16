@@ -128,7 +128,7 @@ class UserManagement:
                     #     global_logger.info(f'User found: {user}')
                     return user
         if current_app.config.LOGGING:
-            global_logger.info(f'User not found for user {user} for {key}: {value}')
+            global_logger.info(f'User not found for {key}: {value}')
         return None 
 
     def register_user(self, email):
@@ -269,7 +269,7 @@ class UserManagement:
                 global_logger.error('User not found in session')
             error_logger.error('User not found in session')
         if current_app.config.DEBUG_LOGGING:
-            global_logger.info(f'Results available: {user['results_available']}')
+            global_logger.info(f"Results available: {user['results_available']}")
         return user['results_available']
     
     def check_model_is_running(self):
