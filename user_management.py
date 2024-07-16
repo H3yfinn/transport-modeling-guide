@@ -218,10 +218,10 @@ class UserManagement:
         user = self.get_user_by_session()
         
         os.makedirs(user['session_folder'], exist_ok=True)
-        if not os.path.exists(user['session_library_path']):
-            if current_app.config.LOGGING:
-                global_logger.info('Creating session library path {}'.format(user['session_library_path']))
-            shutil.copytree(self.app.config['ORIGINAL_MODEL_LIBRARY_NAME'], user['session_library_path'])
+        # if not os.path.exists(user['session_library_path']):#had to remove this because someitmes beause of permission issues, the folder is not fully deleted and the code thinks it exists
+        if current_app.config.LOGGING:
+            global_logger.info('Creating session library path {}'.format(user['session_library_path']))
+        shutil.copytree(self.app.config['ORIGINAL_MODEL_LIBRARY_NAME'], user['session_library_path'], dirs_exist_ok=True)
         
         session['session_folder'] = user['session_folder']
         session['session_library_path'] = user['session_library_path']

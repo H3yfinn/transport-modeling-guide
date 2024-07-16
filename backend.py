@@ -97,9 +97,11 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
             progress_tracker[user_id] = 0
 
             def progress_callback(progress_value):
-                if not 0 <= progress_value <= 100:
-                    logger.error(f"Invalid progress value: {progress_value}")
-                progress_tracker[user_id] = progress_value  # Update progress
+                # if not 0 <= progress_value <= 100:
+                #     logger.error(f"Invalid progress value: {progress_value}")
+                if 0 <= progress_value <= 100:
+                    progress_tracker[user_id] = progress_value  # Update progress
+                # logger.info(f"Progress: {progress_value}")
 
             if current_app.config['DEBUG']:
                 test_dummy_run_model(economy_to_run, progress_callback, logger)
@@ -109,11 +111,11 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
                     # Set sys.path to include the session library path. Note that if we have multiple users running models at the same time, this will mean multiple paths for duplicates of the same module are added to the path. In that case, sys.path will just use the first one it finds.
                     if current_app.config.LOGGING:
                         global_logger.info('Running model with arguments: economy_to_run={}, progress_callback={}, root_dir_param={}, script_dir_param={}'.format( economy_to_run, progress_callback, root_dir_param, root_dir_param))
-                    FILE_DATE_ID, COMPLETED = main_module.main(economy_to_run=economy_to_run, progress_callback=progress_callback, root_dir_param=root_dir_param, script_dir_param=root_dir_param)
+                    FILE_DATE_ID, COMPLETED, error_message = main_module.main(economy_to_run=economy_to_run, progress_callback=progress_callback, root_dir_param=root_dir_param, script_dir_param=root_dir_param)
                     if not COMPLETED:  # Sometimes don't get error from model so catch it via this variable
-                        error_logger.error(f"Model execution did not complete successfully with economy: {economy_to_run}")
-                        logging.getLogger('model_logger').info("Model execution did not complete successfully.")
-                        raise Exception("Model execution did not complete successfully.")
+                        error_logger.error(f"Model execution did not complete successfully with economy: {economy_to_run}, with error message: {error_message}")
+                        logging.getLogger('model_logger').info(f"Model execution did not complete successfully, with error message: {error_message}")
+                        raise Exception(f"Model execution did not complete successfully, with error message: {error_message}")
                     logging.getLogger('model_logger').info("Model execution completed successfully.")
                     if current_app.config.LOGGING:
                         global_logger.info(f"Model execution completed successfully for economy: {economy_to_run}")
