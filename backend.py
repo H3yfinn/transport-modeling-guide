@@ -6,7 +6,7 @@ import sys
 import time
 import importlib.util
 import threading
-from datetime import datetime, timedelta
+from datetime import datetime
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from flask import current_app
@@ -44,7 +44,7 @@ def get_logs_from_file(log_filename):
     else:
         return logs
 
-def archive_log(log_filename):
+def archive_log(log_filename, DELETE_LOGS_INSTEAD_OF_ARCHIVING=True):
     if current_app.config.LOGGING:
         global_logger.info(f'Archiving log file: {log_filename}')
     if os.path.exists(log_filename):
@@ -54,7 +54,10 @@ def archive_log(log_filename):
                 os.fsync(log_file.fileno())
             
             archived_log_filename = os.path.join('logs', 'archive', f'{datetime.now().strftime("%Y%m%d_%H%M%S")}_{os.path.basename(log_filename)}')
-            shutil.move(log_filename, archived_log_filename)
+            if DELETE_LOGS_INSTEAD_OF_ARCHIVING:
+                os.remove(log_filename)
+            else:
+                shutil.move(log_filename, archived_log_filename)
             if current_app.config.LOGGING:
                 global_logger.info(f'Log file archived: {archived_log_filename}')
         except PermissionError as e:
@@ -82,7 +85,7 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
                 # This is a hack to allow long paths in Windows
                 main_module_spec = importlib.util.spec_from_file_location("main", os.path.join(session_library_path, "main.py"))
                 print(main_module_spec)
-                error_logger.error(f"main_module_spec: {main_module_spec}")
+                global_logger.info(f"main_module_spec: {main_module_spec}")
                 if main_module_spec is None:
                     if current_app.config.LOGGING:
                         global_logger.error("Could not find the main module in the session-specific path")

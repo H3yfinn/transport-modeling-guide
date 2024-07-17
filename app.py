@@ -89,7 +89,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(weeks=1)
 @app.before_request
 def update_session_timeout():
     if not app.config['INITIALIZED']:
-        user_manager.create_master_user()
+        user_manager.startup_tasks()
         app.config['INITIALIZED'] = True
     session.permanent = True
     session.modified = True  # Ensures the session cookie is sent to the client

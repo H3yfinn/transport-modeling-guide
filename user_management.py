@@ -10,7 +10,7 @@ import random
 import jwt
 import backend
 from encryption import encrypt_data, decrypt_data
-    
+from datetime import datetime
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
 from shared import progress_tracker, global_logger, model_threads, error_logger
 # from app import progress_tracker
@@ -331,11 +331,10 @@ class UserManagement:
                 global_logger.info('User session reset successfully')
                 
     def delete_inactive_users_sessions(self):
-        if current_app.config.LOGGING:
-            global_logger.info('Deleting inactive user sessions')
+        global_logger.info('Deleting inactive user sessions')
         user_data = self.read_user_data()
         
-        retention_period = 60*60*24*7
+        retention_period = 60*60*24*7 # 7 days
         for user in user_data.values():
             if user['last_active'] < time.time() - retention_period:
                 if current_app.config.LOGGING:
@@ -362,7 +361,7 @@ class UserManagement:
                 self.save_user_data(user)
         if current_app.config.LOGGING:
             global_logger.info('Inactive user sessions deleted successfully')
-            
+    
     def create_master_user(self):
         user_data = self.read_user_data()
         if user_data is None:
@@ -392,3 +391,28 @@ class UserManagement:
         
         if current_app.config.LOGGING:
             global_logger.info('Master user created successfully')
+            
+    def startup_tasks(self, DELETE_LOGS_INSTEAD_OF_ARCHIVING=True):
+        user_data = self.read_user_data()
+        if user_data is None:
+            user_data = {}
+        #also go thorugh the /uploads folder and remove any folders that are not in the user_data
+        for folder in os.listdir(self.app.config['BASE_UPLOAD_FOLDER']):
+            user_id = folder
+            if user_id not in user_data.keys():
+                global_logger.info(f"Deleting upload folder {folder} as it is not in user_data")
+                shutil.rmtree(os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], folder), ignore_errors=True)
+                #and see if theres a log file in logs, we can remove it
+                log_file = os.path.join(self.app.config['BASE_LOGS_FOLDER'], f"model_output_{user_id}.log")
+                
+                if os.path.exists(log_file):
+                    global_logger.info(f"Deleting/archiving log file {log_file} as it is not in user_data")
+                    archived_log_filename = os.path.join('logs', 'archive', f'{datetime.now().strftime("%Y%m%d_%H%M%S")}_{os.path.basename(log_file)}')
+                    if DELETE_LOGS_INSTEAD_OF_ARCHIVING:
+                        os.remove(log_file)
+                    else:
+                        shutil.move(log_file, archived_log_filename)
+        
+        #and create the master user
+        self.create_master_user()
+                
