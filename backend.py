@@ -76,7 +76,7 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
             if current_app.config['DEBUG']:
                 pass
             else:
-                root_dir_param =  ("\\\\?\\"+ os.getcwd()+ '\\' + session_library_path).repalce("/", "\\")
+                root_dir_param =  ("\\\\?\\"+ os.getcwd()+ '\\' + session_library_path).replace("/", "\\")
                 sys.path.append(root_dir_param)#os.getcwd() +'/' +  session_library_path)
                 if current_app.config.LOGGING:
                     global_logger.info(f"Running model for sys.path[-1]: {sys.path[-1]}")
