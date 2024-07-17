@@ -1,3 +1,3 @@
-from backend import run_tasks
+from app import run_tasks
 
 run_tasks()

@@ -305,8 +305,3 @@ def check_disk_space():
         from_email = 'low-disk-space' + current_app.config['MAIL_USERNAME']
         setup_and_send_email(current_app.config.PERSONAL_EMAIL, from_email, new_values_dict, email_template='templates/disk_space_email_template.html', subject_title='Disk Space Warning')
         
-def run_tasks():
-    global_logger.info('Running tasks: delete_inactive_users_sessions, check_disk_space')
-    # Run the tasks in a separate thread
-    UserManagement.delete_inactive_users_sessions()
-    check_disk_space()
