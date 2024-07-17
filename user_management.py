@@ -321,7 +321,6 @@ class UserManagement:
                     global_logger.info(f'Archiving log file: {user["session_log_filename"]}')
                 backend.archive_log(user['session_log_filename'])
             
-            user['session_data'] = {}
             user['economy_to_run'] = '01_AUS'
             user['progress'] = 0
             user['model_thread_running'] = False
@@ -353,7 +352,6 @@ class UserManagement:
                 
                 backend.archive_log(user['session_log_filename'])
                 
-                user['session_data'] = {}
                 user['model_thread_running'] = False
                 user['economy_to_run'] = '01_AUS'
                 user['progress'] = 0
