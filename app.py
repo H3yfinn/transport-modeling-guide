@@ -667,8 +667,8 @@ def content_page(page_name):
 def run_tasks():
     global_logger.info('Running tasks: delete_inactive_users_sessions, check_disk_space')
     # Run the tasks in a separate thread
-    user_manager.delete_inactive_users_sessions()
     backend.check_disk_space()
+    user_manager.delete_inactive_users_sessions()
     
 # Schedule the cleanup task
 # schedule.every().day.at("00:00").do(run_tasks)

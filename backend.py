@@ -300,8 +300,8 @@ def check_disk_space():
     disk_usage = psutil.disk_usage('/')
     if current_app.config.LOGGING:
         global_logger.info(f"Disk space used: {disk_usage.percent}%")
-        
-    if disk_usage.percent > 80:  # Adjust the threshold as needed
+        error_logger.info(f"Disk space used: {disk_usage.percent}%")
+    if disk_usage.percent > 5:  # Adjust the threshold as needed
         new_values_dict={}
         new_values_dict['disk_usage'] = disk_usage.percent
         from_email = 'low-disk-space' + current_app.config['MAIL_USERNAME']
