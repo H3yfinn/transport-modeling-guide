@@ -13,7 +13,7 @@ from flask import current_app
 import psutil
 # from flask import session#trying to avoid using flask session within this module
 from encryption import encrypt_data, decrypt_data
-import user_management as user_manager
+from user_management import UserManagement
 from shared import progress_tracker, global_logger, error_logger, setup_logger, model_threads, model_FILE_DATE_IDs
 
 class StreamToLogger:
@@ -308,5 +308,5 @@ def check_disk_space():
 def run_tasks():
     global_logger.info('Running tasks: delete_inactive_users_sessions, check_disk_space')
     # Run the tasks in a separate thread
-    user_manager.delete_inactive_users_sessions()
+    UserManagement.delete_inactive_users_sessions()
     check_disk_space()
