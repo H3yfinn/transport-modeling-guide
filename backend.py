@@ -9,7 +9,7 @@ from datetime import datetime
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from flask import current_app
-
+import psutil
 # from flask import session#trying to avoid using flask session within this module
 from shared import progress_tracker, global_logger, error_logger, setup_logger, model_FILE_DATE_IDs
 
@@ -291,3 +291,40 @@ def send_feedback_email(name, message):
     except Exception as e:
         global_logger.error(f"Error sending feedback email: {e}")
         error_logger.error(f"Error sending feedback email: {e}")
+        
+
+def check_disk_space():
+    # Check the disk space
+    if current_app.config.DEBUG_LOGGING:
+        global_logger.info('Checking disk space')
+        
+    disk_usage = psutil.disk_usage('/')
+    if current_app.config.LOGGING:
+        global_logger.info(f"Disk space used: {disk_usage.percent}%")
+        
+    if disk_usage.percent > 80:  # Adjust the threshold as needed        
+        if current_app.config.AWS_CONNECTION_AVAILABLE:
+            ses_client = boto3.client('ses', region_name='ap-northeast-1')
+            response = ses_client.send_email(
+                Source='low-disk-space' + current_app.config['MAIL_USERNAME'],
+                Destination={
+                    'ToAddresses': [current_app.config.PERSONAL_EMAIL]
+                },
+                Message={
+                    'Subject': {
+                        'Data': f'Disk Space Warning: {disk_usage.percent}%',
+                        'Charset': 'UTF-8'
+                    },
+                    'Body': {
+                        'Text': {
+                            'Data': f"Disk space warning: {disk_usage.percent}% used",
+                            'Charset': 'UTF-8'
+                        }
+                    }
+                }
+            )
+            error_logger.error(f"Disk space warning email sent: {disk_usage.percent}% used, response: {response}")
+            global_logger.info(f"Disk space warning email sent: {disk_usage.percent}% used, response: {response}")
+    else:
+        if current_app.config.DEBUG_LOGGING:
+            global_logger.info(f"Disk space is not within acceptable limits: {disk_usage.percent}% used")
