@@ -10,6 +10,7 @@ from datetime import datetime
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from flask import current_app
+import psutil
 # from flask import session#trying to avoid using flask session within this module
 from encryption import encrypt_data, decrypt_data
 import user_management as user_manager
@@ -293,3 +294,19 @@ def send_feedback_email(name, message):
     except Exception as e:
         global_logger.error(f"Error sending feedback email: {e}")
         error_logger.error(f"Error sending feedback email: {e}")
+        
+def check_disk_space():
+    # Check the disk space
+    disk_usage = psutil.disk_usage('/')
+    if disk_usage.percent > 80:  # Adjust the threshold as needed
+        error_logger.error(f"Disk space is running low: {disk_usage.percent}%")
+        new_values_dict={}
+        new_values_dict['disk_usage'] = disk_usage.percent
+        from_email = 'low-disk-space' + current_app.config['MAIL_USERNAME']
+        setup_and_send_email(current_app.config.PERSONAL_EMAIL, from_email, new_values_dict, email_template='templates/disk_space_email_template.html', subject_title='Disk Space Warning')
+        
+def run_tasks():
+    global_logger.info('Running tasks: delete_inactive_users_sessions, check_disk_space')
+    # Run the tasks in a separate thread
+    user_manager.delete_inactive_users_sessions()
+    check_disk_space()

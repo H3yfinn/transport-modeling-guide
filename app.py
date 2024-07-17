@@ -665,7 +665,7 @@ def content_page(page_name):
 
 ####################################################
 # Schedule the cleanup task
-schedule.every().day.at("00:00").do(user_manager.delete_inactive_users_sessions)
+schedule.every().day.at("00:00").do(backend.run_tasks)
 
 def run_scheduler():
     while True:
