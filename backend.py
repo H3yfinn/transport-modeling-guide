@@ -298,10 +298,14 @@ def send_feedback_email(name, message):
 def check_disk_space():
     # Check the disk space
     disk_usage = psutil.disk_usage('/')
+    if current_app.config.LOGGING:
+        global_logger.info(f"Disk space used: {disk_usage.percent}%")
+        
     if disk_usage.percent > 80:  # Adjust the threshold as needed
-        error_logger.error(f"Disk space is running low: {disk_usage.percent}%")
         new_values_dict={}
         new_values_dict['disk_usage'] = disk_usage.percent
         from_email = 'low-disk-space' + current_app.config['MAIL_USERNAME']
-        setup_and_send_email(current_app.config.PERSONAL_EMAIL, from_email, new_values_dict, email_template='templates/disk_space_email_template.html', subject_title='Disk Space Warning')
-        
+        if current_app.config.AWS_CONNECTION_AVAILABLE:
+            setup_and_send_email(current_app.config.PERSONAL_EMAIL, from_email, new_values_dict, email_template='templates/disk_space_email_template.html', subject_title='Disk Space Warning')
+        error_logger.error(f"Disk space warning email sent: {disk_usage.percent}% used")
+        global_logger.info(f"Disk space warning email sent: {disk_usage.percent}% used")

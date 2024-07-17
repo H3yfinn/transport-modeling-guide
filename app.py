@@ -671,8 +671,8 @@ def run_tasks():
     backend.check_disk_space()
     
 # Schedule the cleanup task
-schedule.every().day.at("00:00").do(run_tasks)
-
+# schedule.every().day.at("00:00").do(run_tasks)
+schedule.every().minute.do(run_tasks)
 def run_scheduler():
     while True:
         schedule.run_pending()
