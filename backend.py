@@ -92,8 +92,15 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
                 else:
                     if current_app.config.LOGGING:
                         global_logger.info("Main module found in the session-specific path")
-                main_module = importlib.util.module_from_spec(main_module_spec)
-                main_module_spec.loader.exec_module(main_module)
+                try:        
+                    #loading main module: 
+                    main_module = importlib.util.module_from_spec(main_module_spec)
+                    main_module_spec.loader.exec_module(main_module)
+                except Exception as e:
+                    if current_app.config.LOGGING:
+                        global_logger.error(f"Error loading main module: {e}")
+                        error_logger.error(f"Error loading main module: {e}")
+                    raise e
 
             progress_tracker[user_id] = 0
 
