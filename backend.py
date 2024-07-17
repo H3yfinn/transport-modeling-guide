@@ -297,6 +297,8 @@ def send_feedback_email(name, message):
         
 def check_disk_space():
     # Check the disk space
+    if current_app.config.LOGGING:
+        global_logger.info('Checking disk space')
     disk_usage = psutil.disk_usage('/')
     if current_app.config.LOGGING:
         global_logger.info(f"Disk space used: {disk_usage.percent}%")
