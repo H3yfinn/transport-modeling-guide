@@ -13,7 +13,7 @@ from itsdangerous import URLSafeTimedSerializer
 import backend
 from shared import global_logger, error_logger, create_app, SafeConfig
 import validators
-
+import psutil
 # Initialize the app
 app = create_app()
 app.config = SafeConfig(app.config)
@@ -667,9 +667,26 @@ def content_page(page_name):
 def run_tasks():
     global_logger.info('Running tasks: delete_inactive_users_sessions, check_disk_space')
     # Run the tasks in a separate thread
-    backend.check_disk_space()
+    check_disk_space()
     user_manager.delete_inactive_users_sessions()
-    
+            
+def check_disk_space():
+    # Check the disk space
+    if app.config.DEBUG_LOGGING:
+        global_logger.info('Checking disk space')
+    disk_usage = psutil.disk_usage('/')
+    if app.config.LOGGING:
+        global_logger.info(f"Disk space used: {disk_usage.percent}%")
+        error_logger.info(f"Disk space used: {disk_usage.percent}%")
+    if disk_usage.percent > 5:  # Adjust the threshold as needed
+        new_values_dict={}
+        new_values_dict['disk_usage'] = disk_usage.percent
+        from_email = 'low-disk-space' + app.config['MAIL_USERNAME']
+        if app.config.AWS_CONNECTION_AVAILABLE:
+            backend.setup_and_send_email(app.config.PERSONAL_EMAIL, from_email, new_values_dict, email_template='templates/disk_space_email_template.html', subject_title='Disk Space Warning')
+        error_logger.error(f"Disk space warning email sent: {disk_usage.percent}% used")
+        global_logger.info(f"Disk space warning email sent: {disk_usage.percent}% used")
+
 # Schedule the cleanup task
 # schedule.every().day.at("00:00").do(run_tasks)
 schedule.every().minute.do(run_tasks)

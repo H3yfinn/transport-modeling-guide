@@ -42,12 +42,12 @@ The application enables users to upload input files, select an economy, run a mo
 ssh -i "~/.ssh/transport-model-web-app.pem"  ec2-user@ec2-3-113-59-243.ap-northeast-1.compute.amazonaws.com 
 cd /var/www/transport-modeling-guide && git pull --recurse-submodules && git submodule update --remote --merge
 source venv/bin/activate && pip3 install --ignore-installed -r /var/www/transport-modeling-guide/requirements.txt
-sudo systemctl daemon-reload && sudo systemctl restart gunicorn && sudo systemctl restart nginx  && sudo certbot renew && sudo systemctl status gunicorn
+sudo systemctl daemon-reload &&  sudo systemctl restart gunicorn-transport-energy-modelling && sudo systemctl restart gunicorn-aws && sudo systemctl restart nginx  && sudo certbot renew && sudo systemctl status gunicorn-transport-energy-modelling
 ```
 All together (except ssh and requirements update):
 ```bash
 ssh -i "~/.ssh/transport-model-web-app.pem"  ec2-user@ec2-3-113-59-243.ap-northeast-1.compute.amazonaws.com 
-cd /var/www/transport-modeling-guide && git pull --recurse-submodules && git submodule update --remote --merge && source venv/bin/activate && sudo systemctl daemon-reload && sudo systemctl restart gunicorn && sudo systemctl restart nginx  && sudo certbot renew && sudo systemctl status gunicorn
+cd /var/www/transport-modeling-guide && git pull --recurse-submodules && git submodule update --remote --merge && source venv/bin/activate && sudo systemctl daemon-reload && sudo systemctl restart gunicorn-transport-energy-modelling && sudo systemctl restart gunicorn-aws && sudo systemctl restart nginx  && sudo certbot renew && sudo systemctl status gunicorn-transport-energy-modelling
 ```
 
 # Guide for getting website up and running

@@ -5,16 +5,13 @@ import shutil
 import sys
 import time
 import importlib.util
-import threading
 from datetime import datetime
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from flask import current_app
-import psutil
+
 # from flask import session#trying to avoid using flask session within this module
-from encryption import encrypt_data, decrypt_data
-from user_management import UserManagement
-from shared import progress_tracker, global_logger, error_logger, setup_logger, model_threads, model_FILE_DATE_IDs
+from shared import progress_tracker, global_logger, error_logger, setup_logger, model_FILE_DATE_IDs
 
 class StreamToLogger:
     def __init__(self, log_filename):
@@ -294,20 +291,3 @@ def send_feedback_email(name, message):
     except Exception as e:
         global_logger.error(f"Error sending feedback email: {e}")
         error_logger.error(f"Error sending feedback email: {e}")
-        
-def check_disk_space():
-    # Check the disk space
-    if current_app.config.LOGGING:
-        global_logger.info('Checking disk space')
-    disk_usage = psutil.disk_usage('/')
-    if current_app.config.LOGGING:
-        global_logger.info(f"Disk space used: {disk_usage.percent}%")
-        error_logger.info(f"Disk space used: {disk_usage.percent}%")
-    if disk_usage.percent > 5:  # Adjust the threshold as needed
-        new_values_dict={}
-        new_values_dict['disk_usage'] = disk_usage.percent
-        from_email = 'low-disk-space' + current_app.config['MAIL_USERNAME']
-        if current_app.config.AWS_CONNECTION_AVAILABLE:
-            setup_and_send_email(current_app.config.PERSONAL_EMAIL, from_email, new_values_dict, email_template='templates/disk_space_email_template.html', subject_title='Disk Space Warning')
-        error_logger.error(f"Disk space warning email sent: {disk_usage.percent}% used")
-        global_logger.info(f"Disk space warning email sent: {disk_usage.percent}% used")
