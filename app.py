@@ -676,7 +676,7 @@ schedule.every().minute.do(run_tasks)
 def run_scheduler():
     while True:
         schedule.run_pending()
-        time.sleep(60)
+        time.sleep(30)
 
 # Start the scheduler in a separate thread
 scheduler_thread = threading.Thread(target=run_scheduler, daemon=True)
