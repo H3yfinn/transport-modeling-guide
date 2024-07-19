@@ -89,7 +89,7 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
                         global_logger.info(f"Running model for sys.path[-1]: {sys.path[-1]} for non-Windows OS")
                     # For Linux and other OS, use the os.path.join directly
                     root_dir_param = os.path.join(os.getcwd(), session_library_path)
-                sys.path.append(root_dir_param)#os.getcwd() +'/' +  session_library_path)
+                sys.path.append(root_dir_param)
                 # This is a hack to allow long paths in Windows
                 main_module_spec = importlib.util.spec_from_file_location("main", os.path.join(session_library_path, "main.py"))
                 global_logger.info(f"main_module_spec: {main_module_spec}")
@@ -153,10 +153,19 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
                         error_logger.error(f"An error occurred during model execution: {e}")
                     logging.getLogger('model_logger').info(f"Progress: {progress_tracker[user_id]}")
 
-        finally:
+        finally:         
+            # Check if the operating system is Windows
+            if os.name == 'nt':
+                # For Windows, prepend with '\\?\' to handle long paths if necessary
+                root_dir_param = "\\\\?\\" + os.path.join(os.getcwd(), session_library_path)
+                # Replace '/' with '\\' for Windows paths
+                root_dir_param = root_dir_param.replace("/", "\\")
+            else:
+                # For Linux and other OS, use the os.path.join directly
+                root_dir_param = os.path.join(os.getcwd(), session_library_path)
             # If the session library path is in the sys.path, remove it
-            if os.getcwd() +'\\' +  session_library_path in sys.path:
-                sys.path.remove(os.getcwd() +'\\' +  session_library_path)
+            if root_dir_param in sys.path:
+                sys.path.remove(root_dir_param)
             if FILE_DATE_ID:
                 model_FILE_DATE_IDs[user_id] = FILE_DATE_ID
             sys.stdout = sys.__stdout__
