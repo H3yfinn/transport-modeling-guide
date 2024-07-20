@@ -503,6 +503,13 @@ def running_model():
             global_logger.info('User model is running. User must restart the session before running a new model.')
         return redirect(url_for('model_progress'))
     
+    if len(model_threads.keys()) > 0:
+        #we already have a model thread running, we should avoid running another till thats done, because of memory issues.
+        if app.config.LOGGING:
+            global_logger.info('Another model thread is already running. User must wait for it to finish before running a new model.')
+        flash('Another model is already running. Please wait for it to finish before running a new model.')
+        return 
+        
     #update estimated_time 
     global estimated_time
     estimated_time = backend.calculate_average_time()

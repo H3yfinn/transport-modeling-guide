@@ -49,7 +49,11 @@ All together (except ssh and requirements update):
 ssh -i "~/.ssh/transport-model-web-app.pem"  ec2-user@ec2-3-113-59-243.ap-northeast-1.compute.amazonaws.com 
 cd /var/www/transport-modeling-guide && git pull --recurse-submodules && git submodule update --remote --merge && source venv/bin/activate && sudo systemctl daemon-reload && sudo systemctl restart gunicorn-transport-energy-modelling && sudo systemctl restart gunicorn-aws && sudo systemctl restart nginx  && sudo certbot renew && sudo systemctl status gunicorn-transport-energy-modelling
 ```
-
+Might also need to use git lfs if its still being used for data:
+```bash
+git lfs install
+git lfs pull
+```
 # Guide for getting website up and running
 Using Amazon EC2 to deploy the website.
 First set up the requirements.txt file.
