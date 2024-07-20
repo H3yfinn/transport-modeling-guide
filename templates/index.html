@@ -34,14 +34,14 @@
             
             <p><a href="{{ url_for('content_page', page_name='guide') }}" target="_blank">Guide</a></p>     
 
-            <form action="{{ url_for('staging') }}" method="post">
+            <!-- <form action="{{ url_for('staging') }}" method="post">
                 <select id="economy-select" name="economy" onchange="updateEconomy()">
                     {% for key in keys %}
                     <option value="{{ key }}" {% if loop.first %}selected{% endif %}>{{ key }}</option>
                     {% endfor %}
                 </select>
                 <button type="submit">Run Model</button>
-            </form>
+            </form> -->
 
             <div style="display: flex; justify-content: flex-start; align-items: center;">
                 <!-- <form action="{{ url_for('results') }}" method="post" style="margin-right: 5px;">
