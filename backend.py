@@ -163,6 +163,8 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
                 root_dir_param = os.path.join(os.getcwd(), session_library_path)
             # If the session library path is in the sys.path, remove it
             if root_dir_param in sys.path:
+                if current_app.config.LOGGING:
+                    global_logger.info(f"Removing root dir param from sys.path: {root_dir_param}")
                 sys.path.remove(root_dir_param)
             if FILE_DATE_ID:
                 model_FILE_DATE_IDs[user_id] = FILE_DATE_ID

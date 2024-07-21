@@ -520,11 +520,9 @@ def running_model():
         session['results_available'] = False
         progress_tracker[session['user_id']] = 0
         
-        thread = threading.Thread(target=backend.run_model_thread, args=(app, session['session_log_filename'], session['session_library_path'], economy_to_run, session['user_id']))
+        model_threads[session['user_id']] = threading.Thread(target=backend.run_model_thread, args=(app, session['session_log_filename'], session['session_library_path'], economy_to_run, session['user_id']))
         
-        model_threads[session['user_id']] = thread
-        
-        thread.start()
+        model_threads[session['user_id']].start()
         if app.config.LOGGING:
             global_logger.info('Model run started successfully.')
         user_manager.save_session_data()
