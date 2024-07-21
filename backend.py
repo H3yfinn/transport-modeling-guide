@@ -8,7 +8,7 @@ import importlib.util
 from datetime import datetime
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
-from flask import current_app
+from flask import current_app, session
 import psutil
 # from flask import session#trying to avoid using flask session within this module
 from shared import progress_tracker, global_logger, error_logger, setup_logger, model_FILE_DATE_IDs, model_threads
@@ -174,6 +174,9 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
             if current_app.config.LOGGING:
                 global_logger.info('Model thread finished execution')
             progress_tracker[user_id] = 100
+            
+            session['model_thread_running'] = False
+            session['results_available'] = True
             del model_threads[user_id]
             
 def calculate_average_time():
