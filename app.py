@@ -578,11 +578,11 @@ def model_progress():
             return redirect(url_for('login'))
         if not user_manager.check_model_is_running():
             if user_manager.check_if_results_available():
-                if app.config.DEBUG_LOGGING:
+                if app.config.LOGGING:
                     global_logger.info('model_progress() GET: Model is not running and results are available. Redirecting to results page.')
                 return redirect(url_for('results'))
             else:
-                if app.config.DEBUG_LOGGING:
+                if app.config.LOGGING:
                     global_logger.info('model_progress() GET: Model is not running and results not available. Redirecting to index page.')
                 return redirect(url_for('index'))
         
@@ -592,7 +592,7 @@ def model_progress():
             thread = model_threads[user_id][1]
             session['model_thread_running'] = thread.is_alive()
             if not session['model_thread_running']:
-                if app.config.DEBUG_LOGGING:
+                if app.config.LOGGING:
                     global_logger.info('model_progress() GET: Model completed running. Redirecting to results page.')
                 del model_threads[user_id]
                 session['results_available'] = True
@@ -605,8 +605,8 @@ def model_progress():
         
         else:
             if app.config.LOGGING:
-                global_logger.error('Model thread not found yet model_running is True. This should not happen.')
-            return redirect(url_for('hard_reset_user_session'))
+                global_logger.error('Model thread not found yet model_running is True. This should not happen. Model threads are: {}'.format(model_threads))
+            return redirect(url_for('index'))
     
 ####################################################
 
