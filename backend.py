@@ -82,14 +82,12 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
                     root_dir_param = "\\\\?\\" + os.path.join(os.getcwd(), session_library_path)
                     # Replace '/' with '\\' for Windows paths
                     root_dir_param = root_dir_param.replace("/", "\\")
-                    if current_app.config.LOGGING:
-                        global_logger.info(f"Running model for sys.path[-1]: {sys.path[-1]} for Windows OS")
                 else:
-                    if current_app.config.LOGGING:
-                        global_logger.info(f"Running model for sys.path[-1]: {sys.path[-1]} for non-Windows OS")
                     # For Linux and other OS, use the os.path.join directly
                     root_dir_param = os.path.join(os.getcwd(), session_library_path)
                 sys.path.append(root_dir_param)
+                if current_app.config.LOGGING:
+                    global_logger.info(f"Running model for sys.path[-1]: {sys.path[-1]}")
                 # This is a hack to allow long paths in Windows
                 main_module_spec = importlib.util.spec_from_file_location("main", os.path.join(session_library_path, "main.py"))
                 global_logger.info(f"main_module_spec: {main_module_spec}")
