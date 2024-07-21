@@ -16,7 +16,7 @@
             <a href="{{ url_for('content_page', page_name='glossary') }}" target="_blank">Glossary</a>
 
         </nav>
-        <p> Please note that because this takes about 2gb of ram to run, we've set it so that only one model can be run at a time.</p>
+        <p> Please note that because this takes about 3gb of ram to run, we've set it so that only one model can be run at a time. It normally takes about 5min to run the model.</p>
         <form action="{{ url_for('running_model') }}" method="post" style="margin-top: 20px;">
             <button type="submit">Run Model</button>
         </form>
@@ -28,7 +28,6 @@
     </div>
     <div>
 
-        
         <section>
             <h2>About the inputs</h2>
             <ul>

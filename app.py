@@ -220,16 +220,16 @@ def results():
     economy_to_run = session.get('economy_to_run')
     
     results_files = [
-        f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_results.html',
-        f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_assumptions.html',
+        # f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_results.html',
+        # f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_assumptions.html',
         #f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_assumptions_extra.html',
-        f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_results.html',
-        f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions.html'#,
+        # f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_results.html',
+        # f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions.html'#,
         # #f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions_extra.html'
-        # f'dashboards/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_results.html',
-        # f'dashboards/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_secondary_results.html',
-        # f'dashboards/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_results.html',
-        # f'dashboards/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_secondary_results.html'
+        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_results.html',
+        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_secondary_results.html',
+        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_results.html',
+        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_secondary_results.html'
     ]
     
     results_paths = [os.path.join(session['session_library_path'], 'plotting_output', file) for file in results_files]
@@ -243,10 +243,10 @@ def results():
     if session['user_id'] in model_FILE_DATE_IDs.keys():
         model_FILE_DATE_ID = model_FILE_DATE_IDs[session['user_id']]
         
-        key_csv_files += [f'output_data/for_other_modellers/{economy_to_run}/{model_FILE_DATE_ID}_{economy_to_run}_transport_stocks.csv',
-        f'output_data/for_other_modellers/{economy_to_run}/{model_FILE_DATE_ID}_{economy_to_run}_transport_stock_shares.csv',
-        f'output_data/for_other_modellers/{economy_to_run}/{model_FILE_DATE_ID}_{economy_to_run}_transport_activity.csv',
-        f'output_data/for_other_modellers/{economy_to_run}/{economy_to_run}_{model_FILE_DATE_ID}_transport_energy_use.csv']
+        key_csv_files += [f'output_data/for_other_modellers/output_for_outlook_data_system/{model_FILE_DATE_ID}_{economy_to_run}_transport_stocks.csv',
+        f'output_data/for_other_modellers/output_for_outlook_data_system/{model_FILE_DATE_ID}_{economy_to_run}_transport_stock_shares.csv',
+        f'output_data/for_other_modellers/output_for_outlook_data_system/{model_FILE_DATE_ID}_{economy_to_run}_transport_activity.csv',
+        f'output_data/for_other_modellers/output_for_outlook_data_system/{economy_to_run}_{model_FILE_DATE_ID}_transport_energy_use.csv']
 
     key_csv_paths = [os.path.join(session['session_library_path'], file) for file in key_csv_files]
     #check that they exist, otherwise remove them from the list
@@ -272,16 +272,16 @@ def default_results():
     economy_to_run = session.get('economy_to_run')
     
     results_files = [
-        f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_results.html',
-        f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_assumptions.html',
+        # f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_results.html',
+        # f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_assumptions.html',
         #f'dashboards/{economy_to_run}/{economy_to_run}_Target_dashboard_assumptions_extra.html',
-        f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_results.html',
-        f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions.html'#,
+        # f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_results.html',
+        # f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions.html'#,
         #f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions_extra.html'
-        # f'dashboards/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_results.html',
-        # f'dashboards/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_secondary_results.html',
-        # f'dashboards/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_results.html',
-        # f'dashboards/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_secondary_results.html'
+        f'dashboards/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_results.html',
+        f'dashboards/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_secondary_results.html',
+        f'dashboards/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_results.html',
+        f'dashboards/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_secondary_results.html'
     ]
     
     results_paths = [os.path.join(app.config.ORIGINAL_MODEL_LIBRARY_NAME, 'plotting_output', file) for file in results_files]

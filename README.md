@@ -54,6 +54,66 @@ Might also need to use git lfs if its still being used for data:
 git lfs install
 git lfs pull
 ```
+
+Also if you need to clear produced files and so on, this bash script might be helpful:
+```bash
+#!/bin/bash
+# sudo nano clear_dashboards.sh 
+# chmod +x clear_dashboards.sh
+# ./clear_dashboards.sh
+# Define the list of economies
+ECONOMY_LIST=(
+  '01_AUS'
+  '02_BD'
+  '03_CDA'
+  '04_CHL'
+  '05_PRC'
+  '06_HKC'
+  '07_INA'
+  '08_JPN'
+  '09_ROK'
+  '10_MAS'
+  '11_MEX'
+  '12_NZ'
+  '13_PNG'
+  '14_PE'
+  '15_PHL'
+  '16_RUS'
+  '17_SGP'
+  '18_CT'
+  '19_THA'
+  '20_USA'
+  '21_VN'
+)
+
+# Navigate to the main repository
+cd /var/www/transport-modeling-guide
+
+# Empty the specified folders
+for economy in "${ECONOMY_LIST[@]}"; do
+    echo "Clearing contents of /dashboards/${economy}/"
+    rm -rf transport_model_9th_edition/plotting_output/dashboards/${economy}/*
+done
+
+# # Pull the latest changes from the main repository and update submodules
+git pull --recurse-submodules
+git submodule update --remote --merge
+
+# Activate the virtual environment
+source venv/bin/activate
+
+# Reload and restart services
+sudo systemctl daemon-reload
+sudo systemctl restart gunicorn-transport-energy-modelling
+sudo systemctl restart gunicorn-aws
+sudo systemctl restart nginx
+
+# Renew certificates
+sudo certbot renew
+
+# Check the status of the service
+sudo systemctl status gunicorn-transport-energy-modelling
+```
 # Guide for getting website up and running
 Using Amazon EC2 to deploy the website.
 First set up the requirements.txt file.
