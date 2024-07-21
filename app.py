@@ -226,10 +226,10 @@ def results():
         # f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_results.html',
         # f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions.html'#,
         # #f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions_extra.html'
-        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_results.html',
-        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_secondary_results.html',
-        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_results.html',
-        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_secondary_results.html'
+        f'dashboards/dashboards_for_web/{economy_to_run}//WEB_{economy_to_run}_Low_Carbon_dashboard_results.html',
+        f'dashboards/dashboards_for_web/{economy_to_run}//WEB_{economy_to_run}_Low_Carbon_dashboard_secondary_results.html',
+        f'dashboards/dashboards_for_web/{economy_to_run}//WEB_{economy_to_run}_Business_as_Usual_dashboard_results.html',
+        f'dashboards/dashboards_for_web/{economy_to_run}//WEB_{economy_to_run}_Business_as_Usual_dashboard_secondary_results.html'
     ]
     
     results_paths = [os.path.join(session['session_library_path'], 'plotting_output', file) for file in results_files]
@@ -278,10 +278,10 @@ def default_results():
         # f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_results.html',
         # f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions.html'#,
         #f'dashboards/{economy_to_run}/{economy_to_run}_Reference_dashboard_assumptions_extra.html'
-        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_results.html',
-        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Low_Carbon_dashboard_secondary_results.html',
-        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_results.html',
-        f'dashboards/dashboards_for_web/{economy_to_run}/{economy_to_run}_Business_as_Usual_dashboard_secondary_results.html'
+        f'dashboards/dashboards_for_web/{economy_to_run}//WEB_{economy_to_run}_Low_Carbon_dashboard_results.html',
+        f'dashboards/dashboards_for_web/{economy_to_run}//WEB_{economy_to_run}_Low_Carbon_dashboard_secondary_results.html',
+        f'dashboards/dashboards_for_web/{economy_to_run}//WEB_{economy_to_run}_Business_as_Usual_dashboard_results.html',
+        f'dashboards/dashboards_for_web/{economy_to_run}//WEB_{economy_to_run}_Business_as_Usual_dashboard_secondary_results.html'
     ]
     
     results_paths = [os.path.join(app.config.ORIGINAL_MODEL_LIBRARY_NAME, 'plotting_output', file) for file in results_files]

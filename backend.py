@@ -356,4 +356,4 @@ def check_disk_space():
             global_logger.info(f"Disk space warning email sent: {disk_usage.percent}% used, response: {response}")
     else:
         if current_app.config.DEBUG_LOGGING:
-            global_logger.info(f"Disk space is not within acceptable limits: {disk_usage.percent}% used")
+            global_logger.info(f"Disk space is within acceptable limits: {disk_usage.percent}% used")
