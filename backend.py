@@ -11,7 +11,7 @@ from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from flask import current_app
 import psutil
 # from flask import session#trying to avoid using flask session within this module
-from shared import progress_tracker, global_logger, error_logger, setup_logger, model_FILE_DATE_IDs
+from shared import progress_tracker, global_logger, error_logger, setup_logger, model_FILE_DATE_IDs, model_threads
 
 class StreamToLogger:
     def __init__(self, log_filename):
@@ -174,6 +174,7 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
             if current_app.config.LOGGING:
                 global_logger.info('Model thread finished execution')
             progress_tracker[user_id] = 100
+            del model_threads[user_id]
             
 def calculate_average_time():
     if current_app.config.DEBUG_LOGGING:

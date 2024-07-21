@@ -589,24 +589,38 @@ def model_progress():
         # While on the page, check if the model is still running
         user_id = session['user_id']
         if user_id in model_threads.keys():
-            thread = model_threads[user_id][1]
-            session['model_thread_running'] = thread.is_alive()
-            if not session['model_thread_running']:
+            # thread = model_threads[user_id][1]
+            # session['model_thread_running'] = thread.is_alive()
+            # if not session['model_thread_running']:
+            #     global_logger.error('Model thread found yet model_thread_running is True. This should not happen. Model threads are: {}'.format(model_threads))
+            # if app.config.LOGGING:
+            #     global_logger.info('model_progress() GET: Model completed running. Redirecting to results page.')
+            # del model_threads[user_id]
+            # session['results_available'] = True
+            # user_manager.save_session_data()
+            # return redirect(url_for('results'))
+            
+            # else:   
+            logs = backend.get_logs_from_file(session['session_log_filename'])
+            return render_template('model_progress.html', progress=progress_tracker[session['user_id']], logs=logs, estimated_time=estimated_time)
+        
+        else:
+            if session['model_thread_running']:
                 if app.config.LOGGING:
                     global_logger.info('model_progress() GET: Model completed running. Redirecting to results page.')
-                del model_threads[user_id]
+                session['model_thread_running'] = False
                 session['results_available'] = True
                 user_manager.save_session_data()
                 return redirect(url_for('results'))
+            else:
+                global_logger.error('User id not in keys yet model_thread_running is True. This should not happen. Model threads are: {}'.format(model_threads))
             
-            else:   
-                logs = backend.get_logs_from_file(session['session_log_filename'])
-                return render_template('model_progress.html', progress=progress_tracker[session['user_id']], logs=logs, estimated_time=estimated_time)
-        
-        else:
-            if app.config.LOGGING:
-                global_logger.error('Model thread not found yet model_running is True. This should not happen. Model threads are: {}'.format(model_threads))
-            return redirect(url_for('index'))
+            
+            
+            
+            # if app.config.LOGGING:
+            #     global_logger.error('Model thread not found yet model_running is True. This should not happen. Model threads are: {}'.format(model_threads))
+            # return redirect(url_for('index'))
     
 ####################################################
 
