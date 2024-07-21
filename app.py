@@ -520,9 +520,11 @@ def running_model():
         session['results_available'] = False
         progress_tracker[session['user_id']] = 0
         
-        model_threads[session['user_id']] = threading.Thread(target=backend.run_model_thread, args=(app, session['session_log_filename'], session['session_library_path'], economy_to_run, session['user_id']))
+        thread = threading.Thread(target=backend.run_model_thread, args=(app, session['session_log_filename'], session['session_library_path'], economy_to_run, session['user_id']))
         
-        model_threads[session['user_id']].start()
+        model_threads[session['user_id']] = [True, thread]
+        
+        thread.start()
         if app.config.LOGGING:
             global_logger.info('Model run started successfully.')
         user_manager.save_session_data()
@@ -586,8 +588,8 @@ def model_progress():
         
         # While on the page, check if the model is still running
         user_id = session['user_id']
-        if user_id in model_threads:
-            thread = model_threads[user_id]
+        if user_id in model_threads.keys():
+            RUNNING, thread = model_threads[user_id]
             session['model_thread_running'] = thread.is_alive()
             if not session['model_thread_running']:
                 if app.config.DEBUG_LOGGING:
