@@ -210,6 +210,19 @@ class UserManagement:
             user['model_thread_running'] = session.get('model_thread_running', False)
             user['results_available'] = session.get('results_available', False)
             self.update_user_data(user)
+        
+    def copy_large_directory(self, src_dir, dst_dir):
+        if not os.path.exists(dst_dir):
+            os.makedirs(dst_dir)
+        for item in os.listdir(src_dir):
+            src_path = os.path.join(src_dir, item)
+            dst_path = os.path.join(dst_dir, item)
+            if os.path.isdir(src_path):
+                self.copy_large_directory(src_path, dst_path)
+            else:
+                # Copy files with a buffer size to avoid high memory usage
+                with open(src_path, 'rb') as fsrc, open(dst_path, 'wb') as fdst:
+                    shutil.copyfileobj(fsrc, fdst, 1024*1024*10)  # 10MB buffer
 
     def setup_user_session(self):
         if current_app.config.DEBUG_LOGGING:
@@ -222,6 +235,12 @@ class UserManagement:
         if current_app.config.LOGGING:
             global_logger.info('Creating session library path {}'.format(user['session_library_path']))
         # shutil.copytree(self.app.config['ORIGINAL_MODEL_LIBRARY_NAME'], user['session_library_path'], dirs_exist_ok=True)
+            
+        # Usage
+        src_directory = self.app.config['ORIGINAL_MODEL_LIBRARY_NAME']
+        dst_directory = user['session_library_path']
+        self.copy_large_directory(src_directory, dst_directory)
+        
         
         session['session_folder'] = user['session_folder']
         session['session_library_path'] = user['session_library_path']
