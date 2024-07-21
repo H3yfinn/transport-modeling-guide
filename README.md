@@ -54,6 +54,11 @@ Might also need to use git lfs if its still being used for data:
 git lfs install
 git lfs pull
 ```
+And to check logs:
+```bash
+sudo journalctl -u gunicorn-transport-energy-modelling -e
+```
+
 
 Also if you need to clear produced files and so on, this bash script might be helpful:
 ```bash
