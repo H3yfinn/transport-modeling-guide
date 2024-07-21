@@ -70,8 +70,8 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
             global_logger.info(f'Running model thread for economy: {economy_to_run}')
         FILE_DATE_ID = None
         logger = StreamToLogger(log_filename)
-        sys.stdout = logger
-        sys.stderr = logger
+        # sys.stdout = logger
+        # sys.stderr = logger
         try:
             if current_app.config['DEBUG']:
                 pass
@@ -168,8 +168,8 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
                 sys.path.remove(root_dir_param)
             if FILE_DATE_ID:
                 model_FILE_DATE_IDs[user_id] = FILE_DATE_ID
-            sys.stdout = sys.__stdout__
-            sys.stderr = sys.__stderr__
+            # sys.stdout = sys.__stdout__
+            # sys.stderr = sys.__stderr__
             logger.close()  # We don't seem to be getting here?
             if current_app.config.LOGGING:
                 global_logger.info('Model thread finished execution')
