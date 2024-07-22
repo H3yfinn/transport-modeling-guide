@@ -5,7 +5,7 @@ The charts are built to be interacted with and provide more detail the more you 
 Below is the results dashboard which contains the main results of the model and incidentally, some of the assumptions. 
 
 - Notice how you can click on categories in the legend, and also double click to isolate a category. You can also click and drag to zoom in on a section of the chart, and click and drag the axis' to change the scale. 
-- You can also hover over the chart to see the values of the data points. If you are confused about any of the information or cateogories you can read about them in the  {{link:https://transport-energy-modelling.com/content/glossary:text:glossary}} or the {{link:https://transport-energy-modelling.com/content/index:text:methodology}}.
+- You can also hover over the chart to see the values of the data points. If you are confused about any of the information or cateogories you can read about them in the  {{link:https://transport-energy-modelling.com/content/glossary:text:glossary}} or the {{link:https://transport-energy-modelling.com:text:methodology}}.
 
 {{graph:05_PRC_Target_dashboard_results.html}}
 

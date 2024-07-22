@@ -7,6 +7,6 @@ Fundamentally the web app is designed so it will encourage you to look deeply at
 - Learn about {{link:https://transport-energy-modelling.com/content/reading_the_results:text:reading the results here.}}
 - Read about the {{link:https://transport-energy-modelling.com/content/about_the_model:text:technical details of the model here.}}
 
-When you are ready, I suggest going {{link:https://transport-energy-modelling.com/content/index:text:back to the main page}} and running the model. Then as you go, read the guides to learn about the model and the results, and then run the model again with different inputs to see how the results change - or even run different economies to see how their projections differ.
+When you are ready, I suggest going {{link:https://transport-energy-modelling.com:text:back to the main page}} and running the model. Then as you go, read the guides to learn about the model and the results, and then run the model again with different inputs to see how the results change - or even run different economies to see how their projections differ.
 
 Finally, remember, a projection is just one possible future in many. This model is designed to help you understand what might happen in the future, not predict it. It is at the end of the day a tool to help policy makers and researchers understand the energy transition.
