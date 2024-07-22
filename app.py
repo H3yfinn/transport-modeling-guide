@@ -13,7 +13,7 @@ from itsdangerous import URLSafeTimedSerializer
 import backend
 from shared import global_logger, error_logger, create_app, SafeConfig
 import validators
-
+from bs4 import BeautifulSoup
 # Initialize the app
 app = create_app()
 app.config = SafeConfig(app.config)
@@ -695,6 +695,11 @@ def replace_placeholders(explanation, content_folder):
     
     return '\n'.join(replaced_lines)
 
+# Additional helper to ensure well-formed HTML for debugging
+def validate_html(html):
+    soup = BeautifulSoup(html, 'html.parser')
+    return soup.prettify()
+
 # Define the route to serve the content
 @app.route('/content/<page_name>')
 def content_page(page_name):
@@ -715,8 +720,12 @@ def content_page(page_name):
             explanation_content = f.read()
             explanation_markdown = markdown.markdown(explanation_content)
             explanation += replace_placeholders(explanation_markdown, content_folder)
-            
-    return render_template('content_page.html', explanation=explanation)
+    
+    
+    # Validate and prettify HTML for debugging
+    explanation_html = validate_html(explanation)
+    
+    return render_template('content_page.html', explanation=explanation_html)
 
 ####################################################
 #tehse need to be here because not all global variables are defined yet, i think?
