@@ -521,6 +521,15 @@ def running_model():
         progress_tracker[session['user_id']] = 0
         
         model_threads[session['user_id']] = [True, None]
+        
+        if app.config.DEBUG:
+            session['model_thread_running'] = False
+            session['results_available'] = True
+            progress_tracker[session['user_id']] = 0
+            model_threads[session['user_id']] = [True, None]
+            user_manager.save_session_data()
+            return redirect(url_for('model_progress'))
+            
         thread = threading.Thread(target=backend.run_model_thread, args=(app, session['session_log_filename'], session['session_library_path'], economy_to_run, session['user_id']))
         thread.start()
         model_threads[session['user_id']][1] = thread
