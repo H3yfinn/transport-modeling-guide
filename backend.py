@@ -66,6 +66,7 @@ def archive_log(log_filename, DELETE_LOGS_INSTEAD_OF_ARCHIVING=True):
 def run_model_thread(app, log_filename, session_library_path, economy_to_run, user_id):
     """Run the model in a separate thread with the Flask application context."""
     with app.app_context():
+        COMPLETED = False
         if current_app.config.LOGGING:
             global_logger.info(f'Running model thread for economy: {economy_to_run}')
         FILE_DATE_ID = None
@@ -153,12 +154,12 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
 
         finally:         
             # Check if the operating system is Windows
-            if os.name == 'nt':
+            if os.name == 'nt' and not current_app.config['DEBUG']:
                 # For Windows, prepend with '\\?\' to handle long paths if necessary
                 root_dir_param = "\\\\?\\" + os.path.join(os.getcwd(), session_library_path)
                 # Replace '/' with '\\' for Windows paths
                 root_dir_param = root_dir_param.replace("/", "\\")
-            else:
+            elif not current_app.config['DEBUG']:
                 # For Linux and other OS, use the os.path.join directly
                 root_dir_param = os.path.join(os.getcwd(), session_library_path)
             # If the session library path is in the sys.path, remove it
@@ -177,7 +178,9 @@ def run_model_thread(app, log_filename, session_library_path, economy_to_run, us
             
             session['model_thread_running'] = False
             session['results_available'] = True
-            del model_threads[user_id]
+            del model_threads[user_id]#suspect that this doesnt actually work.
+            
+            # return COMPLETED
             
 def calculate_average_time():
     if current_app.config.DEBUG_LOGGING:

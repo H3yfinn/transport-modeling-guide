@@ -318,24 +318,24 @@ class UserManagement:
         user = self.get_user_by_session()
         if user:
             if os.path.exists(user['session_folder']):
-                if current_app.config.DEBUG:
-                    pass
-                else:
-                    shutil.rmtree(user['session_folder'], ignore_errors=True)
+                # if current_app.config.DEBUG:
+                #     pass
+                # else:
+                shutil.rmtree(user['session_folder'], ignore_errors=True)
                 if current_app.config.LOGGING:
                     global_logger.info(f'Deleting session folder: {user["session_folder"]}')
             
             if os.path.exists(user['session_library_path']):
-                if current_app.config.DEBUG:
-                    pass
-                else:
-                    shutil.rmtree(user['session_library_path'], ignore_errors=True)
+                # if current_app.config.DEBUG:
+                #     pass
+                # else:
+                shutil.rmtree(user['session_library_path'], ignore_errors=True)
                 if current_app.config.LOGGING:
                     global_logger.info(f'Deleting session library path: {user["session_library_path"]}')
             
             if os.path.exists(user['session_log_filename']):
-                if current_app.config.DEBUG:
-                    pass
+                # if current_app.config.DEBUG:
+                #     pass
                 if current_app.config.LOGGING:
                     global_logger.info(f'Archiving log file: {user["session_log_filename"]}')
                 backend.archive_log(user['session_log_filename'])
@@ -358,16 +358,16 @@ class UserManagement:
                 if current_app.config.LOGGING:
                     global_logger.info(f'Deleting session data for inactive user: {user["user_id"]}')
                 if os.path.exists(user['session_folder']):
-                    if current_app.config.DEBUG:
-                        pass
-                    else:
-                        shutil.rmtree(user['session_folder'], ignore_errors=True)
+                    # if current_app.config.DEBUG:
+                    #     pass
+                    # else:
+                    shutil.rmtree(user['session_folder'], ignore_errors=True)
                 
                 if os.path.exists(user['session_library_path']):
-                    if current_app.config.DEBUG:
-                        pass
-                    else:
-                        shutil.rmtree(user['session_library_path'], ignore_errors=True)
+                    # if current_app.config.DEBUG:
+                    #     pass
+                    # else:
+                    shutil.rmtree(user['session_library_path'], ignore_errors=True)
                 
                 backend.archive_log(user['session_log_filename'])
                 

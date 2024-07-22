@@ -610,6 +610,12 @@ def model_progress():
                 global_logger.info('model_progress() GET: Model completed running. Redirecting to results page.')
             # session['model_thread_running'] = False
             # session['results_available'] = True
+            if user_id in model_threads.keys():
+                if app.config.LOGGING:
+                    global_logger.info('Model thread still in model thread after model_thread_running set to False.')
+            else:
+                if app.config.LOGGING:
+                    global_logger.info('Model thread not in model thread after model_thread_running set to False.')
             user_manager.save_session_data()
             return redirect(url_for('results'))
         # else:
