@@ -28,7 +28,7 @@
         <div id="progress-container">
             <p>Sorry the progress and estiamted time functions aren't working yet. The model will probably take 5-10min to run. You can leave this page and come back later.</p>
             <h3>Progress: <span id="progress">0</span>%</h3>
-            <h3>Estimated Time (seconds): <span id="estimated-time">0</span></h3>
+            <!-- <h3>Estimated Time (seconds): <span id="estimated-time">0</span></h3> -->
         </div>
         <h3>Logs:</h3>
         <p>If there is an error in the model run we will just show results from a previous APERC modelling session</p>
@@ -48,7 +48,7 @@
                     window.location.href = data.redirect;
                 } else {
                     document.getElementById('progress').innerText = data.progress;
-                    document.getElementById('estimated-time').innerText = data.estimated_time;
+                    // document.getElementById('estimated-time').innerText = data.estimated_time;
                     
                     const logContainer = document.getElementById('log-container');
                     logContainer.innerHTML = '';  // Clear previous logs

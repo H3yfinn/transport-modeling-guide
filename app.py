@@ -553,6 +553,8 @@ def internal_server_error(e):
 @app.route('/model_progress', methods=['GET', 'POST'])
 def model_progress():
     if request.method == 'POST':
+        if app.config.DEBUG_LOGGING:
+            global_logger.info('model_progress() Running POST request')
         if not user_manager.is_session_valid():
             user_manager.clear_invalid_session()
             return redirect(url_for('login'))
@@ -569,7 +571,9 @@ def model_progress():
         
         logs = backend.get_logs_from_file(session['session_log_filename'])
         
-        return jsonify({'progress': progress_tracker.get(session['user_id'], 0), 'logs': logs, 'estimated_time': estimated_time})
+        if app.config.DEBUG_LOGGING:
+            global_logger.info('model_progress() setting up model progress page')
+        return jsonify({'progress': progress_tracker.get(session['user_id'], 0), 'logs': logs})#, 'estimated_time': estimated_time})
         
     elif request.method == 'GET':
         #following are in case of accidental visit to the model progress page
@@ -602,7 +606,7 @@ def model_progress():
             
             # else:   
             logs = backend.get_logs_from_file(session['session_log_filename'])
-            return render_template('model_progress.html', progress=progress_tracker[session['user_id']], logs=logs, estimated_time=estimated_time)
+            return render_template('model_progress.html', progress=progress_tracker[session['user_id']], logs=logs)#, estimated_time=estimated_time)
         
         else:
             # if session['model_thread_running']:
