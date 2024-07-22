@@ -526,7 +526,7 @@ def running_model():
             session['model_thread_running'] = False
             session['results_available'] = True
             progress_tracker[session['user_id']] = 0
-            model_threads[session['user_id']] = [True, None]
+            del model_threads[session['user_id']]
             user_manager.save_session_data()
             return redirect(url_for('model_progress'))
             
