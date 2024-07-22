@@ -377,8 +377,15 @@ def register():
             user = user_manager.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
             session['user_id'] = user['user_id']
             session['username'] = user['username']
-            flash('Registration successful. Please check your email for your password.')
-            return redirect(url_for('login'))
+            user_manager.restart_user_session()
+            
+            ################SPACE MANAGEMENT################
+            #since this is a point where we need to know how much space is available, we will check the disk space here and run some cleanup tasks. Note that this could be done with a cron/scheduled job, but this is a more simple way to do it.
+            backend.check_disk_space()
+            user_manager.delete_inactive_users_sessions()
+            ################################################
+            
+            return redirect(url_for('index'))
         else:
             flash('Email already registered.')
             return redirect(url_for('register'))
