@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VB6FC5642N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-VB6FC5642N');
+    </script>
     <meta charset="UTF-8">
     <title>Login</title>
 </head>
 <body>
     <h1>Login</h1>
     <p>If you have already registered, please check your emails for your password.</p>
-    <p>We won't use your email for anything besides setting up an account for you.</p>
+    <p>We won't use your email for anything besides setting up an account for you - it's just a measure to prevent overuse.</p>
     <form action="{{ url_for('login') }}" method="post">
         <label for="email">Email:</label>
         <input type="email" name="email" required><br>
@@ -15,6 +23,7 @@
         <input type="password" name="password" required><br>
         <input type="submit" value="Login">
     </form>
+    <p>If this is your first time here, please register to create an account. All you need is your email.</p>
     <br>
     <a href="{{ url_for('register') }}"><button>Register</button></a>
     {% with messages = get_flashed_messages() %}

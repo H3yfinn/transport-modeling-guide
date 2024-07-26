@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VB6FC5642N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-VB6FC5642N');
+    </script>
     <meta charset="UTF-8">
     <title>Register</title>
 </head>
 <body>
     <h1>Register</h1>
     
-    <p>You will be sent an email with your permanent password. You will be logged in as soon as you register.</p>
+    <p>You will be sent an email with your permanent password (check your junk folder). You will be logged in as soon as you register.</p>
     <p>Please note that we encrypt your email and password so even I can't tell what they are.</p>
     
     <form action="{{ url_for('register') }}" method="post">
