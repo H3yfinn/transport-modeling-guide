@@ -102,8 +102,15 @@ def index():
         return redirect(url_for('login'))
     return render_template('index.html', keys=app.config.ECONOMY_NAMES.keys())
 
+# @app.route('/no_login_and_model')
+# def no_login_and_model():
+#     #if we think noones going to use website we can activate app.config.NO_LOGIN_AND_MODEL and use this page to redirect user
+#     return render_template('no_login_and_model.html')
+
 @app.route('/staging', methods=['GET', 'POST'])
 def staging():
+    if app.config.NO_LOGIN_AND_MODEL:
+        return render_template('no_login_and_model.html')
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
@@ -142,6 +149,9 @@ def staging():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    if app.config.NO_LOGIN_AND_MODEL:
+        return render_template('no_login_and_model.html')
+
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
@@ -169,6 +179,9 @@ def upload_file():
     
 @app.route('/download_input_file/<path:filename>')
 def download_input_file(filename):
+    if app.config.NO_LOGIN_AND_MODEL
+        return render_template('no_login_and_model.html')
+
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
@@ -182,6 +195,10 @@ def download_input_file(filename):
     
 @app.route('/reset_user_session', methods=['GET', 'POST'])
 def reset_user_session():
+    if app.config.NO_LOGIN_AND_MODEL:
+        flash('Sorry I disabled this option to save on computing power. Go back to home and take a look at the results for different economies!')#todo
+        return #redirect(url_for('index'))
+
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
@@ -195,6 +212,10 @@ def reset_user_session():
 
 @app.route('/hard_reset_user_session', methods=['GET', 'POST'])
 def hard_reset_user_session():
+    if app.config.NO_LOGIN_AND_MODEL:
+        flash('Sorry I disabled this option to save on computing power. Go back to home and take a look at the results for different economies!')#todo
+        return #redirect(url_for('index'))
+        
     #this is a hard reset and will not check if the user is still running the model
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
@@ -202,6 +223,16 @@ def hard_reset_user_session():
         
     user_manager.reset_user_session()
     return redirect(url_for('index'))
+
+
+#ok im not sure how to do this. maybe i could fix the user sessions to just track current sewssion? otherwise it will also use the below
+    # if app.config.NO_LOGIN_AND_MODEL:
+    #     flash('Sorry I disabled this option to save on computing power. Go back to home and take a look at the results for different economies!')#todo
+    #     return #redirect(url_for('index'))
+
+    # if app.config.NO_LOGIN_AND_MODEL
+    #     return render_template('no_login_and_model.html')
+
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():

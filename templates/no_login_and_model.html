@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VB6FC5642N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-VB6FC5642N');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a> |
+            <a href="{{ url_for('logout') }}">Logout</a> |
+            <a href="{{ url_for('feedback_form') }}">Submit Feedback</a> ||
+            <a href="{{ url_for('content_page', page_name='about_the_model') }}" target="_blank">About</a>
+        </nav> 
+    <div class="container">
+        <h2>Sorry</h2>
+        <p>I disabled this option to save on computing power. Go back to home and take a look at the results for different economies!</p>
+    </div>
+</body>
+</html>

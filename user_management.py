@@ -271,6 +271,8 @@ class UserManagement:
             global_logger.info(f'User session restarted successfully. User session is {session}')
 
     def is_session_valid(self):
+        if current_app.NO_LOGIN_AND_MODEL:
+            return True
         if current_app.config.DEBUG_LOGGING:
             global_logger.info('Checking if session is valid')
         user = self.get_user_by_session()
