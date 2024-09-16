@@ -71,6 +71,7 @@ My intention here is to give a view into some of the things I'm writing for our 
     - Strong, non-price-oriented consumer preferences (e.g. political affiliation, high driving ranges, heavy cars) mean that these economies might have just as difficult a time as any in encouraging the BEV transition.
     - More optimistic emissions targets means more pressure on the freight transition, which in turn puts more pressure on charging/hydrogen-refilling infrastructure and grid stability.
     - Low passenger transport shares provide an avenue for improvement, if the right policies are put in place.
+    - If hybrids are to be useful anywhere, it is here and other low density economies. The high driving ranges and heavy cars make them well-suited for these economies. However, use with low carbon fuels would be needed to achieve emissions reduction targets which makes hybrids less cost competitive. Without low carbon fuels, hybrids will result in less than half the emissions reductions that switching to BEVs would cause.
 
 - **High density rich - Japan, Korea, Chinese Taipei**
 {{graph:lmdi_passenger_road_Target_09_ROK.html}}
