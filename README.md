@@ -164,7 +164,8 @@ MASTER_USER_PASSWORD=
 ```
 You will need to copy/paste the values for everything except the keys, as the keys are generated using the generate_key.py file.
 
-Also i found alt-shift-s to be useful for softwrapping things in nano. good for user_data.json viewin
+Also i found alt-shift-s to be useful for softwrapping things in nano. good for user_data.json viewing. also to scroll up and down use alt+shift+arrow keys.
+
 # New EC2 instance
 I'm going to try to set up a new EC2 instance instaed of using elastic beanstalk. Maybe it will be easier to manage.
 
@@ -411,4 +412,12 @@ sudo certbot certificates
 ```
 This command shows the details of the SSL certificates managed by Certbot.
 
+# TESTING LOCALLY:
+To test the app locally, i.e. use your local machine as the server, you can use the following command (no gunicorn or anything, jsut the flask app):
+
+```bash
+export FLASK_APP=app.py
+export FLASK_ENV=development
+flask run
+```
 

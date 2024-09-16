@@ -56,7 +56,7 @@ class UserManagement:
         return password
     
     def update_user_password(self, email, new_password):
-        if current_app.NO_LOGIN:
+        if current_app.config.NO_LOGIN:
             # Password updates are not applicable
             return False
         if current_app.config.LOGGING:
@@ -75,7 +75,7 @@ class UserManagement:
 
     def send_password_email(self, email, password):
         """Send an email with the generated password."""
-        if current_app.NO_LOGIN:
+        if current_app.config.NO_LOGIN:
             # Password updates are not applicable
             return
         if current_app.config.LOGGING:
@@ -92,7 +92,7 @@ class UserManagement:
             global_logger.info('Password email sent')
 
     def send_reset_password_email(self, email, reset_link):
-        if current_app.NO_LOGIN:
+        if current_app.config.NO_LOGIN:
             # Password updates are not applicable
             return
         
@@ -122,7 +122,7 @@ class UserManagement:
         #note that because the Fernet encryption scheme, uses a unique initialization vector (IV) for each encryption operation, resulting in different ciphertexts for the same plaintext each time it's encrypted. We need to decrypt the data before comparing it to the value as the encrypted data will be different each time it is encrypted.
         user_data = self.read_user_data()
         for user in user_data.values():
-            if current_app.NO_LOGIN:
+            if current_app.config.NO_LOGIN:
                 if key == 'user_id':
                     if user.get(key) == value:
                         return user
@@ -150,7 +150,7 @@ class UserManagement:
         return None 
 
     def register_user(self, email):
-        if current_app.NO_LOGIN:
+        if current_app.config.NO_LOGIN:
             if current_app.config.LOGGING:
                 global_logger.info('Registering user without email/password')
             user_data = self.read_user_data()
@@ -228,7 +228,7 @@ class UserManagement:
             if user:
                 return user
             else:
-                if current_app.NO_LOGIN:
+                if current_app.config.NO_LOGIN:
                     # Create a new user
                     user = self.create_user()
                     user_id = user['user_id']
@@ -236,7 +236,7 @@ class UserManagement:
                     user_data[user_id] = user
                     self.write_user_data(user_data)
                     return user
-        elif current_app.NO_LOGIN:
+        elif current_app.config.NO_LOGIN:
             # Create a new user
             user = self.create_user()
             user_id = user['user_id']
@@ -278,7 +278,7 @@ class UserManagement:
         user = self.get_user_by_session()
 
         if not user:
-            if current_app.NO_LOGIN:
+            if current_app.config.NO_LOGIN:
                 user = self.create_user()
                 user_id = user['user_id']
                 session['user_id'] = user_id
@@ -327,7 +327,7 @@ class UserManagement:
             global_logger.info(f'User session restarted successfully. User session is {session}')
 
     def is_session_valid(self):
-        if current_app.NO_LOGIN:
+        if current_app.config.NO_LOGIN:
             if 'user_id' not in session:
                 # Assign a new user_id for the session
                 user = self.create_user()
