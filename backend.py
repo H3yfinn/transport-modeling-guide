@@ -65,6 +65,8 @@ def archive_log(log_filename, DELETE_LOGS_INSTEAD_OF_ARCHIVING=True):
 
 def run_model_thread(app, log_filename, session_library_path, economy_to_run, user_id):
     """Run the model in a separate thread with the Flask application context."""
+    if current_app.config.NO_MODEL:
+        return
     with app.app_context():
         COMPLETED = False
         if current_app.config.LOGGING:
@@ -239,6 +241,8 @@ def test_dummy_run_model(economy_to_run, progress_callback, logger):
 def setup_and_send_email(email, from_email, new_values_dict, email_template, subject_title):
     """Send an email with the generated password. e.g. 
         backend.setup_and_send_email(email, new_values_dict, email_template='reset_password_email_template.html', subject_title='Password Reset Request')"""
+    if email == 'NO_LOGIN':
+        return
     if current_app.config.LOGGING:
         global_logger.info(f'Sending email to {(email)}')#encrypt_data
     

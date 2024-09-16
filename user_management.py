@@ -56,6 +56,9 @@ class UserManagement:
         return password
     
     def update_user_password(self, email, new_password):
+        if current_app.NO_LOGIN:
+            # Password updates are not applicable
+            return False
         if current_app.config.LOGGING:
             global_logger.info(f'Updating password for user: {encrypt_data(email)}')
         user_data = self.find_user_in_user_data_by_key_value('email', email, ENCRYPTED=True)
@@ -72,6 +75,9 @@ class UserManagement:
 
     def send_password_email(self, email, password):
         """Send an email with the generated password."""
+        if current_app.NO_LOGIN:
+            # Password updates are not applicable
+            return
         if current_app.config.LOGGING:
             global_logger.info(f'Sending password email to {(email)}')#encrypt_data
             
@@ -86,6 +92,10 @@ class UserManagement:
             global_logger.info('Password email sent')
 
     def send_reset_password_email(self, email, reset_link):
+        if current_app.NO_LOGIN:
+            # Password updates are not applicable
+            return
+        
         new_values_dict = {'reset_link': reset_link}
         
         from_email = self.app.config["MAIL_USERNAME"]
@@ -112,26 +122,45 @@ class UserManagement:
         #note that because the Fernet encryption scheme, uses a unique initialization vector (IV) for each encryption operation, resulting in different ciphertexts for the same plaintext each time it's encrypted. We need to decrypt the data before comparing it to the value as the encrypted data will be different each time it is encrypted.
         user_data = self.read_user_data()
         for user in user_data.values():
-            if ENCRYPTED:
-                try:
-                    if decrypt_data(user.get(key)) == value:
-                        if current_app.config.DEBUG_LOGGING:
-                            global_logger.info(f'User found: {user} for {key}: {value}')
+            if current_app.NO_LOGIN:
+                if key == 'user_id':
+                    if user.get(key) == value:
                         return user
-                except Exception as e:
-                    if current_app.config.LOGGING:
-                        global_logger.error(f'Error decrypting data: {e} for user {user} for {key}: {value}')
-                    continue
-            else:
-                if user.get(key) == value:
-                    # if current_app.config.LOGGING:
-                    #     global_logger.info(f'User found: {user}')
-                    return user
+                    else:
+                        #create error, havent really thought what to do here, but if we're looking for email addresses then we shouldnt be here as they will be set to 'NO_LOGIN'
+                        raise Exception(f" havent really thought what to do here, but if we're looking for email addresses then we shouldnt be here as they will be set to 'NO_LOGIN'... for {key}: {value}")
+            else:        
+                if ENCRYPTED:
+                    try:
+                        if decrypt_data(user.get(key)) == value:
+                            if current_app.config.DEBUG_LOGGING:
+                                global_logger.info(f'User found: {user} for {key}: {value}')
+                            return user
+                    except Exception as e:
+                        if current_app.config.LOGGING:
+                            global_logger.error(f'Error decrypting data: {e} for user {user} for {key}: {value}')
+                        continue
+                else:
+                    if user.get(key) == value:
+                        # if current_app.config.LOGGING:
+                        #     global_logger.info(f'User found: {user}')
+                        return user
         if current_app.config.LOGGING:
             global_logger.info(f'User not found for {key}: {value}')
         return None 
 
     def register_user(self, email):
+        if current_app.NO_LOGIN:
+            if current_app.config.LOGGING:
+                global_logger.info('Registering user without email/password')
+            user_data = self.read_user_data()
+            user = self.create_user()
+            user_id = user['user_id']
+            user_data[user_id] = user
+            self.write_user_data(user_data)
+            if current_app.config.LOGGING:
+                global_logger.info('User registered without email/password successfully')
+            return True
         if current_app.config.LOGGING:
             global_logger.info(f'Registering user with email: {(email)}')#encrypt_data
         user_data = self.read_user_data()
@@ -151,18 +180,17 @@ class UserManagement:
             global_logger.info('User registered successfully')
         return True
 
-    def create_user(self, email):
+    def create_user(self, email=None):
         if current_app.config.LOGGING:
             global_logger.info(f'Creating user with email: {email}')
-        user_id = str(uuid.uuid4())[:5]
+        user_id = str(uuid.uuid4())
         user = {
-            'username': email,
-            'email': email,
+            'username': email if email else user_id,
+            'email': email if email else 'NO_LOGIN',
             'user_id': user_id,
             'last_active': time.time(),
-            'economy_to_run': session.get('economy_to_run', '01_AUS') if session else '01_AUS',#set to the first value in the dropdown list by default
+            'economy_to_run': session.get('economy_to_run', '01_AUS') if session else '01_AUS',
             'progress': session.get('progress', 0) if session else 0,
-            # 'user_session_active': False,
             'model_thread_running': False,
             'results_available': False,
             'session_folder': os.path.join(self.app.config['BASE_UPLOAD_FOLDER'], user_id),
@@ -197,6 +225,25 @@ class UserManagement:
         if 'user_id' in session:
             user_data = self.read_user_data()
             user = user_data.get(session['user_id'])
+            if user:
+                return user
+            else:
+                if current_app.NO_LOGIN:
+                    # Create a new user
+                    user = self.create_user()
+                    user_id = user['user_id']
+                    session['user_id'] = user_id
+                    user_data[user_id] = user
+                    self.write_user_data(user_data)
+                    return user
+        elif current_app.NO_LOGIN:
+            # Create a new user
+            user = self.create_user()
+            user_id = user['user_id']
+            session['user_id'] = user_id
+            user_data = self.read_user_data()
+            user_data[user_id] = user
+            self.write_user_data(user_data)
             return user
         return None
 
@@ -229,31 +276,40 @@ class UserManagement:
             global_logger.info('Activating user session')
         session['last_active'] = time.time()
         user = self.get_user_by_session()
-        
+
+        if not user:
+            if current_app.NO_LOGIN:
+                user = self.create_user()
+                user_id = user['user_id']
+                session['user_id'] = user_id
+                user_data = self.read_user_data()
+                user_data[user_id] = user
+                self.write_user_data(user_data)
+            else:
+                if current_app.config.DEBUG_LOGGING:
+                    global_logger.error('User not found in session and login is required')
+                return  # Or handle appropriately
+
         os.makedirs(user['session_folder'], exist_ok=True)
-        # if not os.path.exists(user['session_library_path']):#had to remove this because someitmes beause of permission issues, the folder is not fully deleted and the code thinks it exists
         if current_app.config.LOGGING:
             global_logger.info('Creating session library path {}'.format(user['session_library_path']))
-        # shutil.copytree(self.app.config['ORIGINAL_MODEL_LIBRARY_NAME'], user['session_library_path'], dirs_exist_ok=True)
-            
-        # Usage
+
+        # Copy the model library
         src_directory = self.app.config['ORIGINAL_MODEL_LIBRARY_NAME']
         dst_directory = user['session_library_path']
         self.copy_large_directory(src_directory, dst_directory)
-        
-        
+
         session['session_folder'] = user['session_folder']
         session['session_library_path'] = user['session_library_path']
         session['session_log_filename'] = user['session_log_filename']
-        
-        # session['user_session_active'] = True
+
         session['model_thread_running'] = False
         session['results_available'] = False
-        
+
         self.save_session_data()
         if current_app.config.DEBUG_LOGGING:
             global_logger.info(f'User session activated successfully. User session is {session}')
-
+            
     def restart_user_session(self):
         if current_app.config.DEBUG_LOGGING:
             global_logger.info('Restarting user session')
@@ -271,15 +327,24 @@ class UserManagement:
             global_logger.info(f'User session restarted successfully. User session is {session}')
 
     def is_session_valid(self):
-        if current_app.NO_LOGIN_AND_MODEL:
+        if current_app.NO_LOGIN:
+            if 'user_id' not in session:
+                # Assign a new user_id for the session
+                user = self.create_user()
+                user_id = user['user_id']
+                session['user_id'] = user_id
+                user_data = self.read_user_data()
+                user_data[user_id] = user
+                self.write_user_data(user_data)
             return True
-        if current_app.config.DEBUG_LOGGING:
-            global_logger.info('Checking if session is valid')
-        user = self.get_user_by_session()
-        is_valid = user is not None
-        if current_app.config.DEBUG_LOGGING:
-            global_logger.info(f'Session valid: {is_valid}')
-        return is_valid
+        else:
+            if current_app.config.DEBUG_LOGGING:
+                global_logger.info('Checking if session is valid')
+            user = self.get_user_by_session()
+            is_valid = user is not None
+            if current_app.config.DEBUG_LOGGING:
+                global_logger.info(f'Session valid: {is_valid}')
+            return is_valid
         
     def check_if_results_available(self):
         if current_app.config.DEBUG_LOGGING:
@@ -359,6 +424,13 @@ class UserManagement:
             if user['last_active'] < time.time() - retention_period:
                 if current_app.config.LOGGING:
                     global_logger.info(f'Deleting session data for inactive user: {user["user_id"]}')
+                
+                if user['email'] == 'NO_LOGIN':
+                    #just delete the whole user data object
+                    del user_data[user['user_id']]
+                    self.write_user_data(user_data)
+                    continue
+                
                 if os.path.exists(user['session_folder']):
                     # if current_app.config.DEBUG:
                     #     pass

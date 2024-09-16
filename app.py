@@ -31,7 +31,13 @@ estimated_time = None #this will be updated and made global in the running_model
 
 app.config['INITIALIZED'] = False
 ############################################################################
+#maybe this is needed:from flask import Flask, current_app
+# from flask import Flask, current_app
+# app = Flask(__name__)
 
+# @app.context_processor
+# def inject_config():
+#     return dict(config=current_app.config)
 def get_required_input_files_and_their_locations(CHECK_FOLDER_STRUCTURE, INPUT_DATA_FOLDER_PATH, SAVED_FOLDER_STRUCTURE_PATH, OVERWRITE_SAVED_FOLDER_STRUCTURE_PATH):
     """Will search through transport_model_9th_edition/input_data and record the names of all input files and their locations. Then when a file is passed to this app, if it is in the list of required files, it will be moved to the correct location. If it is not, an error message will be returned to the user. This will also take in a list of allowed files to be uploaded, as well as having the option to be passed the structure of the input_data folder, so it doesn't have to be run all the time, only when the structure of the input_data folder changes and the user sets CHECK_FOLDER_STRUCTURE to true.
     
@@ -109,8 +115,8 @@ def index():
 
 @app.route('/staging', methods=['GET', 'POST'])
 def staging():
-    if app.config.NO_LOGIN_AND_MODEL:
-        return render_template('no_login_and_model.html')
+    if app.config.NO_MODEL:
+        return render_template('no_login_or_model.html')
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
@@ -149,8 +155,8 @@ def staging():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    if app.config.NO_LOGIN_AND_MODEL:
-        return render_template('no_login_and_model.html')
+    if app.config.NO_MODEL:
+        return render_template('no_login_or_model.html')
 
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
@@ -179,8 +185,8 @@ def upload_file():
     
 @app.route('/download_input_file/<path:filename>')
 def download_input_file(filename):
-    if app.config.NO_LOGIN_AND_MODEL
-        return render_template('no_login_and_model.html')
+    if app.config.NO_MODEL:
+        return render_template('no_login_or_model.html')
 
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
@@ -195,10 +201,6 @@ def download_input_file(filename):
     
 @app.route('/reset_user_session', methods=['GET', 'POST'])
 def reset_user_session():
-    if app.config.NO_LOGIN_AND_MODEL:
-        flash('Sorry I disabled this option to save on computing power. Go back to home and take a look at the results for different economies!')#todo
-        return #redirect(url_for('index'))
-
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
@@ -211,11 +213,7 @@ def reset_user_session():
     return redirect(url_for('index'))
 
 @app.route('/hard_reset_user_session', methods=['GET', 'POST'])
-def hard_reset_user_session():
-    if app.config.NO_LOGIN_AND_MODEL:
-        flash('Sorry I disabled this option to save on computing power. Go back to home and take a look at the results for different economies!')#todo
-        return #redirect(url_for('index'))
-        
+def hard_reset_user_session():        
     #this is a hard reset and will not check if the user is still running the model
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
@@ -223,16 +221,6 @@ def hard_reset_user_session():
         
     user_manager.reset_user_session()
     return redirect(url_for('index'))
-
-
-#ok im not sure how to do this. maybe i could fix the user sessions to just track current sewssion? otherwise it will also use the below
-    # if app.config.NO_LOGIN_AND_MODEL:
-    #     flash('Sorry I disabled this option to save on computing power. Go back to home and take a look at the results for different economies!')#todo
-    #     return #redirect(url_for('index'))
-
-    # if app.config.NO_LOGIN_AND_MODEL
-    #     return render_template('no_login_and_model.html')
-
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
@@ -369,6 +357,8 @@ def download_file(filename):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if app.config.NO_LOGIN:
+        return render_template('no_login_or_model.html')
     if user_manager.is_session_valid():
         return redirect(url_for('index'))
     if request.method == 'POST':
@@ -400,6 +390,8 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if app.config.NO_LOGIN:
+        return render_template('no_login_or_model.html')
     if user_manager.is_session_valid():
         return redirect(url_for('index'))
     if request.method == 'POST':
@@ -424,6 +416,9 @@ def register():
 
 @app.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
+    if app.config.NO_LOGIN:
+        return render_template('no_login_or_model.html')
+    
     if user_manager.is_session_valid():
         return redirect(url_for('index'))
     
@@ -451,6 +446,9 @@ def forgot_password():
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
+    if app.config.NO_LOGIN:
+        return render_template('no_login_or_model.html')
+    
     try:
         email = s.loads(token, salt='password-reset-salt', max_age=3600)
     except:
@@ -470,10 +468,13 @@ def reset_password(token):
 
 @app.route('/logout')
 def logout():
+    if app.config.NO_LOGIN:
+        return render_template('no_login_or_model.html')
+    
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
-
+ 
     # Save session data into the user object
     user_manager.save_session_data()
 
@@ -498,7 +499,9 @@ def submit_feedback():
         global_logger.error(f'Error processing feedback: {str(e)}')
         error_logger.error(f'Error processing feedback: {str(e)}')
     return redirect(url_for('index'))
+
 ####################################################
+
 @app.route('/running_model', methods=['POST'])
 def running_model():
     """
@@ -514,6 +517,9 @@ def running_model():
     
     If an error occurs during any stage, the user will be redirected to the error page.
     """
+    if app.config.NO_MODEL:
+        return render_template('no_login_or_model.html')
+    
     if not user_manager.is_session_valid():
         user_manager.clear_invalid_session()
         return redirect(url_for('login'))
@@ -599,6 +605,8 @@ def internal_server_error(e):
 
 @app.route('/model_progress', methods=['GET', 'POST'])
 def model_progress():
+    if app.config.NO_MODEL:
+        return render_template('no_login_or_model.html')
     if request.method == 'POST':
         if app.config.DEBUG_LOGGING:
             global_logger.info('model_progress() Running POST request')

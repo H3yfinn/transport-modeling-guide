@@ -15,6 +15,9 @@ class Config:
     
     EXECUTION_TIMES_FILE = 'execution_times.json'
     
+    NO_LOGIN = True#use tehse two to disable model ruinning and login facilities. Have only tested when they are both True or both False but in the future i thought we could have the model running but not the login or vice versa.
+    NO_MODEL = True
+    
     # Flask-Mail configuration
     #now in .env file
     # Load environment variables from .env file

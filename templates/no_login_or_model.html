@@ -19,7 +19,11 @@
     <div class="container">
         <nav>
             <a href="{{ url_for('index') }}">Home</a> |
-            <a href="{{ url_for('logout') }}">Logout</a> |
+            
+            {% if not config.NO_LOGIN %}
+                <a href="{{ url_for('logout') }}">Logout</a> |
+            {% endif %}
+            
             <a href="{{ url_for('feedback_form') }}">Submit Feedback</a> ||
             <a href="{{ url_for('content_page', page_name='about_the_model') }}" target="_blank">About</a>
         </nav> 
