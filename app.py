@@ -1,5 +1,5 @@
 #todo check that singvble user having multiple open sessions does not cause issues
-from flask import request, render_template, send_file, flash, redirect, url_for, session, jsonify, Response, stream_with_context
+from flask import request, render_template, send_file, flash, redirect, url_for, session, jsonify, Response, render_template_string
 import os
 from datetime import timedelta
 import markdown
@@ -758,55 +758,101 @@ def validate_html(html):
     soup = BeautifulSoup(html, 'html.parser')
     return soup.prettify()
 
-# # Define a generator function to stream large content files
-# def stream_explanation_files(explanation_files, content_folder):
-#     for explanation_file in explanation_files:
-#         explanation_file_path = os.path.join(content_folder, explanation_file)
-        
-#         # Open the file and process it line by line (streaming approach)
-#         with open(explanation_file_path, 'r', encoding='utf-8') as f:
-#             for line in f:
-#                 # Convert markdown to HTML for each line and replace placeholders
-#                 explanation_markdown = markdown.markdown(line)
-#                 yield replace_placeholders(explanation_markdown, content_folder)
+# Define a generator function to stream large content files
 def stream_explanation_files(explanation_files, content_folder):
     for explanation_file in explanation_files:
         explanation_file_path = os.path.join(content_folder, explanation_file)
         
-        # Read the entire file at once and process it
+        # Open the file and process it line by line (streaming approach)
         with open(explanation_file_path, 'r', encoding='utf-8') as f:
-            explanation_content = f.read()  # Read the entire content at once
+            for line in f:
+                # Convert markdown to HTML for each line and replace placeholders
+                explanation_markdown = markdown.markdown(line)
+                yield replace_placeholders(explanation_markdown, content_folder)
 
-            # Convert markdown to HTML for the entire file
-            explanation_markdown = markdown.markdown(explanation_content)
+# @app.route('/content/<page_name>')
+# def content_page(page_name):
+#     content_folder = os.path.join('content', page_name)
+    
+#     # Get all markdown files in the content folder
+#     explanation_files = [f for f in os.listdir(content_folder) if f.endswith('.md')]
+    
+#     if not explanation_files:
+#         return render_template('error.html', error_message='Content not found.')
+    
+#     if app.config.get('LOGGING', False):
+#         global_logger.info(f'Generating content for page {page_name}')
+    
+#     # Stream the content using a generator (efficient for large content)
+#     return Response(stream_explanation_files(explanation_files, content_folder), mimetype='text/html')
 
-            # Replace placeholders (tables, graphs, etc.)
-            processed_content = replace_placeholders(explanation_markdown, content_folder)
-            
-            # Stream the processed content in chunks
-            yield processed_content
 
-@app.route('/content/<page_name>')
-def content_page(page_name):
-    return render_template('content_page.html', page_name=page_name)
 
-@app.route('/content_stream/<page_name>')
-def content_stream(page_name):
+
+
+####################################################
+
+# Define a function to generate the dynamic content
+def generate_dynamic_content(page_name):
     content_folder = os.path.join('content', page_name)
 
     # Get all markdown files in the content folder
     explanation_files = [f for f in os.listdir(content_folder) if f.endswith('.md')]
-    
+
     if not explanation_files:
         return "Content not found", 404
 
-    if app.config.get('LOGGING', False):
-        global_logger.info(f'Generating content for page {page_name}')
-    
-    # Use stream_with_context to stream only the content part
-    return Response(stream_with_context(stream_explanation_files(explanation_files, content_folder)), mimetype='text/html')
+    content = ''
+    for explanation_file in explanation_files:
+        explanation_file_path = os.path.join(content_folder, explanation_file)
 
-####################################################
+        # Open the markdown file and process its content
+        with open(explanation_file_path, 'r', encoding='utf-8') as f:
+            explanation_content = f.read()  # Read entire file at once
+            explanation_markdown = markdown.markdown(explanation_content)
+            content += replace_placeholders(explanation_markdown, content_folder)
+
+    return content
+
+@app.route('/content/<page_name>')
+def content_page(page_name):
+    # Generate dynamic content from markdown files
+    explanation = generate_dynamic_content(page_name)
+
+    # Render the template with dynamic content inserted
+    return render_template_string("""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-VB6FC5642N"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VB6FC5642N');
+        </script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <nav>
+                <a href="{{ url_for('index') }}">Home</a> |
+                <a href="{{ url_for('feedback_form') }}">Submit Feedback</a> ||
+                <a href="{{ url_for('content_page', page_name='glossary') }}" target="_blank">Glossary</a>
+            </nav>
+            <section>
+                <div id="content-container">
+                    {{ explanation | safe }}
+                </div>
+            </section>
+        </div>
+    </body>
+    </html>
+    """, explanation=explanation)
+    
 #tehse need to be here because not all global variables are defined yet, i think?
 # def run_tasks():
 #     global_logger.info('Running tasks: delete_inactive_users_sessions, check_disk_space')

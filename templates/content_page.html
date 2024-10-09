@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VB6FC5642N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-VB6FC5642N');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Content Page</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -13,28 +21,11 @@
             <a href="{{ url_for('feedback_form') }}">Submit Feedback</a> ||
             <a href="{{ url_for('content_page', page_name='glossary') }}" target="_blank">Glossary</a>
         </nav>
-
         <section>
             <div id="content-container">
-                <p>Loading content...</p> <!-- Placeholder while content is loading -->
+                {{ explanation|safe }}
             </div>
         </section>
     </div>
-
-    <script>
-        // Fetch the content dynamically after the page loads
-        document.addEventListener("DOMContentLoaded", function() {
-            fetch("/content_stream/{{ page_name }}")
-                .then(response => response.text())
-                .then(data => {
-                    // Inject the fetched content into the content-container div
-                    document.getElementById('content-container').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Error fetching content:', error);
-                    document.getElementById('content-container').innerHTML = '<p>Error loading content.</p>';
-                });
-        });
-    </script>
 </body>
 </html>
