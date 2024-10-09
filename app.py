@@ -1,5 +1,5 @@
 #todo check that singvble user having multiple open sessions does not cause issues
-from flask import request, render_template, send_file, flash, redirect, url_for, session, jsonify
+from flask import request, render_template, send_file, flash, redirect, url_for, session, jsonify, Response
 import os
 from datetime import timedelta
 import markdown
@@ -758,32 +758,33 @@ def validate_html(html):
     soup = BeautifulSoup(html, 'html.parser')
     return soup.prettify()
 
-# Define the route to serve the content
+# Define a generator function to stream large content files
+def stream_explanation_files(explanation_files, content_folder):
+    for explanation_file in explanation_files:
+        explanation_file_path = os.path.join(content_folder, explanation_file)
+        
+        # Open the file and process it line by line (streaming approach)
+        with open(explanation_file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                # Convert markdown to HTML for each line and replace placeholders
+                explanation_markdown = markdown.markdown(line)
+                yield replace_placeholders(explanation_markdown, content_folder)
+
 @app.route('/content/<page_name>')
 def content_page(page_name):
     content_folder = os.path.join('content', page_name)
     
-    # Get all HTML and markdown files in the content folder
+    # Get all markdown files in the content folder
     explanation_files = [f for f in os.listdir(content_folder) if f.endswith('.md')]
+    
     if not explanation_files:
         return render_template('error.html', error_message='Content not found.')
     
     if app.config.get('LOGGING', False):
         global_logger.info(f'Generating content for page {page_name}')
     
-    explanation = ''
-    for explanation_file in explanation_files:
-        explanation_file_path = os.path.join(content_folder, explanation_file)
-        with open(explanation_file_path, 'r', encoding='utf-8') as f:
-            explanation_content = f.read()
-            explanation_markdown = markdown.markdown(explanation_content)
-            explanation += replace_placeholders(explanation_markdown, content_folder)
-    
-    
-    # Validate and prettify HTML for debugging
-    explanation_html = validate_html(explanation)
-    
-    return render_template('content_page.html', explanation=explanation_html)
+    # Stream the content using a generator (efficient for large content)
+    return Response(stream_explanation_files(explanation_files, content_folder), mimetype='text/html')
 
 ####################################################
 #tehse need to be here because not all global variables are defined yet, i think?

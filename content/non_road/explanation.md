@@ -31,6 +31,6 @@ Since there's so much variation within the non road sector, in terms of mileage,
 See an example of the variation in energy intensity values for non-road transport below:
 
 Japan:
-{{graph:energy_intensity_strip_Target_08_JPN.html}} 
+{{graph:energy_intensity_strip_Reference_08_JPN.html}} 
 Indonesia:
 {{graph:energy_intensity_strip_Reference_07_INA.html}}
