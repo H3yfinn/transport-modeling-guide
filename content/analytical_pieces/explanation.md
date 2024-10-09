@@ -64,7 +64,7 @@ My intention here is to give a view into some of the things I'm writing for our 
     - The BEV transition started early on and with the strong cultural pride around BEV's, it is likely they will achieve a 100% stock share well before most other economies.
     - A rapidly aging population means China will eventually see a decrease in passenger activity, resulting in pressures from maintenance of the less used railways and roads, especailly after such rapid growth. This is a good thing for the environment, but it will put pressure on the economy in other ways.
 
-{{graph:05_PRC_Target_road_1_Energy%20use_2060_concatenated.html}}
+{{graph:05_PRC_Target_road_1_Energy use_2060_concatenated.html}}
 
 ### **City states: Singapore, Hong Kong, Brunei**
     - High population density and easier administration make these economies well-suited for a quick BEV transition.

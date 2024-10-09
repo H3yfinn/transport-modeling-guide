@@ -1,6 +1,12 @@
 body {
     font-size: 20px; /* Adjust the size as needed */
 }
+#content-container {
+    word-wrap: break-word;  /* Ensures long words break */
+    white-space: normal;    /* Ensures text wraps naturally */
+    overflow-wrap: break-word;  /* Ensures wrapping for long content */
+    max-width: 100%; /* Optional: Ensure content fits within the container width */
+}
 /* body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
