@@ -758,33 +758,33 @@ def validate_html(html):
     soup = BeautifulSoup(html, 'html.parser')
     return soup.prettify()
 
-# Define a generator function to stream large content files
+# # Define a generator function to stream large content files
+# def stream_explanation_files(explanation_files, content_folder):
+#     for explanation_file in explanation_files:
+#         explanation_file_path = os.path.join(content_folder, explanation_file)
+        
+#         # Open the file and process it line by line (streaming approach)
+#         with open(explanation_file_path, 'r', encoding='utf-8') as f:
+#             for line in f:
+#                 # Convert markdown to HTML for each line and replace placeholders
+#                 explanation_markdown = markdown.markdown(line)
+#                 yield replace_placeholders(explanation_markdown, content_folder)
 def stream_explanation_files(explanation_files, content_folder):
     for explanation_file in explanation_files:
         explanation_file_path = os.path.join(content_folder, explanation_file)
         
-        # Open the file and process it line by line (streaming approach)
+        # Read the entire file at once and process it
         with open(explanation_file_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                # Convert markdown to HTML for each line and replace placeholders
-                explanation_markdown = markdown.markdown(line)
-                yield replace_placeholders(explanation_markdown, content_folder)
+            explanation_content = f.read()  # Read the entire content at once
 
-# @app.route('/content/<page_name>')
-# def content_page(page_name):
-#     content_folder = os.path.join('content', page_name)
-    
-#     # Get all markdown files in the content folder
-#     explanation_files = [f for f in os.listdir(content_folder) if f.endswith('.md')]
-    
-#     if not explanation_files:
-#         return render_template('error.html', error_message='Content not found.')
-    
-#     if app.config.get('LOGGING', False):
-#         global_logger.info(f'Generating content for page {page_name}')
-    
-#     # Stream the content using a generator (efficient for large content)
-#     return Response(stream_explanation_files(explanation_files, content_folder), mimetype='text/html')
+            # Convert markdown to HTML for the entire file
+            explanation_markdown = markdown.markdown(explanation_content)
+
+            # Replace placeholders (tables, graphs, etc.)
+            processed_content = replace_placeholders(explanation_markdown, content_folder)
+            
+            # Stream the processed content in chunks
+            yield processed_content
 
 @app.route('/content/<page_name>')
 def content_page(page_name):
