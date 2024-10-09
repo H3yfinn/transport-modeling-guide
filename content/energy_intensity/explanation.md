@@ -10,6 +10,6 @@ Below is a chart showing the intensity per drive/engine/powertrain type within t
 
 And then, see below the efficiency for all those combinations of drive/vehicle type within the road sector (mode):
     
-{{graph:energy_efficiency_strip_Target_20_USA.html}}
+{{graph:energy_efficiency_road_strip_Reference_08_JPN.html}}
 
 Note that because of the way we model non-road we dont have efficiency data for those modes. See {{link:https://transport-energy-modelling.com/content/non_road:text:here}} for more information on how we model non-road transport.

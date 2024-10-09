@@ -21,3 +21,11 @@ Some analysis of the chart above:
 You can also break down the changes in energy use using a multiplicative LMDI, which shows the same information but in a different way. It has the advantage of being easier to read in a time series and it shows the changes as the product of the multipliers. 
 
 {{graph:10_MAS_Target_passenger_road_2_Emissions_Hierarchical_2070_multiplicative_timeseries.html}}
+
+## Analysing Emissions drivers using LMDI
+The LMDI method can also be used to break down changes in emissions. The drivers are usually the same, with addition of anything that might be affecting emissions intensity independently of the energy use. For example, changes in the carbon intensity of fuels, measured using the **emissions intensity** driver below. This is usually the result of fuel mixing, as described in the {{link:https://transport-energy-modelling.com/content/fuel_mixing:text:fuel mixing}} section.
+
+{{graph:07_INA_Target_freight_road_2_Emissions_Hierarchical_2050_additive_hierarchical.html}}
+
+### NOTE
+If you want to use this method, please take a look at my github code and guide {{link:https://github.com/asia-pacific-energy-research-centre/PyLMDI/tree/main:text:here}}. 

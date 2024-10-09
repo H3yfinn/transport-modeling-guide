@@ -58,6 +58,10 @@ And to check logs:
 ```bash
 sudo journalctl -u gunicorn-transport-energy-modelling -e
 ```
+Access logs: (use "2024-09-29 21:" for a specific date and hour)
+```bash
+grep /var/log/gunicorn/access.log
+```
 And add to swap space:
 ```bash
 sudo swapoff /swapfile && sudo rm /swapfile && sudo fallocate -l 1G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile && sudo swapon --show && echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
@@ -412,6 +416,19 @@ sudo certbot certificates
 ```
 This command shows the details of the SSL certificates managed by Certbot.
 
+# Access logs:
+https://chatgpt.com/share/66fb8c56-5284-8000-89f6-604233acf325 - this is how i set up the logs. 
+## 1. Find Logs for a Specific Date:
+If your log file uses a date format like YYYY-MM-DD, you can search for all entries on a particular date. For example, to find all logs on September 29th, 2024:
+```bash
+grep "2024-09-29" /var/log/gunicorn/access.log
+```
+## 2. Find Logs for a Specific Hour:
+If you want to narrow it down to a particular hour, include the hour in your search pattern. For instance, to find logs from 21:00 to 21:59 on September 29th:
+
+```bash
+grep "2024-09-29 21:" /var/log/gunicorn/access.log
+```
 # TESTING LOCALLY:
 To test the app locally, i.e. use your local machine as the server, you can use the following command (no gunicorn or anything, jsut the flask app):
 
@@ -421,3 +438,62 @@ export FLASK_ENV=development
 flask run
 ```
 
+# Automatic restart of services:
+To set up a cron job to cehck the website is not down: 
+```bash
+sudo nano /usr/local/bin/check_website.sh
+```
+
+```bash
+#!/bin/bash
+
+# URL to check
+URL="https://transport-energy-modelling.com/"
+
+# Check if the website is responding (status code 200)
+status_code=$(curl --write-out "%{http_code}" --silent --output /dev/null $URL)
+
+if [ "$status_code" -ne 200 ]; then
+  echo "Website is down. Restarting services..."
+
+  # Reload and restart services
+  sudo systemctl daemon-reload
+  sudo systemctl restart gunicorn-transport-energy-modelling
+  sudo systemctl restart gunicorn-aws
+  sudo systemctl restart nginx
+
+  echo "Services restarted at $(date)" >> /var/log/service_restart.log
+else
+  echo "Website is up."
+fi
+```
+
+```bash
+sudo chmod +x /usr/local/bin/check_website.sh #you might need to run this instead sudo chown ec2-user:ec2-user /usr/local/bin/check_website.sh
+```
+
+Next, use cron to run this script at regular intervals (e.g., every 5 minutes).
+
+To edit your cron jobs:
+
+```bash
+crontab -e
+```
+
+Add the following line to run the script every 5 minutes:
+
+```bash
+*/5 * * * * /usr/local/bin/check_website.sh >> /var/log/check_website.log 2>&1
+```
+
+You can check if the cron job is correctly scheduled by listing all your current cron jobs:
+
+```bash
+crontab -l
+```
+
+You should see the following line in the output:
+
+```bash
+*/5 * * * * /usr/local/bin/check_website.sh >> /var/log/check_website.log 2>&1
+```

@@ -2,9 +2,9 @@
 
 Because we must match what an economy sends us as their energy use statistics, and we calculate energy use using a bottom up approach, we often have to balance out our input data to match the energy data. This is done using an optimisation process.
 
-Remember, the equation for enegry in road use is:
+The equation for energy in road transport is:
 
-Mileage * (1/Efficiency) * Stock = Energy use
+    Mileage * (1/Efficiency) * Stock = Energy use
 
 So we have to balance out the mileage, efficiency and stock factors to make their product equal the energy data.
 

@@ -15,7 +15,7 @@ My intention here is to give a view into some of the things I'm writing for our 
     - Energy security
     - Ease of use
 
-- However, they require government support to reach the level of preexisting support that ICEs have. Benefits of this support can already be seen in China, where early investment has led to the development of a world-leading BEV industry, and the charging infrastructure to support their high BEV stock share (~20% of all cars).
+- However, they require government support to reach the level of preexisting support that ICEs have. Benefits of this support can already be seen in China, where early investment has led to the development of a world-leading BEV industry, and the charging infrastructure to support their high BEV stock share (~20% of all cars. 2024).
 
 - For those economies who are already automobile manufacturers, they have a tough decision ahead of them; risk trying to compete with China in the BEV market, or continue building ICEs and slowly lose market share. We have seen some manufacturers try to focus on hybrids and FCEV's, and now some economies are supporting their manufacturers BEV transition by placing tariffs on Chinese EV's.
 
@@ -48,39 +48,50 @@ My intention here is to give a view into some of the things I'm writing for our 
 
 ## The variety of transport systems within APEC
 
-{{graph:energy_use_by_region.html}}
+{{graph:energy_use_by_fuel_type_Target_passenger_transport_style_all_all_indep_axis.html}}
 
-- **High density developing – Indonesia, Malaysia, Phillipines, Thailand, Viet Nam**
+### **High density developing – Indonesia, Malaysia, Phillipines, Thailand, Viet Nam**
     - Generally able to be categorised as south-east asian economies. These economies have a high population density, increasing vehicle ownership and high reliance on motorcycles.
     - The high population density means that these economies are well-suited for public transport, if the right policies are put in place.
     - Motorcycles use about half as much energy per km than cars, and they are expected to be easier to transition to BEVs. This makes it so the transition can be done more quickly and with less investment.
     - Most of these economies are working on their own BEV industries, which could be a good thing as it means they can develop their own technology and not be reliant on imports.
+    - Indonesia's biofuel projections are high. This brings significant energy security benefits, but also poses risks to food security and the environment. But on the other hand, as you can see below, it has a massive benefit for the transport emissions intensity. And what about the other axis on the energy trilemma, affordability? 
 
-- **China**
+{{graph:07_INA_Target_freight_road_2_Emissions_Hierarchical_2050_additive_hierarchical.html}}
+
+### **China**
     - China is currently the factory of the world. This means they have a large amount of heavy freight activity which is difficult to decarbonise. China is actively promoting the development of rail and ship networks to take freight off the roads. This is a good strategy as rail and ships are inherently much more efficient. China is also transitioning to a service-based economy, which decreases the expected activity in freight transport.
     - The BEV transition started early on and with the strong cultural pride around BEV's, it is likely they will achieve a 100% stock share well before most other economies.
     - A rapidly aging population means China will eventually see a decrease in passenger activity, resulting in pressures from maintenance of the less used railways and roads, especailly after such rapid growth. This is a good thing for the environment, but it will put pressure on the economy in other ways.
 
-- **City states: Singapore, Hong Kong, Brunei**
+{{graph:05_PRC_Target_road_1_Energy%20use_2060_concatenated.html}}
+
+### **City states: Singapore, Hong Kong, Brunei**
     - High population density and easier administration make these economies well-suited for a quick BEV transition.
-    - Singapore's Early Turnover Scheme helps to speed up the turnover of ICE vehicles, which plays a large part in achieving a projected 100% BEV stock share for light vehicles and buses by 2040.
     - High public transport shares mean that these economies have a relatively low vehicle ownership rate, improving efficiency and making the transition easier -  it is easier to replace a few public buses than many private cars.
     - Low driving ranges make BEV vehicles even more attractive. This is especailly important for freight trucks, which are normally held back by their needs for high power over long distances.
-    
-- **Low density rich – Australia, Canada, New Zealand, United States**
+    - Singapore's Early Turnover Scheme helps to speed up the turnover of ICE vehicles, which plays a large part in achieving a projected 100% BEV stock share for light vehicles and buses by 2040. You can see singapore's turnover rate curve below.
+
+#### Singapore's turnover rate curve
+{{graph:turnover_rate_age_curve_Target_17_SGP.html}}
+
+### **Low density rich – Australia, Canada, New Zealand, United States**
     - Strong, non-price-oriented consumer preferences (e.g. political affiliation, high driving ranges, heavy cars) mean that these economies might have just as difficult a time as any in encouraging the BEV transition.
     - More optimistic emissions targets means more pressure on the freight transition, which in turn puts more pressure on charging/hydrogen-refilling infrastructure and grid stability.
     - Low passenger transport shares provide an avenue for improvement, if the right policies are put in place.
     - If hybrids are to be useful anywhere, it is here and other low density economies. The high driving ranges and heavy cars make them well-suited for these economies. However, use with low carbon fuels would be needed to achieve emissions reduction targets which makes hybrids less cost competitive. Without low carbon fuels, hybrids will result in less than half the emissions reductions that switching to BEVs would cause.
 
-- **High density rich - Japan, Korea, Chinese Taipei**
+### **High density rich - Japan, Korea, Chinese Taipei**
 {{graph:lmdi_passenger_road_Target_09_ROK.html}}
     - The graph shows the drivers of changes in energy use in passenger transport. Korea and Japan are the only economies where passenger km is causing a decrease in energy use. This comes as a result of a mix of high preexising transport use and a decreasing population. Like with China, this will reduce emissions, but also make it harder to maintain the transport infrastructure.
     - By comparing to other economies we can see the effect of public transport on the amount of cars on the road. Japan has one of the lowest vehicle ownership rates in the world, yet their people still enjoy the ability to travel cheaply and efficiently due to their well developed public transport system. 
     - Other economies could replicate this by investing in public transport, but it is not an easy solution - public transport requires government investment and organisation, while cars are a private good (even if they still need roads). Although, a slight increase in public transport in all economies could have large benefits on social welfare, emissions, and energy use for low marginal costs.
     - Japan and korea maintain a strong sense of technology neutrality within the current energy transition. This is for many reasons, ranging from culture, energy security, and the fact that they are net importers of energy making them more vulnerable to negative effects of committing to the wrong technology. Japan and Korea have strong focuses on hydrogen and low carbon fuels, which they ?might be able to process in their domestical chemical industries? as well as develop energy security through strong trade partnerships?. Japan also has a strong focus on hybrids, yet it remains to be seen if this market will fail to take off due to the rise of BEVs.
 
-- **Low density developing and middle income -  Chile, Peru, Mexico, Papua New Guinea, Russia**
+### **Low density developing and middle income -  Chile, Peru, Mexico, Papua New Guinea, Russia**
     - These might be the economies with the slowest expected transport transition as the mix of lower incomes and higher driving ranges makes the transition to BEVs more difficult. These economies also have quite unique Targets, such as a high reliance on gas vehicles in Peru and Russia, a very optimistic target in Chile, and a pessimistic targets in Papua New Guinea and Mexico.
+
+### Papua New Guinea's sales share projections
+{{graph:individual_graphs_sales_share_by_transport_type_all_Target.html}}
 
 Some notes: lower incomes doesnt necessarily mean evs are less suited if they become cheap, however because of issues with used car imports and the correlation between income levels and used car imports, these lower income economies might be disadvantaged in the transition.

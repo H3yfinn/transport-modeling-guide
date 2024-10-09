@@ -74,8 +74,7 @@
         {% else %}
             <section>
                 <div class="container">
-                    <h2>Sorry</h2>
-                    <p>To save on expensive compute I've stopped allowing users to run the model themselves. But you can see my latest model runs below:</p>
+                    <p>Sorry, to save on expensive compute I've stopped allowing users to run the model themselves. But you can see my latest model runs below:</p>
                     
                     <p><a href="{{ url_for('content_page', page_name='guide') }}" target="_blank">Guide</a></p>     
 
@@ -104,6 +103,7 @@
             <h2>Methodology and notes</h2>
             <p>Here you can find the methodology and notes for the transport model. These will be helpful in understanding the results and how the model works.</p>
             <ul>
+                <li><a href="{{ url_for('content_page', page_name='how_model_works') }}">How the model works</a></li>
                 <li><a href="{{ url_for('content_page', page_name='fuel_mixing') }}">Fuel Mixing</a></li>
                 <li><a href="{{ url_for('content_page', page_name='vehicle_sales_shares') }}">Vehicle Sales Shares</a></li>
                 <li><a href="{{ url_for('content_page', page_name='activity') }}">Activity</a></li>

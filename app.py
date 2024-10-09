@@ -693,6 +693,7 @@ def model_progress():
 def replace_placeholders(explanation, content_folder):
     file_pattern = re.compile(r'\{\{(table|graph):(.+?)\}\}')        
     link_pattern = re.compile(r'\{\{(link):(.+?):(text):(.+?)\}\}')#{{link:https://transport-energy-modelling.com/content/activity_growth:text:here}}
+    image_pattern = re.compile(r'\{\{(image):(.+?)\}\}') 
 
     def replace_with_link(match):
         link = match.group(2)
@@ -729,6 +730,15 @@ def replace_placeholders(explanation, content_folder):
         else:
             return f'<div style="color:red;">{file_type.capitalize()} file not found: {file_name}</div>'
 
+    def replace_with_image(match):
+        image_name = match.group(2)
+        image_path = os.path.join(content_folder, image_name)
+        if os.path.exists(image_path):
+            return f'<img src="{image_path}" alt="{image_name}" class="img-fluid">'
+        else:
+            error_logger.error(f'Image file not found: {image_name}')
+            return f'<div style="color:red;">Image file not found: {image_name}</div>'
+        
     # Process line by line
     lines = explanation.split('\n')
     replaced_lines = []
@@ -737,6 +747,8 @@ def replace_placeholders(explanation, content_folder):
             line = file_pattern.sub(replace_with_file, line)
         if link_pattern.search(line):
             line = link_pattern.sub(replace_with_link, line)
+        if image_pattern.search(line):  # Process image placeholders
+            line = image_pattern.sub(replace_with_image, line)
         replaced_lines.append(line)
     
     return '\n'.join(replaced_lines)
