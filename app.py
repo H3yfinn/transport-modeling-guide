@@ -1,5 +1,5 @@
 #todo check that singvble user having multiple open sessions does not cause issues
-from flask import request, render_template, send_file, flash, redirect, url_for, session, jsonify, Response
+from flask import request, render_template, send_file, flash, redirect, url_for, session, jsonify, Response, stream_with_context
 import os
 from datetime import timedelta
 import markdown
@@ -770,40 +770,22 @@ def stream_explanation_files(explanation_files, content_folder):
                 explanation_markdown = markdown.markdown(line)
                 yield replace_placeholders(explanation_markdown, content_folder)
 
-# @app.route('/content/<page_name>')
-# def content_page(page_name):
-#     content_folder = os.path.join('content', page_name)
-    
-#     # Get all markdown files in the content folder
-#     explanation_files = [f for f in os.listdir(content_folder) if f.endswith('.md')]
-    
-#     if not explanation_files:
-#         return render_template('error.html', error_message='Content not found.')
-    
-#     if app.config.get('LOGGING', False):
-#         global_logger.info(f'Generating content for page {page_name}')
-    
-#     # Stream the content using a generator (efficient for large content)
-#     return Response(stream_explanation_files(explanation_files, content_folder), mimetype='text/html')
-
 @app.route('/content/<page_name>')
 def content_page(page_name):
     content_folder = os.path.join('content', page_name)
-    
+
     # Get all markdown files in the content folder
     explanation_files = [f for f in os.listdir(content_folder) if f.endswith('.md')]
     
     if not explanation_files:
         return render_template('error.html', error_message='Content not found.')
-    
+
     if app.config.get('LOGGING', False):
         global_logger.info(f'Generating content for page {page_name}')
     
-    # Stream the content using a generator (efficient for large content)
-    explanation_html = Response(stream_explanation_files(explanation_files, content_folder), mimetype='text/html')
-    
-    # Render the template with the navigation and static elements, passing the streamed content
-    return render_template('content_page.html', explanation=explanation_html)
+    # Use stream_with_context to stream only the content part
+    return render_template('content_page.html', explanation=Response(stream_with_context(stream_explanation_files(explanation_files, content_folder)), mimetype='text/html'))
+
 ####################################################
 #tehse need to be here because not all global variables are defined yet, i think?
 # def run_tasks():
