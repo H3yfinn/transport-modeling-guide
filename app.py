@@ -690,7 +690,7 @@ def model_progress():
 ####################################################
 
 # Define the function to replace placeholders
-def replace_placeholders(explanation, content_folder):
+def replace_placeholders(explanation, content_folder, page_name):
     file_pattern = re.compile(r'\{\{(table|graph):(.+?)\}\}')        
     link_pattern = re.compile(r'\{\{(link):(.+?):(text):(.+?)\}\}')#{{link:https://transport-energy-modelling.com/content/activity_growth:text:here}}
     image_pattern = re.compile(r'\{\{(image):(.+?)\}\}') 
@@ -732,12 +732,8 @@ def replace_placeholders(explanation, content_folder):
 
     def replace_with_image(match):
         image_name = match.group(2)
-        image_path = os.path.join(content_folder, image_name)
-        if os.path.exists(image_path):
-            return f'<img src="{image_path}" alt="{image_name}" class="img-fluid">'
-        else:
-            error_logger.error(f'Image file not found: {image_name}')
-            return f'<div style="color:red;">Image file not found: {image_name}</div>'
+        image_url = url_for('serve_content_image', page_name=page_name, image_name=image_name)
+        return f'<img src="{image_url}" alt="{image_name}" class="img-fluid">'
         
     # Process line by line
     lines = explanation.split('\n')
@@ -753,12 +749,20 @@ def replace_placeholders(explanation, content_folder):
     
     return '\n'.join(replaced_lines)
 
+@app.route('/content_images/<page_name>/<image_name>')
+def serve_content_image(page_name, image_name):
+    image_path = os.path.join('content', page_name, image_name)
+    if os.path.exists(image_path):
+        return send_file(image_path)
+    else:
+        error_logger.error(f"Image file not found: {image_path}")
+        return f"Image not found: {image_name}", 404
+    
 # Additional helper to ensure well-formed HTML for debugging
 def validate_html(html):
     soup = BeautifulSoup(html, 'html.parser')
     return soup.prettify()
 
-# Define a function to generate the dynamic content
 def generate_dynamic_content(page_name):
     content_folder = os.path.join('content', page_name)
 
@@ -776,7 +780,7 @@ def generate_dynamic_content(page_name):
         with open(explanation_file_path, 'r', encoding='utf-8') as f:
             explanation_content = f.read()  # Read entire file at once
             explanation_markdown = markdown.markdown(explanation_content)
-            content += replace_placeholders(explanation_markdown, content_folder)
+            content += replace_placeholders(explanation_markdown, content_folder, page_name)
 
     return content
 
