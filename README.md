@@ -455,12 +455,12 @@ URL="https://transport-energy-modelling.com/"
 
 # Check if the website is responding (status code 200)
 status_code=$(/usr/bin/curl --write-out "%{http_code}" --silent --output /dev/null $URL)
-
+ 
 echo "Status code: $status_code" >> /home/ec2-user/logs/check_website_debug.log
 
 if [ "$status_code" -ne 200 ]; then
   echo "Website is down. Restarting services..." >> /home/ec2-user/logs/check_website_debug.log
-
+ 
   # Reload and restart services
   /usr/bin/sudo /bin/systemctl daemon-reload
   /usr/bin/sudo /bin/systemctl restart gunicorn-transport-energy-modelling
