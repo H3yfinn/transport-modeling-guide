@@ -447,31 +447,43 @@ sudo nano /usr/local/bin/check_website.sh
 ```bash
 #!/bin/bash
 
+# Log the current date and time for debugging
+echo "Cron job running at $(date)" >> /home/ec2-user/logs/check_website_debug.log
+
 # URL to check
 URL="https://transport-energy-modelling.com/"
 
 # Check if the website is responding (status code 200)
-status_code=$(curl --write-out "%{http_code}" --silent --output /dev/null $URL)
+status_code=$(/usr/bin/curl --write-out "%{http_code}" --silent --output /dev/null $URL)
+
+echo "Status code: $status_code" >> /home/ec2-user/logs/check_website_debug.log
 
 if [ "$status_code" -ne 200 ]; then
-  echo "Website is down. Restarting services..."
+  echo "Website is down. Restarting services..." >> /home/ec2-user/logs/check_website_debug.log
 
   # Reload and restart services
-  sudo systemctl daemon-reload
-  sudo systemctl restart gunicorn-transport-energy-modelling
-  sudo systemctl restart gunicorn-aws
-  sudo systemctl restart nginx
+  /usr/bin/sudo /bin/systemctl daemon-reload
+  /usr/bin/sudo /bin/systemctl restart gunicorn-transport-energy-modelling
+  /usr/bin/sudo /bin/systemctl restart gunicorn-aws
+  /usr/bin/sudo /bin/systemctl restart nginx
 
-  echo "Services restarted at $(date)" >> /var/log/service_restart.log
+  echo "Services restarted at $(date)" >> /home/ec2-user/logs/service_restart.log
 else
-  echo "Website is up."
+  echo "Website is up." >> /home/ec2-user/logs/check_website_debug.log
 fi
 ```
 
 ```bash
 sudo chmod +x /usr/local/bin/check_website.sh #you might need to run this instead sudo chown ec2-user:ec2-user /usr/local/bin/check_website.sh
 ```
-
+Maybe you also need to do this to allow sude to be used within the script:
+```bash
+sudo visudo.
+```
+and paste the following in:
+```bash
+ec2-user ALL=(ALL) NOPASSWD: /bin/systemctl restart gunicorn-transport-energy-modelling, /bin/systemctl restart gunicorn-aws, /bin/systemctl restart nginx, /bin/systemctl daemon-reload
+```
 Next, use cron to run this script at regular intervals (e.g., every 5 minutes).
 
 To edit your cron jobs:
@@ -490,6 +502,7 @@ You can check if the cron job is correctly scheduled by listing all your current
 
 ```bash
 crontab -l
+cat /home/ec2-user/logs/check_website_debug.log #to check the logs
 ```
 
 You should see the following line in the output:
