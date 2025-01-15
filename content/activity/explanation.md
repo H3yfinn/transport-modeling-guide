@@ -14,13 +14,11 @@ Total activity for the whole projection is first estimated using Activity growth
 - Occupancy: the number of passengers in each vehicle
 - Load: the weight of the freight in each vehicle
 
-And for passenger transport we also use this to adcjust the trend to match our vehicle ownership expectations:
+And for passenger transport we also use a measure of vehicle ownership to adjust the trend to match our expectations:
 
 - Vehicle ownership: otherwise called stocks per capita and essentially is a measure for passenger vehicles which is heavily affected by the amount of road travel that each member of the population does. If this is low (for example in japan where trains are more popular) then the vehicle ownership (number of vehicles needed) is lower. In the USA this is high. See {{link:https://transport-energy-modelling.com/content/vehicle_ownership:text:here}} for more information on vehicle ownership.
 
-So, for freight Activity Growth is used to create the trend, then we split it into the acitivty mix and are finished. 
-
-For passenger (road) transport we caculate the trend and then adjust the trend to match our vehicle ownership expectations, and then finally break it down into the activity mix.
+So, for freight Activity Growth is used to create the trend, then we split it into the acitivty mix and are finished. For passenger (road) transport we caculate the trend and then adjust the trend to match our vehicle ownership expectations, and then finally break it down into the activity mix. In the code it's a little more complicated than that but that's the basic idea. 
 
 You can read more about activity growth {{link:https://transport-energy-modelling.com/content/activity_growth:text:here}}.
 
