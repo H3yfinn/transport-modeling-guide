@@ -10,13 +10,14 @@ See a projection of chargers below:
 {{graph:charging_dashboard_05_PRC_Target.html}}
 
 Some other factors affecting the number of chargers required in an economy are:
- - The amount of private chargers that are available.
- - Urban density and population density.
- - The size of vehicles and the size of the batteries.
- - The amount of time that vehicles are parked.
- - The amount of time that vehicles are parked in public spaces.
- - The amount of driving people do.
- - You can find more on the IEA website, e.g. {{link:https://www.iea.org/reports/global-ev-outlook-2024/trends-in-electric-vehicle-charging:text:here}}.
+
+- The amount of private chargers that are available.
+- Urban density and population density.
+- The size of vehicles and the size of the batteries.
+- The amount of time that vehicles are parked.
+- The amount of time that vehicles are parked in public spaces.
+- The amount of driving people do.
+- You can find more on the IEA website, e.g. [here](https://www.iea.org/reports/global-ev-outlook-2024/trends-in-electric-vehicle-charging).
 
 ## My code
 The {{link:https://github.com/H3yfinn/transport_model_9th_edition/blob/public_master/model_code/calculation_functions/estimate_charging_requirements.py:text:script in my model}} can be explained using the following:
