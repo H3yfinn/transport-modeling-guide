@@ -453,14 +453,19 @@ echo "Cron job running at $(date)" >> /home/ec2-user/logs/check_website_debug.lo
 # URL to check
 URL="https://transport-energy-modelling.com/"
 
-# Check if the website is responding (status code 200)
+# Check if the website is responding and capture the status code
 status_code=$(/usr/bin/curl --write-out "%{http_code}" --silent --output /dev/null $URL)
- 
+
 echo "Status code: $status_code" >> /home/ec2-user/logs/check_website_debug.log
 
+# Check for common error codes, including 502, 503, and non-200 statuses
 if [ "$status_code" -ne 200 ]; then
-  echo "Website is down. Restarting services..." >> /home/ec2-user/logs/check_website_debug.log
- 
+  if [ "$status_code" -eq 502 ]; then
+    echo "502 Bad Gateway error detected. Restarting services..." >> /home/ec2-user/logs/check_website_debug.log
+  else
+    echo "Website returned status code $status_code. Restarting services..." >> /home/ec2-user/logs/check_website_debug.log
+  fi
+
   # Reload and restart services
   /usr/bin/sudo /bin/systemctl daemon-reload
   /usr/bin/sudo /bin/systemctl restart gunicorn-transport-energy-modelling
@@ -476,7 +481,7 @@ fi
 ```bash
 sudo chmod +x /usr/local/bin/check_website.sh #you might need to run this instead sudo chown ec2-user:ec2-user /usr/local/bin/check_website.sh
 ```
-Maybe you also need to do this to allow sude to be used within the script:
+Maybe you also need to do this to allow sudo to be used within the script:
 ```bash
 sudo visudo.
 ```
@@ -487,15 +492,16 @@ ec2-user ALL=(ALL) NOPASSWD: /bin/systemctl restart gunicorn-transport-energy-mo
 Next, use cron to run this script at regular intervals (e.g., every 5 minutes).
 
 To edit your cron jobs:
-
+(if you want to use nano instead of vim you might need to use 'nano ~/.bashrc' and insert the line: 'export EDITOR=nano')
 ```bash
-crontab -e
+nano crontab -e 
 ```
 
-Add the following line to run the script every 5 minutes:
+Add the following line to run the script every 5 minutes: NOTE it used to be like this: */5 * * * * /usr/local/bin/check_website.sh >> /var/log/check_website.log 2>&1
 
 ```bash
-*/5 * * * * /usr/local/bin/check_website.sh >> /var/log/check_website.log 2>&1
+*/5 * * * * env -i /bin/bash -c "/usr/local/bin/check_website.sh >> /home/ec2-user/logs/check_website_cron_output.log 2>&1"
+
 ```
 
 You can check if the cron job is correctly scheduled by listing all your current cron jobs:
@@ -510,3 +516,5 @@ You should see the following line in the output:
 ```bash
 */5 * * * * /usr/local/bin/check_website.sh >> /var/log/check_website.log 2>&1
 ```
+#NOTE AS OF 11/5/2024 I WAS UP TO HERE:
+https://chatgpt.com/share/67298273-bd9c-8000-bc39-0d7841f76289

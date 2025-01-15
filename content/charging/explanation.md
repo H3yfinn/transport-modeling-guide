@@ -7,7 +7,7 @@ Generally a good rule of thumb is 1 publicly available slow charger per 10 BEV's
 
 See a projection of chargers below:
     
-{{graph:charging_Target.html}}
+{{graph:charging_dashboard_05_PRC_Target.html}}
 
 Some other factors affecting the number of chargers required in an economy are:
  - The amount of private chargers that are available.
@@ -18,5 +18,8 @@ Some other factors affecting the number of chargers required in an economy are:
  - The amount of driving people do.
  - You can find more on the IEA website, e.g. {{link:https://www.iea.org/reports/global-ev-outlook-2024/trends-in-electric-vehicle-charging:text:here}}.
 
+## My code
+The {{link:https://github.com/H3yfinn/transport_model_9th_edition/blob/public_master/model_code/calculation_functions/estimate_charging_requirements.py:text:script in my model}} can be explained using the following:
+This code calculates the number of public chargers needed for EVs using three main inputs: EV numbers, average battery capacities by vehicle type, and the expected chargers per kWh of battery capacity. It adjusts for population density and urbanization, which scale the public charging needs (more dense means more public chargers needed). Based on these factors, it calculates the total battery capacity of the EV fleet.
 
-
+Charger requirements are determined by applying the chargers-per-kWh parameter and adjusting for public charger utilization rates specific to vehicle types. The total charger demand is split into fast and slow chargers using predefined ratios and their respective power capacities. The outputs rely heavily on accurate inputs for EV numbers, battery capacities, and the chargers-per-kWh parameter.

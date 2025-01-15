@@ -1,0 +1,5 @@
+## Better data on public transport:
+{{link:https://asiantransportobservatory.org/insights/urban-access-to-public-transportation-visualization:text:asian transport observatory - access to public transport}}
+
+Here you can find estimates of access to public transport in many different cities. We can easily estimate an average level of access by economy and from there improve our estimates of the public transport use in each country. And even if we don't use it to adjust the level of activity, stocks or energy use in the data we have, it is still most useful because it is a consistent measure of access to public transport across many different cities in all countries. This means that it can be used to compare the level of access to public transport in different countries (which can't currently be done because we are so uncertain about the input data for public transport) as well as as an indicator of the level of public transport use in each country in our projections. That also means it can also be used as a lever from which to adjust the level of public transport use in each country in our projections.
+
