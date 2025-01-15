@@ -6,7 +6,7 @@ Activity can be split into two units, passenger-km and freight-tonne-km. See the
 
 These are key indicators for the transport sector, given that the 2 major factors in determining any economic sector's energy use is the activity, and the energy intensity of that activity.
 
-The main factors that affect activity within the transport model are:
+Total activity for the whole projection is first estimated using Activity growth. Then once that is done, the activity mix is determined by the distance travelled, occupancy and load:
 
 - Distance travelled (for all cars in the economy) = Mileage * Stocks
     - Stocks: the number of vehicles in the fleet
@@ -14,11 +14,15 @@ The main factors that affect activity within the transport model are:
 - Occupancy: the number of passengers in each vehicle
 - Load: the weight of the freight in each vehicle
 
-And for passenger transport we also have:
+And for passenger transport we also use this to adcjust the trend to match our vehicle ownership expectations:
 
 - Vehicle ownership: otherwise called stocks per capita and essentially is a measure for passenger vehicles which is heavily affected by the amount of road travel that each member of the population does. If this is low (for example in japan where trains are more popular) then the vehicle ownership (number of vehicles needed) is lower. In the USA this is high. See {{link:https://transport-energy-modelling.com/content/vehicle_ownership:text:here}} for more information on vehicle ownership.
 
-There is also Activity Growth, for which you can read about {{link:https://transport-energy-modelling.com/content/activity_growth:text:here}}.
+So, for freight Activity Growth is used to create the trend, then we split it into the acitivty mix and are finished. 
+
+For passenger (road) transport we caculate the trend and then adjust the trend to match our vehicle ownership expectations, and then finally break it down into the activity mix.
+
+You can read more about activity growth {{link:https://transport-energy-modelling.com/content/activity_growth:text:here}}.
 
 And below you can see a chart of passenger activity:
 {{graph:passenger_km_by_drive_Target.html}}
